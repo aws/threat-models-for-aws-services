@@ -1,0 +1,56 @@
+{
+  "version": "1.0.0",
+  "schema": {
+    "path": "schema/manifest.schema.json",
+    "sha256": "ebc5b475550674973fd0fc6973b67708a588341f305d68a7c3d8906974f1c83c"
+  },
+  "catalogs": {
+    "mitigationGoals": {
+      "data": {
+        "path": "data/mitigation-goals.json",
+        "sha256": "225dded9626e1e7ba1edc2983919beccf88a34cfab641b9ce42bd213317e0a0f"
+      },
+      "schema": {
+        "path": "schema/mitigation-goals.schema.json",
+        "sha256": "f80491b8da1b6f3849a20a52a38dc42978f1c262f171745d3063200381d060fe"
+      },
+      "report": {
+        "path": "reports/mitigation-goals.md",
+        "sha256": "6a4b8058124c44988206d383a5d89668389bf42956919f3fdcae99da2fd0b95d"
+      }
+    },
+    "potentialThreats": {
+      "data": {
+        "path": "data/potential-threats.json",
+        "sha256": "5565a81e9e90aa3aa3ea7926cfeefe21fba79332dee032906c889e2020014f00"
+      },
+      "schema": {
+        "path": "schema/potential-threats.schema.json",
+        "sha256": "f9f8bb39cbbde141d8b0c4258a3caf065c912de2a12b3852056b3eeffe9793cc"
+      },
+      "report": {
+        "path": "reports/potential-threats.md",
+        "sha256": "cd2a1902b508150d622269ebc5b6b68a73b28047ef6e2340d5ed645fac14de08"
+      }
+    },
+    "threatImpacts": {
+      "data": {
+        "path": "data/threat-impacts.json",
+        "sha256": "d387b8dc667294ea08d7006b788aae733713027116e8c258cb05344969800b98"
+      },
+      "schema": {
+        "path": "schema/threat-impacts.schema.json",
+        "sha256": "9e671a27593977a2afe53b576a61a75960bdc5b65924138b1b9db2e72b1954ce"
+      },
+      "report": {
+        "path": "reports/threat-impacts.md",
+        "sha256": "6ee1b686d24c2500114ae0a7c8cbdaa0a9962e52b9c136e5ba8e8cdb3d3c70e1"
+      }
+    }
+  },
+  "serviceSchema": {
+    "path": "schema/threat-model.schema.json",
+    "sha256": "9668d0b48bbb807a98910674221ad19739559b25a3c9df00887a46cc8b8b873a"
+  },
+  "services": []
+}

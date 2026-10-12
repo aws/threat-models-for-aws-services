@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "PotentialThreat": {
+      "additionalProperties": false,
+      "description": "A potential threat from the potential threat catalog.\n\nA potential threat is a threat scenario assessed against every service.",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "createTime": {
+          "description": "UTC timestamp when the threat was added to the catalog.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "name": {
+          "description": "The threat's name.",
+          "type": "string"
+        },
+        "description": {
+          "description": "The threat's description.",
+          "type": "string"
+        },
+        "category": {
+          "$ref": "#/$defs/PotentialThreatCategory",
+          "description": "The security domain this potential threat belongs to."
+        },
+        "replaces": {
+          "default": [],
+          "description": "Ids of predecessor potential threats this entry replaces; content previously derived from a predecessor may be re-issued under this threat.",
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "createTime",
+        "name",
+        "description",
+        "category"
+      ],
+      "title": "PotentialThreat",
+      "type": "object"
+    },
+    "PotentialThreatCategory": {
+      "description": "The security domain a potential threat belongs to, used to group related threats. Each threat has exactly one category; OTHER indicates no listed domain fits.\n\nValues:\n- ENCRYPTION: Exposure of data through missing or weakened encryption or key controls.\n- PERMISSIONS_AND_IDENTITY: Unauthorized access through missing or weakened authentication, authorization, or data-perimeter controls.\n- NETWORK: Attacks through network reachability, placement, or traffic paths.\n- LOGGING: Loss or evasion of activity and data-access logs.\n- MONITORING_AND_METRICS: Undetected activity through missing metrics or telemetry.\n- AVAILABILITY: Service disruption, capacity exhaustion, or loss of availability.\n- DATA_RETENTION_AND_RESILIENCE: Loss of data or resources through deletion or insufficient retention.\n- TAGGING: Governance gaps through missing or manipulated resource tags.\n- CODE_INTEGRITY: Execution of untrusted, unreviewed, or unsigned code or content on a resource.\n- OTHER: Does not fit a listed security domain.",
+      "enum": [
+        "ENCRYPTION",
+        "PERMISSIONS_AND_IDENTITY",
+        "NETWORK",
+        "LOGGING",
+        "MONITORING_AND_METRICS",
+        "AVAILABILITY",
+        "DATA_RETENTION_AND_RESILIENCE",
+        "TAGGING",
+        "CODE_INTEGRITY",
+        "OTHER"
+      ],
+      "title": "PotentialThreatCategory",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The catalog of potential threats considered across all services.\n\nEach service threat model records which of these threats apply to it.",
+  "properties": {
+    "potentialThreats": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/PotentialThreat"
+      },
+      "type": "array"
+    }
+  },
+  "title": "PotentialThreatCatalog",
+  "type": "object"
+}

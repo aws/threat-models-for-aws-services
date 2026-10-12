@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Framework": {
+      "additionalProperties": false,
+      "description": "The external security framework a mapping refers to.",
+      "properties": {
+        "name": {
+          "description": "The framework name, for example 'MITRE ATT&CK'.",
+          "type": "string"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The framework version the mapping was made against, for example '18.1'. Absent when the framework does not publish versions."
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "Framework",
+      "type": "object"
+    },
+    "Mapping": {
+      "additionalProperties": false,
+      "description": "A minimal reference linking one object to another within the release.\n\nThe type identifies the kind of object referenced and the id identifies it. For framework mappings, framework identifies the external framework and its version, and id is the item's identifier within that framework, for example 'T1485'.\n\nConsumers resolve the full object by looking up the id in the matching collection of the same release.",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/MappingType"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Identifier of the referenced object: a UUID for objects within this release, or the framework's own identifier for FRAMEWORK mappings."
+        },
+        "framework": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Framework"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The external framework and its version. Only present when type is FRAMEWORK."
+        }
+      },
+      "required": [
+        "type",
+        "id"
+      ],
+      "title": "Mapping",
+      "type": "object"
+    },
+    "MappingType": {
+      "description": "The kind of object a mapping points to.",
+      "enum": [
+        "ENTITY",
+        "OPERATION",
+        "MITIGATION_GOAL",
+        "POTENTIAL_THREAT",
+        "THREAT_IMPACT",
+        "FRAMEWORK",
+        "THREAT",
+        "MITIGATION",
+        "IMPLEMENTATION"
+      ],
+      "title": "MappingType",
+      "type": "string"
+    },
+    "ThreatImpact": {
+      "additionalProperties": false,
+      "description": "A threat impact from the threat impact catalog.\n\nIts mappings are FRAMEWORK entries naming the impact's MITRE ATT&CK counterpart: the tactic it corresponds to, or, for an impact that is an Impact-tactic technique, both the Impact tactic (TA0040) and the technique.",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "createTime": {
+          "description": "UTC timestamp when the impact was added to the catalog.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "name": {
+          "description": "The impact's name.",
+          "type": "string"
+        },
+        "description": {
+          "description": "The impact's description.",
+          "type": "string"
+        },
+        "mappings": {
+          "default": [],
+          "description": "Relationships to external frameworks, for example MITRE ATT&CK.",
+          "items": {
+            "$ref": "#/$defs/Mapping"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "createTime",
+        "name",
+        "description"
+      ],
+      "title": "ThreatImpact",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The catalog of threat impacts, with their framework mappings.",
+  "properties": {
+    "threatImpacts": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ThreatImpact"
+      },
+      "type": "array"
+    }
+  },
+  "title": "ThreatImpactCatalog",
+  "type": "object"
+}

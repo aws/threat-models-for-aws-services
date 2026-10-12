@@ -1,0 +1,22 @@
+name: Issue or PR notifier
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+permissions: {}
+
+jobs:
+  run:
+    name: Notify maintainers of new activity
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send notification
+        uses: slackapi/slack-github-action@91efab103c0de0a537f72a35f6b8cda0ee76bf0a # v2.1.1
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: webhook-trigger
+          payload: |
+            {
+              "text": "A new \"${{ github.event_name }}\" has been opened on https://github.com/${{ github.repository }}."
+            }

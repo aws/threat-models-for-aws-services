@@ -1,0 +1,19 @@
+name: Documentation improvement
+description: Suggest a clarification or expansion of the README, design docs, or repository structure.
+labels: ["documentation"]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Document
+      description: The file or section your suggestion applies to.
+      placeholder: "README.md, Scope section"
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested improvement
+      description: What is unclear or missing, and what would make it better.
+    validations:
+      required: true

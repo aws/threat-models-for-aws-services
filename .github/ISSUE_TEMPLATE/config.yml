@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: AWS service usage questions
+    url: https://repost.aws/
+    about: Questions about how to use an AWS service belong on AWS re:Post, Stack Overflow, or the AWS Support Center.
+  - name: Security vulnerability reports
+    url: https://aws.amazon.com/security/vulnerability-reporting/
+    about: Do not file security vulnerabilities as GitHub issues - use the AWS vulnerability reporting page.

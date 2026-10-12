@@ -1,0 +1,28 @@
+name: Threat model scope increase request
+description: Request an additional control objective or threat class brought into scope for all services.
+labels: ["scope-expansion"]
+body:
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed control objective or threat class
+      description: >
+        What should be assessed across all services. Check
+        threat-models-for-aws-services/reports/mitigation-goals.md and
+        potential-threats.md first - this template is for objectives or threat
+        classes not covered there. Workload-specific and application-level
+        threats are outside the scope of these models by design.
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Why it belongs in scope for every service
+      description: The security property it protects and why it generalizes beyond a single service or workload.
+    validations:
+      required: true
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Frameworks, documentation, or incidents that motivate the addition.

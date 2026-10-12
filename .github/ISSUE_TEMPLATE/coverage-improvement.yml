@@ -1,0 +1,45 @@
+name: Threat model coverage improvement
+description: Suggest coverage we could add to a published service threat model - an additional threat, mitigation, or implementation.
+labels: ["threat-model-content", "enhancement"]
+body:
+  - type: input
+    id: service
+    attributes:
+      label: Service threat model
+      description: The published service threat model the coverage belongs in (see `services` in threat-models-for-aws-services/manifest.json).
+      placeholder: "lambda"
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed coverage
+      description: >
+        For a threat, describe it in the form the threat models use - source,
+        prerequisites, and threat action. For a mitigation, state it as a
+        configuration of a service resource and name the mitigation goal it
+        serves. For an implementation, name the preventive, proactive,
+        detective, or directive mechanism.
+    validations:
+      required: true
+  - type: input
+    id: mapping
+    attributes:
+      label: Related catalog entry
+      description: The existing potential threat or mitigation goal this maps to (see the reports under threat-models-for-aws-services/reports/).
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: What your suggestion is based on
+      description: How you established the service behavior - an API call and its response, a console test, or a link to the relevant AWS documentation or API model.
+    validations:
+      required: true
+  - type: input
+    id: release-version
+    attributes:
+      label: Release version
+      description: The `version` value from threat-models-for-aws-services/manifest.json you compared against.
+    validations:
+      required: true

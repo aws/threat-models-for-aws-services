@@ -1,0 +1,33 @@
+name: Threat model content improvement
+description: Suggest a refinement to content that is already published - threats, mitigations, or implementations within a published service threat model.
+labels: ["threat-model-content"]
+body:
+  - type: input
+    id: element-ids
+    attributes:
+      label: Element ID(s)
+      description: The stable identifiers of the elements your suggestion applies to.
+      placeholder: "Threat.LAMBDA.Function.12, Mitigation.LAMBDA.Function.2"
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested change
+      description: What should change, and what the improved content should say.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: What your suggestion is based on
+      description: How you established the current service behavior - an API call and its response, a console test, or a link to the relevant AWS documentation, service API model, or condition key reference.
+    validations:
+      required: true
+  - type: input
+    id: release-version
+    attributes:
+      label: Release version
+      description: The `version` value from threat-models-for-aws-services/manifest.json you compared against.
+    validations:
+      required: true

@@ -1,0 +1,12 @@
+# Source archives (github.com/<owner>/<repo>/archive/...) are `git archive`
+# output, which honours export-ignore. Everything except the release directory
+# threat-models-for-aws-services/, README.md and LICENSE is repository
+# scaffolding and stays out of the archive, so an archive of a tag is the
+# release itself plus the README and licence. Patterns are anchored to the
+# repository root.
+/.github export-ignore
+/docs export-ignore
+/CONTRIBUTING.md export-ignore
+/CODE_OF_CONDUCT.md export-ignore
+/.gitignore export-ignore
+/.gitattributes export-ignore

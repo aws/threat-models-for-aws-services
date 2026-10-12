@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "A file of the release: its path relative to the release root and the SHA-256 digest of its bytes, so a consumer fetching files one at a time can verify each.\n\nThe digest algorithm is the property name, so a stronger digest can be added later as another property beside sha256 without changing this one.",
+      "properties": {
+        "path": {
+          "description": "Path of the file relative to the release root, in POSIX form.",
+          "type": "string"
+        },
+        "sha256": {
+          "description": "Lowercase hexadecimal SHA-256 digest of the file's bytes.",
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "CatalogArtifact": {
+      "additionalProperties": false,
+      "description": "The files of one reference catalog.\n\ndata is the catalog JSON, schema the JSON Schema that JSON validates against, and report the human-readable rendering of the same catalog.",
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/ArtifactRef",
+          "description": "The catalog JSON file."
+        },
+        "schema": {
+          "$ref": "#/$defs/ArtifactRef",
+          "description": "The JSON Schema the catalog JSON validates against."
+        },
+        "report": {
+          "$ref": "#/$defs/ArtifactRef",
+          "description": "The human-readable catalog report."
+        }
+      },
+      "required": [
+        "data",
+        "schema",
+        "report"
+      ],
+      "title": "CatalogArtifact",
+      "type": "object"
+    },
+    "CatalogIndex": {
+      "additionalProperties": false,
+      "description": "The three reference catalogs of a release.",
+      "properties": {
+        "mitigationGoals": {
+          "$ref": "#/$defs/CatalogArtifact",
+          "description": "The mitigation goal catalog."
+        },
+        "potentialThreats": {
+          "$ref": "#/$defs/CatalogArtifact",
+          "description": "The potential threat catalog."
+        },
+        "threatImpacts": {
+          "$ref": "#/$defs/CatalogArtifact",
+          "description": "The threat impact catalog."
+        }
+      },
+      "required": [
+        "mitigationGoals",
+        "potentialThreats",
+        "threatImpacts"
+      ],
+      "title": "CatalogIndex",
+      "type": "object"
+    },
+    "ServiceArtifact": {
+      "additionalProperties": false,
+      "description": "The files of one service threat model.",
+      "properties": {
+        "namespace": {
+          "description": "The service namespace, for example 'lambda'.",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/ArtifactRef",
+          "description": "The service threat model JSON file."
+        },
+        "report": {
+          "$ref": "#/$defs/ArtifactRef",
+          "description": "The human-readable service threat model report."
+        }
+      },
+      "required": [
+        "namespace",
+        "data",
+        "report"
+      ],
+      "title": "ServiceArtifact",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The index of a release of the threat model files.\n\nSerialized to manifest.json at the root of the release. manifest.json and the human-readable README beside it are the fixed root files; consumers read only the manifest and follow its file references, each carrying the file's path and SHA-256 digest, rather than hardcoding directory names.",
+  "properties": {
+    "version": {
+      "description": "Semantic version of this release of the threat models.",
+      "type": "string"
+    },
+    "schema": {
+      "$ref": "#/$defs/ArtifactRef",
+      "description": "The JSON Schema this manifest validates against."
+    },
+    "catalogs": {
+      "$ref": "#/$defs/CatalogIndex",
+      "description": "The reference catalogs, each with its data, schema, and report files."
+    },
+    "serviceSchema": {
+      "$ref": "#/$defs/ArtifactRef",
+      "description": "The JSON Schema every service threat model JSON validates against."
+    },
+    "services": {
+      "description": "The service threat models in this release, sorted by namespace.",
+      "items": {
+        "$ref": "#/$defs/ServiceArtifact"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "version",
+    "schema",
+    "catalogs",
+    "serviceSchema",
+    "services"
+  ],
+  "title": "ReleaseManifest",
+  "type": "object"
+}

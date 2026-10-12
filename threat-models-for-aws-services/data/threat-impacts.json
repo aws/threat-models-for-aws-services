@@ -1,0 +1,428 @@
+{
+  "threatImpacts": [
+    {
+      "id": "9a471928-c496-40c4-a2ff-747fa68de3fe",
+      "createTime": "2025-05-05T17:20:29Z",
+      "name": "Initial Access",
+      "description": "Methods used by threat actors to gain initial access to a cloud environment, typically through credential theft or authentication bypass",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0001",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "393043bc-0fad-4b56-89db-5ae79d9cd38a",
+      "createTime": "2025-05-05T14:10:41Z",
+      "name": "Malicious Code Execution",
+      "description": "Execution of threat actor-controlled code on cloud resources or services",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0002",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "a8f3d912-7c45-4e89-b3d1-8f6e9a2c4b5d",
+      "createTime": "2026-03-18T20:55:00Z",
+      "name": "Persistence Establishment",
+      "description": "Techniques used by threat actors to maintain access to cloud environments across restarts, credential changes, or other interruptions",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0003",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ad5e4ee7-4af3-457e-9e55-3d14bf27819e",
+      "createTime": "2025-05-05T22:05:20Z",
+      "name": "Privilege Escalation",
+      "description": "Actions that allow a threat actor to gain a higher level of permissions or access than initially granted, expanding the actions they can perform",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0004",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d5880a1f-77bb-4207-be0a-37840d932bd0",
+      "createTime": "2025-05-05T19:16:03Z",
+      "name": "Defense Evasion",
+      "description": "Techniques used by threat actors to avoid detection and circumvent security controls, including disabling logging or operating in unmonitored environments",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0005",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c7e2f8a1-9b3d-4f5c-a6e8-1d7b9c4f2e3a",
+      "createTime": "2026-03-18T20:55:00Z",
+      "name": "Credential Theft",
+      "description": "Techniques for stealing credentials such as access keys, passwords, tokens, or certificates that grant access to cloud resources",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0006",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "206f3f0b-eff5-4ef5-8160-3f1d91172e92",
+      "createTime": "2025-05-06T10:35:07Z",
+      "name": "Account and Resource Discovery",
+      "description": "Techniques used to discover information about cloud accounts, resources, permissions, and network topology",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0007",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "934cb5b4-2bec-491d-9803-48717ca53bd4",
+      "createTime": "2025-05-05T22:15:15Z",
+      "name": "Lateral Movement",
+      "description": "Techniques that enable threat actors to move through a cloud environment from one resource to another",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0008",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "b9d4e6f2-8a7c-4e3b-9f5d-2c8a1e6b4f7c",
+      "createTime": "2026-03-18T20:55:00Z",
+      "name": "Data Collection",
+      "description": "Techniques used to identify and gather data of interest from cloud resources before exfiltration",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0009",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "248a14ef-26fb-4c4a-a4b3-3c1b1325e427",
+      "createTime": "2025-05-05T19:03:16Z",
+      "name": "Data Exfiltration",
+      "description": "Unauthorized transfer of data from an organization's cloud resources to external locations controlled by a threat actor",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0010",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f3a8e9d1-6c4b-4e7f-9a2d-5b8c3e1f6a9b",
+      "createTime": "2026-03-18T20:55:00Z",
+      "name": "Account Access Removal",
+      "description": "Disabling accounts or removing access permissions to disrupt access to cloud resources",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0040",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        },
+        {
+          "type": "FRAMEWORK",
+          "id": "T1531",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6ed0b82c-e261-4e85-9982-edee0c904aea",
+      "createTime": "2025-05-05T19:24:21Z",
+      "name": "Data Destruction",
+      "description": "Deliberate deletion, corruption, or overwriting of data, making it unavailable to authorized users",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0040",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        },
+        {
+          "type": "FRAMEWORK",
+          "id": "T1485",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "e7b9c2f4-8d6a-4e3f-9b5c-1a7d8e4f9c2b",
+      "createTime": "2026-03-18T20:55:00Z",
+      "name": "Data Encrypted for Impact",
+      "description": "Encryption of data on cloud storage or databases to disrupt availability and demand ransom for decryption",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0040",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        },
+        {
+          "type": "FRAMEWORK",
+          "id": "T1486",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d8c4f7a2-9e6b-4f3c-8a5d-2e7b9c1f4a6e",
+      "createTime": "2026-03-18T20:55:00Z",
+      "name": "Defacement",
+      "description": "Modification of cloud-hosted content or resources to deface websites or applications, often to convey a message or cause reputational damage",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0040",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        },
+        {
+          "type": "FRAMEWORK",
+          "id": "T1491",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "a5e9b3c7-4d8f-4e2a-9c6b-1f7d8e3a5c9b",
+      "createTime": "2026-03-18T20:55:00Z",
+      "name": "Email Bombing",
+      "description": "Sending large volumes of email to overwhelm email services or incur excessive costs through cloud email services",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0040",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        },
+        {
+          "type": "FRAMEWORK",
+          "id": "T1667",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "461973c2-7ecc-4acb-9550-39329e7b07f8",
+      "createTime": "2025-05-08T15:55:09Z",
+      "name": "Endpoint Denial of Service",
+      "description": "Actions that prevent authorized users from accessing cloud services or applications by overwhelming compute resources or disrupting normal operations",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0040",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        },
+        {
+          "type": "FRAMEWORK",
+          "id": "T1499",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "eb66ade6-c9fd-45b4-8042-bdf897de0f08",
+      "createTime": "2025-05-08T15:54:54Z",
+      "name": "Financial Theft",
+      "description": "Activities that directly lead to financial losses, such as excessive resource provisioning, fraudulent transactions, or cryptocurrency mining",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0040",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        },
+        {
+          "type": "FRAMEWORK",
+          "id": "T1657",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c6f8e2b4-7d9a-4f3c-8e5b-2a7d9c1e4f6a",
+      "createTime": "2026-03-18T20:55:00Z",
+      "name": "Inhibit System Recovery",
+      "description": "Deletion or disabling of backup and recovery capabilities to prevent restoration after destructive actions",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0040",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        },
+        {
+          "type": "FRAMEWORK",
+          "id": "T1490",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "b7d9e3f5-8c6a-4f2d-9e7b-3a8c1e5f7d9b",
+      "createTime": "2026-03-18T20:55:00Z",
+      "name": "Network Denial of Service",
+      "description": "Network-level attacks that disrupt availability by saturating network bandwidth or overwhelming network infrastructure",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0040",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        },
+        {
+          "type": "FRAMEWORK",
+          "id": "T1498",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "137cbd00-b4f3-40c0-9a64-75cdd12191da",
+      "createTime": "2025-05-06T14:46:16Z",
+      "name": "Resource Hijacking",
+      "description": "Taking control of cloud resources to repurpose them for unauthorized activities, such as cryptocurrency mining or hosting malicious content",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0040",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        },
+        {
+          "type": "FRAMEWORK",
+          "id": "T1496",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d9e7f4c8-5a6b-4e3d-8c9f-2e7b1a4f6c8d",
+      "createTime": "2026-03-18T20:55:00Z",
+      "name": "Service Stop",
+      "description": "Stopping or disabling cloud services to disrupt operations or as part of a destructive attack",
+      "mappings": [
+        {
+          "type": "FRAMEWORK",
+          "id": "TA0040",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        },
+        {
+          "type": "FRAMEWORK",
+          "id": "T1489",
+          "framework": {
+            "name": "MITRE ATT&CK",
+            "version": "18.1"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+name: New service threat model request
+description: Request a threat model for an AWS service that is not yet covered.
+labels: ["new-service"]
+body:
+  - type: input
+    id: service
+    attributes:
+      label: AWS service
+      description: The service you want covered. Please confirm it is not already listed under `services` in threat-models-for-aws-services/manifest.json.
+      placeholder: "AWS AppSync"
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Why this service
+      description: How you would use its threat model, and anything notable about the service's security surface.
+    validations:
+      required: true

@@ -1,0 +1,336 @@
+{
+  "potentialThreats": [
+    {
+      "id": "ac688864-f392-4bac-b558-26aab92e0e59",
+      "createTime": "2025-10-21T17:56:20Z",
+      "name": "Unauthorized data access through AWS managed KMS key",
+      "description": "Data encrypted with an AWS managed KMS key can be read by any IAM principal in the same account that holds data-plane read permissions, because the AWS managed key's key policy grants decrypt access to every same-account principal using the key through the owning service.",
+      "category": "ENCRYPTION"
+    },
+    {
+      "id": "c69d4a95-e060-42aa-a395-a07aaaca802a",
+      "createTime": "2026-04-20T00:00:00Z",
+      "name": "Cross-service confused deputy problem through resource-based policies",
+      "description": "An untrusted IAM principal with access to configure an AWS service that has been granted access to your resource through a resource-based policy may be able to cause that service to write to or read from the resource, because the policy does not restrict which source account or resource triggered the service action.",
+      "category": "PERMISSIONS_AND_IDENTITY"
+    },
+    {
+      "id": "7d2c69ce-12c0-4002-bbf5-c87e441091fa",
+      "createTime": "2026-03-19T06:07:00Z",
+      "name": "Unauthorized data access without customer managed KMS key encryption",
+      "description": "Data at rest that is stored without customer managed KMS key based encryption can be read by any IAM principal that holds data-plane read permissions, because access is governed solely by those permissions without the additional decrypt authorization that a customer managed KMS key's key policy provides.",
+      "category": "ENCRYPTION"
+    },
+    {
+      "id": "b83032c6-f137-4e8d-90c0-37db78e86320",
+      "createTime": "2026-03-19T06:07:00Z",
+      "name": "Unauthorized data access through AWS owned KMS key",
+      "description": "Data encrypted with an AWS owned KMS key can be read by any IAM principal with data-plane read permissions, because you cannot govern the key policy to restrict which principals can decrypt, and have no visibility into or ability to audit usage of the encryption key.",
+      "category": "ENCRYPTION"
+    },
+    {
+      "id": "39b0676b-af44-4253-882b-3ef5c91587a0",
+      "createTime": "2026-03-19T06:07:00Z",
+      "name": "Unauthorized data access through service-managed KMS grants",
+      "description": "Data encrypted with a KMS key can be read by any IAM principal with data-plane read permissions when the service manages KMS operations in a way that does not allow the key policy to restrict access to individual callers.",
+      "category": "ENCRYPTION"
+    },
+    {
+      "id": "0ab27868-c274-4527-93ff-f32b4d52baa7",
+      "createTime": "2025-09-23T18:30:34Z",
+      "name": "Data loss through resource deletion",
+      "description": "Deleting an entire AWS resource permanently destroys all data it contains as a side effect, even when the IAM principal does not have permissions to delete the data directly.",
+      "category": "DATA_RETENTION_AND_RESILIENCE"
+    },
+    {
+      "id": "e93c30e2-77cc-4a96-836e-b1562a0320f3",
+      "createTime": "2025-11-11T22:10:28Z",
+      "name": "Data in transit interception through unencrypted client connection",
+      "description": "Traffic destined for a resource can be captured and data in transit observed by a network-adjacent actor when the resource accepts unencrypted client connections.",
+      "category": "ENCRYPTION"
+    },
+    {
+      "id": "9a820cfd-705d-457e-b332-26d5558fd4ab",
+      "createTime": "2026-08-21T00:00:00Z",
+      "name": "Unencrypted instance-to-instance traffic through instance type selection",
+      "description": "An instance type that does not provide automatic encryption of instance-to-instance traffic carries a resource's traffic between instances without that encryption layer, whether the peer is another of the resource's backing instances or another customer-operated instance that customer code on the resource's instances communicates with, which removes a layer of defense in depth and can prevent demonstrating the end-to-end encryption in transit expected by frameworks such as HIPAA, PCI DSS, and FedRAMP.",
+      "category": "ENCRYPTION"
+    },
+    {
+      "id": "c86e41f4-b517-4a9d-8ee6-ade513783ee4",
+      "createTime": "2026-05-04T00:00:00Z",
+      "name": "Network traffic interception through AWS network-inspection features",
+      "description": "A threat actor with permissions to configure AWS network-inspection resources in a VPC, or to redirect a network path through an inspection appliance they control, can capture network traffic flowing to or from resources in that VPC, and read data in transit that has not been encrypted.",
+      "category": "NETWORK"
+    },
+    {
+      "id": "a95f93b5-5423-4a87-bcdd-b0537abfa698",
+      "createTime": "2025-11-11T23:57:59Z",
+      "name": "Network Perimeter - Credential use from unexpected network",
+      "description": "IAM credentials obtained by an unauthorized party can be used from any network location, including infrastructure outside your control, because IAM credentials are not inherently bound to a specific network location.",
+      "category": "PERMISSIONS_AND_IDENTITY"
+    },
+    {
+      "id": "42fa0510-0f71-4807-99a8-5c66bb35ed3b",
+      "createTime": "2025-11-11T21:20:56Z",
+      "name": "Resource Perimeter - Data exfiltration to untrusted resource",
+      "description": "My IAM principal can interact with AWS resources outside my trust boundary if IAM policies grant permissions beyond my own AWS accounts or organization.",
+      "category": "PERMISSIONS_AND_IDENTITY"
+    },
+    {
+      "id": "12dfce62-d6f3-48c9-b692-864d002b49a7",
+      "createTime": "2026-07-28T00:00:00Z",
+      "name": "Resource Configuration - Data movement through an untrusted configured target",
+      "description": "My IAM principal can configure my AWS resource to use a resource outside my trust boundary as a target of an operation, because the call the service makes against that target is not governed by my permissions guardrails.",
+      "category": "PERMISSIONS_AND_IDENTITY"
+    },
+    {
+      "id": "f7a2c91d-3e84-4b6f-a519-8d4e0c7b2f63",
+      "createTime": "2026-03-19T00:00:00Z",
+      "name": "Resource Perimeter - Access to untrusted resource from a governed VPC network",
+      "description": "An IAM principal operating from a governed VPC network can interact with AWS resources outside my trust boundary, because the network does not restrict which resources can be accessed.",
+      "category": "PERMISSIONS_AND_IDENTITY"
+    },
+    {
+      "id": "4dd7b452-776a-4958-b891-8a72007b7fc7",
+      "createTime": "2025-10-21T21:12:27Z",
+      "name": "Network Perimeter - Resource access from unexpected network",
+      "description": "An IAM principal with valid credentials can access my AWS resource from an unexpected network, because the resource does not enforce network-origin restrictions.",
+      "category": "PERMISSIONS_AND_IDENTITY"
+    },
+    {
+      "id": "7fa4cdd4-d3cd-418c-8cec-ea25a0c174e2",
+      "createTime": "2025-10-21T17:44:15Z",
+      "name": "Identity Perimeter - Untrusted principal access to my resources",
+      "description": "An untrusted IAM principal that has been granted access to my AWS resource can use the resource.",
+      "category": "PERMISSIONS_AND_IDENTITY"
+    },
+    {
+      "id": "9dc4f10a-c396-462f-ae45-23e804ea2bd2",
+      "createTime": "2026-09-09T00:36:11Z",
+      "name": "Identity Perimeter - Untrusted principal assumption of my IAM roles",
+      "description": "An untrusted IAM principal that has been granted access through the trust policy of a service role my resource uses can assume the role and act with its permissions.",
+      "category": "PERMISSIONS_AND_IDENTITY",
+      "replaces": [
+        "7fa4cdd4-d3cd-418c-8cec-ea25a0c174e2"
+      ]
+    },
+    {
+      "id": "bb896b11-55b3-49d5-9934-a283f38a8e51",
+      "createTime": "2026-04-20T00:00:00Z",
+      "name": "Identity Perimeter - Untrusted principal access from a governed VPC network",
+      "description": "An untrusted IAM principal operating from a governed VPC network can perform AWS service API operations.",
+      "category": "PERMISSIONS_AND_IDENTITY"
+    },
+    {
+      "id": "8bd74957-248d-4083-b27f-27bf7b93eee1",
+      "createTime": "2025-10-24T16:30:24Z",
+      "name": "Direct data deletion",
+      "description": "An IAM principal can delete data (objects, records, messages) from an AWS resource that supports data deletion operations, without deleting the AWS resource itself.",
+      "category": "DATA_RETENTION_AND_RESILIENCE"
+    },
+    {
+      "id": "12f8a54f-d911-40f5-a081-828d01ec58c4",
+      "createTime": "2025-10-28T13:19:19Z",
+      "name": "Data loss through encryption key deletion",
+      "description": "Deleting an encryption key (such as a KMS customer managed key or CloudHSM key) permanently renders all data encrypted with that key inaccessible, because the key material required for decryption no longer exists.",
+      "category": "DATA_RETENTION_AND_RESILIENCE"
+    },
+    {
+      "id": "26795ac3-4214-4d7a-8f89-5423851b43e8",
+      "createTime": "2025-10-24T19:54:12Z",
+      "name": "Data loss through inaccessible encryption key",
+      "description": "Data can be encrypted with key material that the data owner does not control, such as a cross-account KMS key, imported key material, or an external key store. If the data owner loses access to the key, the encrypted data may become permanently inaccessible.",
+      "category": "DATA_RETENTION_AND_RESILIENCE"
+    },
+    {
+      "id": "2780ceca-53ca-4264-a33b-7eaecf08863b",
+      "createTime": "2025-11-12T15:05:39Z",
+      "name": "Flawed authentication model problem",
+      "description": "An authentication or authorization mechanism you define that contains implementation errors (such as SAML signature validation gaps, JWT algorithm confusion, or overly permissive trust policies) can be used by a threat actor to gain unauthorized access to the AWS environment.",
+      "category": "PERMISSIONS_AND_IDENTITY"
+    },
+    {
+      "id": "29023478-af56-4003-b329-679ec57b7890",
+      "createTime": "2025-10-21T18:40:45Z",
+      "name": "Limited encryption governance with AWS owned or managed KMS keys",
+      "description": "An AWS resource encrypted with an AWS owned or AWS managed KMS key limits your ability to control the key lifecycle and customize key policies. With AWS owned keys it also limits your ability to audit key usage through CloudTrail. Full control of these capabilities is available only with customer managed keys.",
+      "category": "ENCRYPTION"
+    },
+    {
+      "id": "b39c7580-c562-4948-baf9-825e20fdd77b",
+      "createTime": "2025-11-11T20:17:17Z",
+      "name": "Log data destruction through logging resource deletion",
+      "description": "Deleting a dedicated logging resource that serves as the primary store for audit trails, log entries, or monitoring data permanently destroys the log data it contains.",
+      "category": "LOGGING"
+    },
+    {
+      "id": "d24ef03d-0580-4369-acad-0013230d6396",
+      "createTime": "2025-11-11T19:27:27Z",
+      "name": "Logging disablement",
+      "description": "Logging configurations on AWS resources can be disabled through modification API operations, stopping the generation of new log entries and creating a gap in security visibility for subsequent activities.",
+      "category": "LOGGING"
+    },
+    {
+      "id": "18367f5a-4a43-4a0f-9810-d1bf864cdd24",
+      "createTime": "2026-04-17T00:00:00Z",
+      "name": "Monitoring disablement",
+      "description": "Enhanced monitoring and detailed metrics configurations on AWS resources can be disabled through modification API operations, reducing the ability to detect anomalous resource behavior such as cryptomining, unusual query patterns, or resource misuse.",
+      "category": "MONITORING_AND_METRICS"
+    },
+    {
+      "id": "51ea715a-033b-4b39-8180-8835698a9118",
+      "createTime": "2026-04-21T00:00:00Z",
+      "name": "CloudWatch log tampering",
+      "description": "CloudWatch log entries can be deleted or made inaccessible by modifying log group retention policies, deleting log groups, or deleting log streams.",
+      "category": "LOGGING"
+    },
+    {
+      "id": "d4fb5a6b-6821-4ef0-bffd-90bdacff2409",
+      "createTime": "2025-11-12T16:44:03Z",
+      "name": "Ungoverned AI data processing without opt-out policy",
+      "description": "Content submitted to AWS AI services may be used for service improvement, creating ungoverned processing and storage of potentially sensitive data outside your control.",
+      "category": "PERMISSIONS_AND_IDENTITY"
+    },
+    {
+      "id": "b47c4676-64e7-4dfe-b944-508035ef6210",
+      "createTime": "2025-11-11T19:41:56Z",
+      "name": "Defense evasion through unconfigured logging",
+      "description": "AWS resources with optional logging capabilities that have never been enabled allow principals to interact with the resource without generating activity records, creating blind spots in security monitoring from the time of resource creation.",
+      "category": "LOGGING"
+    },
+    {
+      "id": "12167a38-3f24-4510-8a62-29c0521f4e98",
+      "createTime": "2025-10-28T02:09:13Z",
+      "name": "Data inaccessibility through resource-based policy lockout",
+      "description": "Modifying a resource-based policy to remove all principals’ access renders the governed resource unmanageable, effectively making the data it protects inaccessible without deleting the resource itself.",
+      "category": "PERMISSIONS_AND_IDENTITY"
+    },
+    {
+      "id": "6679ff32-c0e5-4f08-9bf0-e785ab2ce430",
+      "createTime": "2025-10-24T15:07:46Z",
+      "name": "Lateral movement through permissive network rules",
+      "description": "A threat actor who controls a VPC-connected resource can move laterally through overly permissive network rules (security groups, network ACLs) to interact with other resources in the VPC.",
+      "category": "NETWORK"
+    },
+    {
+      "id": "6c956efc-9ed9-487a-97ac-da3b154570b7",
+      "createTime": "2026-07-09T00:00:00Z",
+      "name": "Network exposure through overly-permissive inbound security group rules",
+      "description": "A threat actor with network reachability to a resource can reach services and administrative ports that should be restricted. Overly permissive inbound security group rules (unrestricted source ranges such as 0.0.0.0/0 or ::/0, overly broad port ranges, or all protocols) enable this access.",
+      "category": "NETWORK"
+    },
+    {
+      "id": "e1277a0c-00f6-479e-a30b-ab934f9db7d3",
+      "createTime": "2026-07-09T00:00:00Z",
+      "name": "Data exfiltration through overly-permissive outbound security group rules",
+      "description": "A threat actor who controls a resource can use overly permissive outbound security group rules that permit traffic to unrestricted destination ranges (0.0.0.0/0 or ::/0) to interact with ungoverned network destinations from the resource.",
+      "category": "NETWORK"
+    },
+    {
+      "id": "0cf6b1bb-06f9-4661-ae24-6511b9eb5013",
+      "createTime": "2025-11-11T23:05:48Z",
+      "name": "Service disruption through resource deletion",
+      "description": "Deleting an AWS resource that provides a service capability or infrastructure function causes denial of service to applications and users that depend on it.",
+      "category": "AVAILABILITY"
+    },
+    {
+      "id": "43e01b4c-53f2-4ba1-a5a8-b4edbdb9e7dd",
+      "createTime": "2025-10-21T19:39:58Z",
+      "name": "Service disruption from single availability zone dependency",
+      "description": "An AWS resource deployed in a single Availability Zone becomes unreachable during an AZ-level outage, creating a single point of failure that can cause service disruption.",
+      "category": "AVAILABILITY"
+    },
+    {
+      "id": "ef0ac04c-5507-45a6-855d-c3cecc5b3163",
+      "createTime": "2025-10-21T19:54:36Z",
+      "name": "System capacity exhaustion",
+      "description": "An AWS resource that provisions a data-plane network interface or endpoint in a subnet you control can be overwhelmed by request volume that exceeds its processing capacity or available network bandwidth, causing denial of service to legitimate users.",
+      "category": "AVAILABILITY"
+    },
+    {
+      "id": "8e50f936-ed20-42f9-bbf9-a60235103d37",
+      "createTime": "2025-10-28T14:20:28Z",
+      "name": "Premature data deletion through retention policy modification",
+      "description": "Reducing data retention thresholds (lifecycle policies, TTL settings, backup retention periods) causes existing data to be automatically deleted sooner than required, potentially violating compliance requirements.",
+      "category": "DATA_RETENTION_AND_RESILIENCE"
+    },
+    {
+      "id": "1457e8e1-1e3c-4d9d-a1f3-c5ea9dc6ba00",
+      "createTime": "2025-11-11T19:04:40Z",
+      "name": "Ungoverned network traffic from non-VPC resources",
+      "description": "AWS resources with network communication capabilities that are deployed without VPC attachment can send and receive traffic outside the network controls that a VPC configuration would enforce, such as firewalls and traffic inspection.",
+      "category": "NETWORK"
+    },
+    {
+      "id": "ee6e01c1-e379-4940-8452-63714e02a4d9",
+      "createTime": "2026-07-07T00:00:00Z",
+      "name": "Uncontrolled internet egress through public-subnet routing",
+      "description": "A VPC-attached resource placed in a public subnet (a subnet whose route table has a route to an internet gateway) can send outbound traffic directly to the public internet, without the egress controls that private subnet placement would keep in the path, such as NAT-based inspection, egress firewalls, and traffic monitoring.",
+      "category": "NETWORK"
+    },
+    {
+      "id": "38c18d5c-1705-4637-a39d-2f84f45d66b4",
+      "createTime": "2025-10-21T14:18:54Z",
+      "name": "Data exposure from missing encryption at rest",
+      "description": "An AWS resource that supports optional encryption at rest can be created or modified without encryption enabled, leaving the data it stores in plaintext and removing the layer of protection that encryption at rest provides.",
+      "category": "ENCRYPTION"
+    },
+    {
+      "id": "2f091560-8353-43e6-aff6-adca00e09506",
+      "createTime": "2025-09-24T13:49:34Z",
+      "name": "Unintended public resource access",
+      "description": "An AWS resource configured to allow public access can be accessed by any actor who discovers it, including unauthenticated users or any authenticated AWS account holder.",
+      "category": "PERMISSIONS_AND_IDENTITY"
+    },
+    {
+      "id": "274ce981-ff11-45a1-8609-291d91ac51d3",
+      "createTime": "2025-10-22T15:01:13Z",
+      "name": "Resource missing required tags",
+      "description": "An AWS resource created or modified without required tags escapes tag-based governance controls, including ownership attribution, cost allocation, and compliance inventory.",
+      "category": "TAGGING"
+    },
+    {
+      "id": "8ec97f4a-e477-4873-842b-ec8f356c9c05",
+      "createTime": "2025-11-12T00:06:57Z",
+      "name": "Vulnerable identity provider problem",
+      "description": "An identity provider with security weaknesses (such as incomplete SAML signature validation, token replay susceptibility, or exposed metadata endpoints) can be used by a threat actor to gain unauthorized access to AWS resources.",
+      "category": "PERMISSIONS_AND_IDENTITY"
+    },
+    {
+      "id": "c583d067-7740-47f1-a482-3ed617c1ccb0",
+      "createTime": "2025-11-12T17:57:19Z",
+      "name": "Weak authentication problem",
+      "description": "An AWS resource that supports an inherently weak authentication mechanism (such as default credentials, HTTP basic authentication, plaintext password transmission, or trust of an unverified client-asserted identity) can have that weak mechanism used by a threat actor to gain unauthorized access to the resource.",
+      "category": "PERMISSIONS_AND_IDENTITY"
+    },
+    {
+      "id": "2f372385-34e6-4037-a054-32b3e8a424ea",
+      "createTime": "2025-11-20T16:32:25Z",
+      "name": "Defense evasion through unconfigured enhanced monitoring",
+      "description": "An AWS resource that supports enhanced monitoring capabilities can be created or configured without these capabilities enabled, reducing the ability to detect anomalous resource behavior.",
+      "category": "MONITORING_AND_METRICS"
+    },
+    {
+      "id": "5c6db911-927d-4eb9-8bb2-b6b9b8e1bd2a",
+      "createTime": "2025-12-16T18:19:03Z",
+      "name": "Unauthenticated access from connected networks",
+      "description": "An AWS resource deployed in a VPC that does not require authentication for data plane operations can be accessed by any actor with network connectivity to the resource.",
+      "category": "PERMISSIONS_AND_IDENTITY"
+    },
+    {
+      "id": "9183b960-20eb-4c17-b7d5-7830e0f1c326",
+      "createTime": "2025-12-18T16:16:36Z",
+      "name": "Public subnet resource exposure",
+      "description": "An AWS resource placed in a public subnet may be directly reachable from ungoverned networks, regardless of whether the resource was intended to be publicly accessible.",
+      "category": "NETWORK"
+    },
+    {
+      "id": "d433d6a3-5930-4303-a6b5-a24bfd479d19",
+      "createTime": "2026-08-02T00:00:00Z",
+      "name": "Unauthorized data access through service principal presigned URL",
+      "description": "An IAM principal with permissions to generate an Amazon S3 presigned URL signed by a service principal can use the URL to read or write data in a service-owned resource from an unexpected network, because API calls signed with service principal credentials are not subject to your IAM policies.",
+      "category": "PERMISSIONS_AND_IDENTITY"
+    }
+  ]
+}

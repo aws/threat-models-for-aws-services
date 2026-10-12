@@ -1,0 +1,1533 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "AlternativeConditionKey": {
+      "additionalProperties": false,
+      "description": "A condition key that can be used instead of the selected key.\n\nAn alternative achieves the same mitigation, often at a different trust-boundary granularity. It replaces the selected key in the statement and is never combined with it.",
+      "properties": {
+        "key": {
+          "description": "The alternative condition key, for example 'aws:SourceVpc'.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "key"
+      ],
+      "title": "AlternativeConditionKey",
+      "type": "object"
+    },
+    "AnalysisType": {
+      "description": "Which types of analysis were performed for an API operation.\n\nAn operation may carry more than one analysis type.\n\n- DOCUMENTATION: analysis of public service documentation and its service model.\n- DATA_PERIMETER: analysis against data perimeter control objectives.",
+      "enum": [
+        "DOCUMENTATION",
+        "DATA_PERIMETER"
+      ],
+      "title": "AnalysisType",
+      "type": "string"
+    },
+    "AuthorizationPolicy": {
+      "additionalProperties": false,
+      "description": "Implementation guide for an authorization policy.\n\nCovers service control policies, resource control policies, and resource-based policies; the policy type is given by the implementation's implementationType. For a resource-based policy, governedResourceType names the resource the policy attaches to.",
+      "properties": {
+        "governedIamPermissions": {
+          "default": [],
+          "description": "The statement groups of the policy.",
+          "items": {
+            "$ref": "#/$defs/GovernedIamPermission"
+          },
+          "type": "array"
+        },
+        "governedResourceType": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "For a resource-based policy, the resource type the policy attaches to in 'AWS::Service::Resource' form, for example 'AWS::S3::Bucket'. Absent for service control and resource control policies, and when the attachment point cannot be determined."
+        }
+      },
+      "title": "AuthorizationPolicy",
+      "type": "object"
+    },
+    "CloudFormationHook": {
+      "additionalProperties": false,
+      "description": "Implementation guide for a CloudFormation hook.\n\ngovernedResourceProperties names the template properties the hook evaluates. governedApiOperations, when present, records the API calls the hook function makes to resolve a fact about a resource the template references; a Lambda-backed hook runs your code under its own execution role, so describe and read calls are available to it. It is empty when the template alone is enough.",
+      "properties": {
+        "governedResourceProperties": {
+          "default": [],
+          "description": "For each CloudFormation resource type, the template properties the hook evaluates.",
+          "items": {
+            "$ref": "#/$defs/GovernedCfnResourceProperty"
+          },
+          "type": "array"
+        },
+        "governedApiOperations": {
+          "default": [],
+          "description": "Resolution steps for facts about referenced resources: the API operations the hook function calls, ordered first to last. Empty when the hook evaluates only the resource's own properties.",
+          "items": {
+            "$ref": "#/$defs/GovernedApiOperation"
+          },
+          "type": "array"
+        }
+      },
+      "title": "CloudFormationHook",
+      "type": "object"
+    },
+    "CloudTrailEvent": {
+      "additionalProperties": false,
+      "description": "Implementation guide for a detective control based on AWS CloudTrail events.\n\nThe CloudTrail event category (management, data, or network activity) is given by the implementation's implementationType.",
+      "properties": {
+        "monitoredOperations": {
+          "default": [],
+          "description": "The API operations to monitor.",
+          "items": {
+            "$ref": "#/$defs/MonitoredApiOperation"
+          },
+          "type": "array"
+        }
+      },
+      "title": "CloudTrailEvent",
+      "type": "object"
+    },
+    "ConfigRule": {
+      "additionalProperties": false,
+      "description": "Implementation guide for an AWS Config rule.\n\nA change-triggered rule evaluates the properties in governedConfigurationItemProperties when the configuration item changes. A periodic rule evaluates on a schedule by calling the API operations in governedApiOperations.",
+      "properties": {
+        "ruleType": {
+          "$ref": "#/$defs/ConfigRuleType",
+          "description": "How the rule is triggered."
+        },
+        "governedConfigurationItemProperties": {
+          "default": [],
+          "description": "For each AWS Config resource type, the configuration item properties a change-triggered rule evaluates.",
+          "items": {
+            "$ref": "#/$defs/GovernedConfigurationItemProperty"
+          },
+          "type": "array"
+        },
+        "governedApiOperations": {
+          "default": [],
+          "description": "The evaluation chain of a periodic rule: the API operations, ordered first to last, that fetch the state the rule checks.",
+          "items": {
+            "$ref": "#/$defs/GovernedApiOperation"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "ruleType"
+      ],
+      "title": "ConfigRule",
+      "type": "object"
+    },
+    "ConfigRuleType": {
+      "description": "How an AWS Config rule is triggered.\n\n- CHANGE_TRIGGERED: the rule evaluates when the configuration item changes.\n- PERIODIC: the rule evaluates on a schedule by calling AWS APIs.",
+      "enum": [
+        "PERIODIC",
+        "CHANGE_TRIGGERED"
+      ],
+      "title": "ConfigRuleType",
+      "type": "string"
+    },
+    "ContextType": {
+      "description": "Classification of a supplemental context on a published object.\n\n- SCOPING: for a mitigation, the capability the mitigation goal governs on the entity and the objective of governing it; for a threat, the exposure the threat's mapped mitigations address; for an implementation, how it achieves a mitigation.\n- DATA_PERIMETER: observations and guidance derived from analysis against data perimeter control objectives.\n- REFERENCE: general guidance and documentation links for this class of mitigation, threat, or implementation, shared across services.",
+      "enum": [
+        "SCOPING",
+        "DATA_PERIMETER",
+        "REFERENCE"
+      ],
+      "title": "ContextType",
+      "type": "string"
+    },
+    "ControlBehavior": {
+      "description": "Control behavior classifications from the AWS Control Catalog.\n\nDIRECTIVE extends the Control Catalog set for guidance controls that direct a behavior rather than preventing, detecting, or proactively enforcing it.",
+      "enum": [
+        "PREVENTIVE",
+        "DETECTIVE",
+        "PROACTIVE",
+        "DIRECTIVE"
+      ],
+      "title": "ControlBehavior",
+      "type": "string"
+    },
+    "Entity": {
+      "additionalProperties": false,
+      "description": "An entity of the service, for example FileSystem or AccessPoint.\n\nAn entity is a resource type or other addressable construct that the service's API operations create, configure, or act on. Those operations are listed in mappings as OPERATION entries.",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "name": {
+          "description": "The entity name, for example 'FileSystem'.",
+          "type": "string"
+        },
+        "entityCategory": {
+          "$ref": "#/$defs/EntityCategory",
+          "description": "The entity's primary functional role."
+        },
+        "entitySubCategories": {
+          "default": [],
+          "description": "Characteristic traits refining the entity's category.",
+          "items": {
+            "$ref": "#/$defs/EntitySubCategory"
+          },
+          "type": "array"
+        },
+        "overview": {
+          "description": "Overview of the entity: what it represents and does within the service, described functionally.",
+          "type": "string"
+        },
+        "identifiers": {
+          "$ref": "#/$defs/EntityIdentifiers",
+          "description": "Identifiers for this entity across AWS systems: IAM resource ARN patterns, CloudFormation resource types, and AWS Config resource types. Each list is empty when none apply."
+        },
+        "mappings": {
+          "default": [],
+          "description": "Relationships to operations and other objects.",
+          "items": {
+            "$ref": "#/$defs/Mapping"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "entityCategory",
+        "overview",
+        "identifiers"
+      ],
+      "title": "Entity",
+      "type": "object"
+    },
+    "EntityCategory": {
+      "description": "The primary functional role of a resource entity within its AWS service. Each entity has exactly one category; OTHER indicates no listed category fits.\n\nValues:\n- DATA_STORE: Holds or persists customer data at rest (bucket, table, cluster, file system, volume, repository, snapshot or backup copy).\n- COMPUTE_RESOURCE: Executes customer code or workloads (instance, function, container task, notebook, environment runtime).\n- CONFIGURATION: A settings object, template, definition, or profile that shapes another resource's behavior.\n- IDENTITY: A principal or identity-management construct: user, role, group, member, session, user pool, identity provider, directory.\n- ACCESS_CONTROL: An authorization artifact or access-control construct: resource policy, permission set, grant, ACL, policy store.\n- NETWORK: A networking construct controlling connectivity or exposure (VPC endpoint, subnet, security group, listener, gateway attachment).\n- INTEGRATION: Connects the service to another service or moves data across a service boundary (stream, subscription, event rule, destination, connector).\n- CRYPTOGRAPHIC_MATERIAL: Keys, certificates, secrets, tokens, or credentials used for encryption, signing, or authentication.\n- MONITORING: Produces, stores, or routes observability, audit, or analysis output (trail, log delivery, alarm, finding, recommendation, report).\n- JOB_OR_WORKFLOW: An asynchronous task, job, pipeline, or workflow execution with a lifecycle.\n- AI_RESOURCE: A machine-learning or generative-AI construct (model, model version, agent, knowledge base, flow, inference profile).\n- RESOURCE_GROUPING: An organizational container that scopes, groups, or namespaces other resources (domain, application, workspace, project, registry, namespace).\n- OTHER: No listed category fits.",
+      "enum": [
+        "DATA_STORE",
+        "COMPUTE_RESOURCE",
+        "CONFIGURATION",
+        "IDENTITY",
+        "ACCESS_CONTROL",
+        "NETWORK",
+        "INTEGRATION",
+        "CRYPTOGRAPHIC_MATERIAL",
+        "MONITORING",
+        "JOB_OR_WORKFLOW",
+        "AI_RESOURCE",
+        "RESOURCE_GROUPING",
+        "OTHER"
+      ],
+      "title": "EntityCategory",
+      "type": "string"
+    },
+    "EntityIdentifiers": {
+      "additionalProperties": false,
+      "description": "Identifiers for an entity across AWS systems.",
+      "properties": {
+        "iamResourceArns": {
+          "default": [],
+          "description": "IAM resource ARN patterns for the entity, for example 'arn:${Partition}:s3:::${BucketName}'. Empty when the entity has no IAM resource type.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "cfnResourceTypes": {
+          "default": [],
+          "description": "CloudFormation resource types for the entity, for example 'AWS::S3::Bucket'. Empty when none apply.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "configCiTypes": {
+          "default": [],
+          "description": "AWS Config resource types for the entity, for example 'AWS::S3::Bucket'. Empty when none apply.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "title": "EntityIdentifiers",
+      "type": "object"
+    },
+    "EntitySubCategory": {
+      "description": "Characteristic traits refining an entity's category; an entity may carry zero or more. Sub-categories describe what an entity is (its storage model, execution model, or architectural shape), not which security features it supports.\n\nValues:\n- SERVERLESS: No customer-managed capacity or instances; scales transparently.\n- CHILD_RESOURCE: Exists only under a parent entity.\n- EPHEMERAL: Short-lived by design (sessions, tokens, job runs).\n- MULTI_REGION: Spans or replicates across regions as a single logical resource.\n- RELATIONAL_DATABASE: SQL/transactional query engine over stored data.\n- NON_RELATIONAL_DATABASE: Key-value, document, or graph store with query capability.\n- OBJECT_STORAGE: Flat blob/object container.\n- BLOCK_STORAGE: Block-level volume storage.\n- FILE_STORAGE: File-system semantics over stored data.\n- CACHE: Accelerating or volatile copy of data.\n- MESSAGE_QUEUE: Point-to-point buffered message delivery.\n- EVENT_STREAM: Ordered, replayable event/record stream.\n- POINT_IN_TIME_COPY: A snapshot, backup, or recovery point of another resource's data.\n- ARTIFACT_REPOSITORY: Code, package, or image repository or registry.\n- FUNCTION_EXECUTION: Event-driven code execution unit.\n- CONTAINER_WORKLOAD: Containerized task or service execution.\n- VIRTUAL_MACHINE: Instance-based compute with an operating system.\n- ML_MODEL: A machine-learning model or model version/artifact.\n- AI_AGENT: An autonomous or orchestrating AI agent construct.\n- KNOWLEDGE_BASE: A retrieval corpus for AI workloads.\n- NETWORK_ENDPOINT: A network-addressable access/entry point (VPC endpoint, access point, API endpoint).\n- NETWORK_BOUNDARY: A segmentation/isolation construct (VPC, subnet, security group, firewall).\n- NETWORK_GATEWAY: Routes or bridges traffic between networks (gateway, peering, attachment).\n- TRAFFIC_DISTRIBUTION: Distributes or fronts traffic (load balancer, listener, CDN distribution).\n- NETWORK_ADDRESSING: A naming/addressing object (IP address, domain name, DNS record, hosted zone).\n- MANAGED_API: A customer-defined API surface (REST/HTTP/GraphQL API, stage).\n- EVENT_BUS: Routes events between producers and consumers (event bus/broker, event rule).\n- PUB_SUB_TOPIC: A fan-out publish/subscribe channel (SNS/IoT topic).\n- CONNECTOR: A managed binding to another service or external system (flow, connection, event source mapping).\n- DELIVERY_DESTINATION: A configured delivery target (subscription, destination, notification configuration).\n- SCHEDULED_TRIGGER: A time-based trigger (schedule, scheduled action).\n- PRINCIPAL: An authenticatable or assumable actor (user, role, group).\n- IDENTITY_PROVIDER: Issues or federates identities (user pool, IdP, directory).\n- ENCRYPTION_KEY: A key used for encryption or signing.\n- CERTIFICATE: An X.509/TLS certificate object.\n- SECRET_OR_CREDENTIAL: A stored secret, token, or credential.",
+      "enum": [
+        "SERVERLESS",
+        "CHILD_RESOURCE",
+        "EPHEMERAL",
+        "MULTI_REGION",
+        "RELATIONAL_DATABASE",
+        "NON_RELATIONAL_DATABASE",
+        "OBJECT_STORAGE",
+        "BLOCK_STORAGE",
+        "FILE_STORAGE",
+        "CACHE",
+        "MESSAGE_QUEUE",
+        "EVENT_STREAM",
+        "POINT_IN_TIME_COPY",
+        "ARTIFACT_REPOSITORY",
+        "FUNCTION_EXECUTION",
+        "CONTAINER_WORKLOAD",
+        "VIRTUAL_MACHINE",
+        "ML_MODEL",
+        "AI_AGENT",
+        "KNOWLEDGE_BASE",
+        "NETWORK_ENDPOINT",
+        "NETWORK_BOUNDARY",
+        "NETWORK_GATEWAY",
+        "TRAFFIC_DISTRIBUTION",
+        "NETWORK_ADDRESSING",
+        "MANAGED_API",
+        "EVENT_BUS",
+        "PUB_SUB_TOPIC",
+        "CONNECTOR",
+        "DELIVERY_DESTINATION",
+        "SCHEDULED_TRIGGER",
+        "PRINCIPAL",
+        "IDENTITY_PROVIDER",
+        "ENCRYPTION_KEY",
+        "CERTIFICATE",
+        "SECRET_OR_CREDENTIAL"
+      ],
+      "title": "EntitySubCategory",
+      "type": "string"
+    },
+    "Framework": {
+      "additionalProperties": false,
+      "description": "The external security framework a mapping refers to.",
+      "properties": {
+        "name": {
+          "description": "The framework name, for example 'MITRE ATT&CK'.",
+          "type": "string"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The framework version the mapping was made against, for example '18.1'. Absent when the framework does not publish versions."
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "Framework",
+      "type": "object"
+    },
+    "GovernedAction": {
+      "additionalProperties": false,
+      "description": "One IAM action a policy statement applies to.",
+      "properties": {
+        "action": {
+          "description": "The IAM action in 'prefix:ActionName' form, with the '*' and '?' wildcards allowed, for example 's3:GetObject' or 'dsql:*'; or the bare '*' for every action.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "action"
+      ],
+      "title": "GovernedAction",
+      "type": "object"
+    },
+    "GovernedApiOperation": {
+      "additionalProperties": false,
+      "description": "One API call in an evaluation or resolution chain.\n\nEntries are ordered from the first call to the last. Each names the operation to call, the request parameters to send, and the response properties to check. Response values from one call feed the next call's request parameters. In a CloudFormation hook's chain, the first call's request parameter is fed by a template property value such as the referenced resource's id or ARN.",
+      "properties": {
+        "service": {
+          "description": "AWS service namespace, for example 's3' or 'ec2'.",
+          "type": "string"
+        },
+        "operation": {
+          "description": "API operation name, for example 'DescribeSubnets'.",
+          "type": "string"
+        },
+        "requestParameters": {
+          "default": [],
+          "description": "Parameters sent in the request, each a JSONPath with an optional expected value, for example '$.SubnetIds'.",
+          "items": {
+            "$ref": "#/$defs/GovernedApiParameter"
+          },
+          "type": "array"
+        },
+        "responseParameters": {
+          "default": [],
+          "description": "Properties checked in the response, each a JSONPath with an optional expected value, for example '$.Subnets[*].MapPublicIpOnLaunch'.",
+          "items": {
+            "$ref": "#/$defs/GovernedApiParameter"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "service",
+        "operation"
+      ],
+      "title": "GovernedApiOperation",
+      "type": "object"
+    },
+    "GovernedApiParameter": {
+      "additionalProperties": false,
+      "description": "A JSONPath reference to an API request or response parameter, with an optional expected value.",
+      "properties": {
+        "path": {
+          "description": "JSONPath expression for the property, for example '$.Encrypted' or '$.configuration.ServerSideEncryptionConfiguration'.",
+          "type": "string"
+        },
+        "expectedValue": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The value the parameter is expected to hold, when it is a well-known service-defined constant such as an IAM Access Analyzer issue code. Absent when the value is specific to your environment, or when the check is only whether the parameter is present."
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "title": "GovernedApiParameter",
+      "type": "object"
+    },
+    "GovernedCfnResourceProperty": {
+      "additionalProperties": false,
+      "description": "The properties of one CloudFormation resource type that a hook evaluates.",
+      "properties": {
+        "resourceType": {
+          "description": "The CloudFormation resource type, for example 'AWS::S3::Bucket'.",
+          "type": "string"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PropertyPath"
+          },
+          "default": [],
+          "description": "JSONPaths of the resource properties that decide whether the resource meets the mitigation, for example '$.ServerSideEncryptionConfiguration'."
+        }
+      },
+      "required": [
+        "resourceType"
+      ],
+      "title": "GovernedCfnResourceProperty",
+      "type": "object"
+    },
+    "GovernedConditionKey": {
+      "additionalProperties": false,
+      "description": "One condition key that scopes when a policy statement matches.\n\nAll condition keys in one statement group apply together (logical AND) in the statement's Condition block.",
+      "properties": {
+        "key": {
+          "description": "The condition key, for example 'aws:PrincipalOrgID'.",
+          "type": "string"
+        },
+        "alternatives": {
+          "default": [],
+          "description": "Condition keys that can be used instead of this key to achieve the same mitigation. Empty when no alternative is identified.",
+          "items": {
+            "$ref": "#/$defs/AlternativeConditionKey"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "key"
+      ],
+      "title": "GovernedConditionKey",
+      "type": "object"
+    },
+    "GovernedConfigurationItemProperty": {
+      "additionalProperties": false,
+      "description": "The configuration item properties of one AWS Config resource type that a change-triggered rule evaluates.",
+      "properties": {
+        "configurationItem": {
+          "description": "The AWS Config resource type of the configuration item, for example 'AWS::S3::Bucket'.",
+          "type": "string"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PropertyPath"
+          },
+          "default": [],
+          "description": "JSONPaths on the recorded configuration item that decide compliance, for example '$.configuration.ServerSideEncryptionConfiguration'."
+        }
+      },
+      "required": [
+        "configurationItem"
+      ],
+      "title": "GovernedConfigurationItemProperty",
+      "type": "object"
+    },
+    "GovernedIamPermission": {
+      "additionalProperties": false,
+      "description": "One statement group of an authorization policy.\n\nA statement group is the IAM actions, the resources they apply to, and the condition keys that scope when the statement matches. All statement groups of one implementation together form a single policy.",
+      "properties": {
+        "actions": {
+          "description": "The IAM actions the statement applies to.",
+          "items": {
+            "$ref": "#/$defs/GovernedAction"
+          },
+          "type": "array"
+        },
+        "resources": {
+          "description": "The resources the statement applies to.",
+          "items": {
+            "$ref": "#/$defs/GovernedResource"
+          },
+          "type": "array"
+        },
+        "conditionKeys": {
+          "default": [],
+          "description": "The condition keys that scope when the statement matches; keys in one group apply together.",
+          "items": {
+            "$ref": "#/$defs/GovernedConditionKey"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "actions",
+        "resources"
+      ],
+      "title": "GovernedIamPermission",
+      "type": "object"
+    },
+    "GovernedResource": {
+      "additionalProperties": false,
+      "description": "One resource a policy statement applies to.",
+      "properties": {
+        "resource": {
+          "description": "The resource ARN or ARN pattern the statement applies to, or '*' for every resource the statement's actions apply to.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "resource"
+      ],
+      "title": "GovernedResource",
+      "type": "object"
+    },
+    "GovernedTrustPolicyPermission": {
+      "additionalProperties": false,
+      "description": "One statement group of an IAM role's trust policy.\n\nA statement group is the service principal that may assume the role, the sts:AssumeRole actions it may use, and the condition keys that scope when the statement matches. The role itself is the resource, so no resources are listed. All statement groups of one implementation together form a single trust policy.",
+      "properties": {
+        "principal": {
+          "$ref": "#/$defs/TrustedPrincipal",
+          "description": "The service principal this statement lets assume the role."
+        },
+        "actions": {
+          "description": "The sts:AssumeRole actions the statement applies to.",
+          "items": {
+            "$ref": "#/$defs/GovernedAction"
+          },
+          "type": "array"
+        },
+        "conditionKeys": {
+          "default": [],
+          "description": "The condition keys that scope when the statement matches; keys in one group apply together.",
+          "items": {
+            "$ref": "#/$defs/GovernedConditionKey"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "principal",
+        "actions"
+      ],
+      "title": "GovernedTrustPolicyPermission",
+      "type": "object"
+    },
+    "Guidance": {
+      "additionalProperties": false,
+      "description": "Implementation guide for a directive control: a recommendation that is not enforced by a policy or rule.",
+      "properties": {
+        "description": {
+          "description": "The recommendation, as prose.",
+          "type": "string"
+        },
+        "links": {
+          "default": [],
+          "description": "Documentation links supporting the recommendation.",
+          "items": {
+            "$ref": "#/$defs/Link"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "description"
+      ],
+      "title": "Guidance",
+      "type": "object"
+    },
+    "Implementation": {
+      "additionalProperties": false,
+      "description": "An implementation describing how to achieve a mitigation.\n\nExactly one of implementationGuide (a custom control to build) or managedImplementation (a pre-built AWS managed control) is set.",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "alias": {
+          "description": "Human-readable alias, for example 'Implementation.EFS.FileSystem.1' for an implementation guide or 'ManagedControl.EFS.FileSystem.1' for a managed control.",
+          "type": "string"
+        },
+        "behavior": {
+          "$ref": "#/$defs/ControlBehavior",
+          "description": "Control behavior classification: PREVENTIVE, DETECTIVE, PROACTIVE, or DIRECTIVE."
+        },
+        "implementationType": {
+          "$ref": "#/$defs/ImplementationType",
+          "description": "The control mechanism, for example a service control policy, an AWS Config rule, a CloudFormation hook, or guidance."
+        },
+        "implementationGuide": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImplementationGuideDetail"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The guide for building a custom control. Set for custom implementations."
+        },
+        "implementationContext": {
+          "default": [],
+          "description": "Supplemental context for the implementation: a concise SCOPING statement per mitigation it achieves and, where applicable, DATA_PERIMETER or REFERENCE entries with prose and URL references.",
+          "items": {
+            "$ref": "#/$defs/ImplementationContext"
+          },
+          "type": "array"
+        },
+        "managedImplementation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ManagedImplementation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The pre-built AWS managed control. Set for managed implementations."
+        },
+        "mappings": {
+          "default": [],
+          "description": "Relationships to the entity, mitigations, and frameworks.",
+          "items": {
+            "$ref": "#/$defs/Mapping"
+          },
+          "type": "array"
+        },
+        "createTime": {
+          "description": "UTC timestamp when this implementation was first published.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "lastUpdateTime": {
+          "description": "UTC timestamp when this implementation was last updated.",
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "alias",
+        "behavior",
+        "implementationType",
+        "createTime",
+        "lastUpdateTime"
+      ],
+      "title": "Implementation",
+      "type": "object"
+    },
+    "ImplementationContext": {
+      "additionalProperties": false,
+      "description": "A supplemental context on an implementation.\n\nmitigationId identifies the mitigation the entry explains the implementation for. It is present on SCOPING entries and on DATA_PERIMETER entries that extend a mitigation's guide; it is absent on REFERENCE entries, which are not specific to one mitigation, and on DATA_PERIMETER entries that describe the whole implementation.",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/ContextType"
+        },
+        "context": {
+          "description": "The explanatory statement.",
+          "type": "string"
+        },
+        "links": {
+          "default": [],
+          "description": "URL references supporting the statement.",
+          "items": {
+            "$ref": "#/$defs/Link"
+          },
+          "type": "array"
+        },
+        "mitigationId": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "type",
+        "context"
+      ],
+      "title": "ImplementationContext",
+      "type": "object"
+    },
+    "ImplementationGuideDetail": {
+      "additionalProperties": false,
+      "description": "The implementation guide for a custom control.\n\nExactly one field is set, matching the implementation's implementationType.",
+      "properties": {
+        "declarativePolicy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OrganizationsPolicy"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set for an AWS Organizations declarative policy."
+        },
+        "configRule": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ConfigRule"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set for an AWS Config rule."
+        },
+        "authorizationPolicy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AuthorizationPolicy"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set for a service control policy, resource control policy, or resource-based policy."
+        },
+        "roleTrustPolicy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RoleTrustPolicy"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set for an IAM role trust policy."
+        },
+        "cloudformationHook": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CloudFormationHook"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set for a CloudFormation hook."
+        },
+        "cloudtrailEvent": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CloudTrailEvent"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set for a CloudTrail event monitor."
+        },
+        "guidance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Guidance"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set for a directive control."
+        }
+      },
+      "title": "ImplementationGuideDetail",
+      "type": "object"
+    },
+    "ImplementationType": {
+      "description": "The mechanism a control is implemented with.\n\nMost values are the resource type identifiers the AWS Control Catalog uses for its Implementation.Type field. The remaining values identify mechanisms the Control Catalog has no type for:\n\n- AWS::*::*::RESOURCE_POLICY: a resource-based policy attached to the resource itself.\n- AWS::IAM::Role::TRUST_POLICY: the trust policy of an IAM role, the resource-based policy on the role that controls which principals may assume it.\n- AWS::CloudTrail::Trail::MANAGEMENT_EVENT: monitoring of control-plane API calls in CloudTrail management events.\n- AWS::CloudTrail::Trail::DATA_EVENT: monitoring of data-plane operations on a resource in CloudTrail data events.\n- AWS::CloudTrail::Trail::NETWORK_ACTIVITY_EVENT: monitoring of API calls traversing a VPC endpoint in CloudTrail network activity events.\n- AWS::*::*::GUIDANCE: a directive control conveying a recommendation that is not enforced by a policy or rule.",
+      "enum": [
+        "AWS::Organizations::Policy::SERVICE_CONTROL_POLICY",
+        "AWS::Organizations::Policy::RESOURCE_CONTROL_POLICY",
+        "AWS::*::*::RESOURCE_POLICY",
+        "AWS::IAM::Role::TRUST_POLICY",
+        "AWS::Organizations::Policy::DECLARATIVE_POLICY",
+        "AWS::Config::ConfigRule",
+        "AWS::CloudFormation::Type::HOOK",
+        "AWS::CloudTrail::Trail::MANAGEMENT_EVENT",
+        "AWS::CloudTrail::Trail::DATA_EVENT",
+        "AWS::CloudTrail::Trail::NETWORK_ACTIVITY_EVENT",
+        "AWS::*::*::GUIDANCE"
+      ],
+      "title": "ImplementationType",
+      "type": "string"
+    },
+    "Link": {
+      "additionalProperties": false,
+      "description": "A URL reference with a human-readable title.",
+      "properties": {
+        "href": {
+          "description": "The URL.",
+          "type": "string"
+        },
+        "title": {
+          "description": "A human-readable title for the link.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "href",
+        "title"
+      ],
+      "title": "Link",
+      "type": "object"
+    },
+    "ManagedImplementation": {
+      "additionalProperties": false,
+      "description": "A pre-built, AWS-managed control from the AWS Control Catalog.\n\nThe control's behavior and mechanism are the behavior and implementationType of the enclosing implementation.",
+      "properties": {
+        "arn": {
+          "description": "The ARN of the managed control.",
+          "type": "string"
+        },
+        "controlAliases": {
+          "default": [],
+          "description": "Control aliases from the Control Catalog API, for example 'CT.EFS.PR.1'.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "title": {
+          "description": "The control's title.",
+          "type": "string"
+        },
+        "description": {
+          "description": "The control's description.",
+          "type": "string"
+        },
+        "implementationIdentifier": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "A service-specific identifier for the control, assigned by the service that implements it: for example an AWS Config rule identifier or a Security Hub control identifier. Absent where the Control Catalog API surfaces no distinct identifier, such as some CloudFormation hook controls."
+        },
+        "source": {
+          "description": "The control catalog the control comes from.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "arn",
+        "title",
+        "description",
+        "source"
+      ],
+      "title": "ManagedImplementation",
+      "type": "object"
+    },
+    "Mapping": {
+      "additionalProperties": false,
+      "description": "A minimal reference linking one object to another within the release.\n\nThe type identifies the kind of object referenced and the id identifies it. For framework mappings, framework identifies the external framework and its version, and id is the item's identifier within that framework, for example 'T1485'.\n\nConsumers resolve the full object by looking up the id in the matching collection of the same release.",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/MappingType"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Identifier of the referenced object: a UUID for objects within this release, or the framework's own identifier for FRAMEWORK mappings."
+        },
+        "framework": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Framework"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The external framework and its version. Only present when type is FRAMEWORK."
+        }
+      },
+      "required": [
+        "type",
+        "id"
+      ],
+      "title": "Mapping",
+      "type": "object"
+    },
+    "MappingType": {
+      "description": "The kind of object a mapping points to.",
+      "enum": [
+        "ENTITY",
+        "OPERATION",
+        "MITIGATION_GOAL",
+        "POTENTIAL_THREAT",
+        "THREAT_IMPACT",
+        "FRAMEWORK",
+        "THREAT",
+        "MITIGATION",
+        "IMPLEMENTATION"
+      ],
+      "title": "MappingType",
+      "type": "string"
+    },
+    "Mitigation": {
+      "additionalProperties": false,
+      "description": "A concrete mitigation statement derived from a mitigation goal.\n\nThe request parameters that apply and verify the mitigation are grouped by service and operation.",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "alias": {
+          "description": "Human-readable alias, for example 'Mitigation.EFS.FileSystem.1'.",
+          "type": "string"
+        },
+        "statement": {
+          "description": "The mitigation statement.",
+          "type": "string"
+        },
+        "configurationRequestParameters": {
+          "default": [],
+          "description": "Parameters of create, update, and put operations that apply the mitigation, grouped by service and operation.",
+          "items": {
+            "$ref": "#/$defs/OperationParameterGroup"
+          },
+          "type": "array"
+        },
+        "verificationRequestParameters": {
+          "default": [],
+          "description": "Parameters of describe, get, and list operations that verify the mitigation is in place, grouped by service and operation.",
+          "items": {
+            "$ref": "#/$defs/OperationParameterGroup"
+          },
+          "type": "array"
+        },
+        "mitigationContext": {
+          "default": [],
+          "description": "Supplemental context: a concise SCOPING statement and, where applicable, REFERENCE entries. Each scoping statement names the capability the mitigation goal governs on the entity and the objective of governing it.",
+          "items": {
+            "$ref": "#/$defs/MitigationContext"
+          },
+          "type": "array"
+        },
+        "mappings": {
+          "default": [],
+          "description": "Relationships to the entity, mitigation goal, threats, implementations, and frameworks.",
+          "items": {
+            "$ref": "#/$defs/Mapping"
+          },
+          "type": "array"
+        },
+        "createTime": {
+          "description": "UTC timestamp when this mitigation was first published.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "lastUpdateTime": {
+          "description": "UTC timestamp when this mitigation was last updated.",
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "alias",
+        "statement",
+        "createTime",
+        "lastUpdateTime"
+      ],
+      "title": "Mitigation",
+      "type": "object"
+    },
+    "MitigationContext": {
+      "additionalProperties": false,
+      "description": "A supplemental context on a mitigation.\n\nmitigationGoalId identifies the mitigation goal the mitigation addresses. It is present on SCOPING entries and absent on DATA_PERIMETER and REFERENCE entries.",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/ContextType"
+        },
+        "context": {
+          "description": "The explanatory statement.",
+          "type": "string"
+        },
+        "links": {
+          "default": [],
+          "description": "URL references supporting the statement.",
+          "items": {
+            "$ref": "#/$defs/Link"
+          },
+          "type": "array"
+        },
+        "mitigationGoalId": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "type",
+        "context"
+      ],
+      "title": "MitigationContext",
+      "type": "object"
+    },
+    "MonitoredApiOperation": {
+      "additionalProperties": false,
+      "description": "An API operation to monitor in AWS CloudTrail.\n\nOnly the logged request is observed, so there is no response chain. The identity that made the call is a CloudTrail event field rather than a request parameter; the implementation's implementationContext describes it where relevant.",
+      "properties": {
+        "service": {
+          "description": "AWS service namespace, for example 's3' or 'lambda'.",
+          "type": "string"
+        },
+        "operation": {
+          "description": "API operation name, for example 'PutBucketPolicy'.",
+          "type": "string"
+        },
+        "requestParameters": {
+          "default": [],
+          "description": "Request parameters that narrow the monitored value, each a JSONPath with an optional expected value, for example '$.BucketName'. Empty when every call to the operation is monitored.",
+          "items": {
+            "$ref": "#/$defs/GovernedApiParameter"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "service",
+        "operation"
+      ],
+      "title": "MonitoredApiOperation",
+      "type": "object"
+    },
+    "NamespaceCategory": {
+      "description": "The AWS service category of a service, following the grouping used in the AWS 'Services by Category' overview. Each service has exactly one category; OTHER indicates no listed category fits.\n\nValues:\n- ANALYTICS: Analytics\n- APPLICATION_INTEGRATION: Application integration\n- BLOCKCHAIN: Blockchain\n- BUSINESS_APPLICATIONS: Business applications\n- CLOUD_FINANCIAL_MANAGEMENT: Cloud financial management\n- COMPUTE: Compute\n- CONTAINERS: Containers\n- CUSTOMER_ENABLEMENT: Customer enablement\n- DATABASES: Databases\n- DEVELOPER_TOOLS: Developer tools\n- END_USER_COMPUTING: End user computing\n- FRONT_END_WEB_AND_MOBILE: Front-end web and mobile\n- GAME_TECH: Game tech\n- INTERNET_OF_THINGS: Internet of Things (IoT)\n- MACHINE_LEARNING_AND_AI: Machine Learning (ML) and Artificial Intelligence (AI)\n- MANAGEMENT_AND_GOVERNANCE: Management and governance\n- MEDIA: Media\n- MIGRATION_AND_TRANSFER: Migration and transfer\n- NETWORKING_AND_CONTENT_DELIVERY: Networking and content delivery\n- QUANTUM_TECHNOLOGIES: Quantum technologies\n- SATELLITE: Satellite\n- SECURITY_IDENTITY_AND_COMPLIANCE: Security, identity, and compliance\n- STORAGE: Storage\n- OTHER: Other",
+      "enum": [
+        "ANALYTICS",
+        "APPLICATION_INTEGRATION",
+        "BLOCKCHAIN",
+        "BUSINESS_APPLICATIONS",
+        "CLOUD_FINANCIAL_MANAGEMENT",
+        "COMPUTE",
+        "CONTAINERS",
+        "CUSTOMER_ENABLEMENT",
+        "DATABASES",
+        "DEVELOPER_TOOLS",
+        "END_USER_COMPUTING",
+        "FRONT_END_WEB_AND_MOBILE",
+        "GAME_TECH",
+        "INTERNET_OF_THINGS",
+        "MACHINE_LEARNING_AND_AI",
+        "MANAGEMENT_AND_GOVERNANCE",
+        "MEDIA",
+        "MIGRATION_AND_TRANSFER",
+        "NETWORKING_AND_CONTENT_DELIVERY",
+        "QUANTUM_TECHNOLOGIES",
+        "SATELLITE",
+        "SECURITY_IDENTITY_AND_COMPLIANCE",
+        "STORAGE",
+        "OTHER"
+      ],
+      "title": "NamespaceCategory",
+      "type": "string"
+    },
+    "NamespaceIdentifiers": {
+      "additionalProperties": false,
+      "description": "Identifiers for the service across AWS systems.\n\nPrefix fields are lists with the primary prefix first; iam is always non-empty. Entries in cfn and config are fully qualified service prefixes, for example 'AWS::S3' and 'AWS::S3Express'.",
+      "properties": {
+        "iam": {
+          "description": "IAM service prefixes, primary first.",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "fullName": {
+          "description": "The full service name, for example 'Amazon Simple Storage Service'.",
+          "type": "string"
+        },
+        "shortName": {
+          "description": "The short service name, for example 'Amazon S3'.",
+          "type": "string"
+        },
+        "cfn": {
+          "default": [],
+          "description": "CloudFormation service prefixes. Empty when CloudFormation does not support the service.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "config": {
+          "default": [],
+          "description": "AWS Config service prefixes. Empty when AWS Config does not support the service.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "iam",
+        "fullName",
+        "shortName"
+      ],
+      "title": "NamespaceIdentifiers",
+      "type": "object"
+    },
+    "NamespaceMetadata": {
+      "additionalProperties": false,
+      "description": "Metadata about the AWS service the threat model covers.",
+      "properties": {
+        "name": {
+          "description": "The service namespace, for example 'efs'.",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "overview": {
+          "description": "Overview of the service: what it does and the problems it solves, described functionally.",
+          "type": "string"
+        },
+        "category": {
+          "$ref": "#/$defs/NamespaceCategory",
+          "description": "The AWS service category of this service."
+        },
+        "identifiers": {
+          "$ref": "#/$defs/NamespaceIdentifiers"
+        },
+        "useCases": {
+          "default": [],
+          "description": "Common customer scenarios for this service.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "relationshipToOtherNamespaces": {
+          "default": [],
+          "description": "Relationships to other AWS services.",
+          "items": {
+            "$ref": "#/$defs/NamespaceRelationship"
+          },
+          "type": "array"
+        },
+        "serviceModelUrl": {
+          "description": "URL of the published Smithy API model of the service that this threat model was derived from.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "id",
+        "overview",
+        "category",
+        "identifiers",
+        "serviceModelUrl"
+      ],
+      "title": "NamespaceMetadata",
+      "type": "object"
+    },
+    "NamespaceRelationship": {
+      "additionalProperties": false,
+      "description": "A relationship between this service and another AWS service.",
+      "properties": {
+        "namespace": {
+          "description": "The related service's namespace.",
+          "type": "string"
+        },
+        "relationship": {
+          "description": "How the two services relate.",
+          "type": "string"
+        },
+        "reference": {
+          "description": "A documentation reference for the relationship.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "namespace",
+        "relationship",
+        "reference"
+      ],
+      "title": "NamespaceRelationship",
+      "type": "object"
+    },
+    "OperationAnalysis": {
+      "additionalProperties": false,
+      "description": "An API operation and the types of analysis performed for it.\n\nOperations are first-class objects so that entities can cross-reference them through mappings.",
+      "properties": {
+        "id": {
+          "description": "Deterministic UUID5 derived from the service namespace and operation name, stable across publications.",
+          "format": "uuid",
+          "type": "string"
+        },
+        "name": {
+          "description": "API operation name, for example 'CreateFileSystem'.",
+          "type": "string"
+        },
+        "analyses": {
+          "default": [],
+          "description": "Types of analysis that have been performed for this operation.",
+          "items": {
+            "$ref": "#/$defs/AnalysisType"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "OperationAnalysis",
+      "type": "object"
+    },
+    "OperationParameterGroup": {
+      "additionalProperties": false,
+      "description": "The parameters of one API operation that a mitigation or threat refers to.\n\nAll paths for the same service and operation are grouped in one entry. A path of '$.' refers to the operation as a whole rather than to a specific parameter.",
+      "properties": {
+        "service": {
+          "description": "AWS service namespace, for example 'efs' or 's3'.",
+          "type": "string"
+        },
+        "operation": {
+          "description": "API operation name, for example 'CreateFileSystem'.",
+          "type": "string"
+        },
+        "paths": {
+          "default": [],
+          "description": "JSONPath references to parameters of this operation.",
+          "items": {
+            "$ref": "#/$defs/PropertyPath"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "service",
+        "operation"
+      ],
+      "title": "OperationParameterGroup",
+      "type": "object"
+    },
+    "OrganizationsPolicy": {
+      "additionalProperties": false,
+      "description": "Implementation guide for an AWS Organizations declarative policy.\n\ngovernedAttributes lists the JSONPaths of the declarative policy attributes the mitigation governs: the service block and the nested attribute elements down to the leaf, for example '$.ec2_attributes.vpc_block_public_access.internet_gateway_block.mode'. Operator wrappers such as '@@assign' and attribute values are not included; set values according to your organization's requirements.",
+      "properties": {
+        "policyType": {
+          "$ref": "#/$defs/OrganizationsPolicyType",
+          "description": "The declarative policy type, as accepted by the Type parameter of the AWS Organizations CreatePolicy operation."
+        },
+        "governedAttributes": {
+          "default": [],
+          "description": "JSONPaths of the declarative policy attributes the mitigation governs.",
+          "items": {
+            "$ref": "#/$defs/PropertyPath"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "policyType"
+      ],
+      "title": "OrganizationsPolicy",
+      "type": "object"
+    },
+    "OrganizationsPolicyType": {
+      "description": "The AWS Organizations declarative policy types that implementations may use.\n\nThe values are the Type values accepted by the AWS Organizations CreatePolicy operation for declarative policies, which enforce a service configuration baseline across an organization (distinct from the service control and resource control authorization policies).",
+      "enum": [
+        "DECLARATIVE_POLICY_EC2",
+        "S3_POLICY",
+        "INSPECTOR_POLICY",
+        "BEDROCK_POLICY",
+        "AISERVICES_OPT_OUT_POLICY",
+        "BACKUP_POLICY"
+      ],
+      "title": "OrganizationsPolicyType",
+      "type": "string"
+    },
+    "PropertyPath": {
+      "additionalProperties": false,
+      "description": "A JSONPath reference to one property or parameter.\n\nThe same shape is used for API request parameters, AWS Config configuration item properties, CloudFormation resource properties, and declarative policy attributes.",
+      "properties": {
+        "path": {
+          "description": "JSONPath expression for the property, for example '$.Encrypted' or '$.configuration.ServerSideEncryptionConfiguration'.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "title": "PropertyPath",
+      "type": "object"
+    },
+    "RoleTrustPolicy": {
+      "additionalProperties": false,
+      "description": "Implementation guide for an IAM role trust policy.\n\nThe trust policy is the resource-based policy on the role that controls which principals may assume it; the role is always the attachment point.",
+      "properties": {
+        "governedIamPermissions": {
+          "default": [],
+          "description": "The statement groups of the trust policy.",
+          "items": {
+            "$ref": "#/$defs/GovernedTrustPolicyPermission"
+          },
+          "type": "array"
+        }
+      },
+      "title": "RoleTrustPolicy",
+      "type": "object"
+    },
+    "Threat": {
+      "additionalProperties": false,
+      "description": "A concrete threat scenario derived from a potential threat.\n\nThe threat statement is decomposed into source, prerequisites, and threatAction.",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "alias": {
+          "description": "Human-readable alias, for example 'Threat.EFS.FileSystem.1'.",
+          "type": "string"
+        },
+        "source": {
+          "description": "Who initiates the threat: an IAM principal or a threat actor.",
+          "type": "string"
+        },
+        "prerequisites": {
+          "description": "What must be true for the threat to be realized.",
+          "type": "string"
+        },
+        "threatAction": {
+          "description": "The action the source takes against the entity.",
+          "type": "string"
+        },
+        "requestParameters": {
+          "default": [],
+          "description": "Parameters of the API operations that could be used to realize the threat, grouped by service and operation.",
+          "items": {
+            "$ref": "#/$defs/OperationParameterGroup"
+          },
+          "type": "array"
+        },
+        "protocols": {
+          "default": [],
+          "description": "Network protocols that could be used to realize the threat.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "threatContext": {
+          "default": [],
+          "description": "Supplemental context: a concise SCOPING statement and, where applicable, DATA_PERIMETER or REFERENCE entries. Each scoping statement describes the exposure the threat's mapped mitigations address. It assumes those mitigations are not applied and makes no claim about your resources.",
+          "items": {
+            "$ref": "#/$defs/ThreatContext"
+          },
+          "type": "array"
+        },
+        "mappings": {
+          "default": [],
+          "description": "Relationships to the entity, potential threat, threat impacts, mitigations, and frameworks.",
+          "items": {
+            "$ref": "#/$defs/Mapping"
+          },
+          "type": "array"
+        },
+        "createTime": {
+          "description": "UTC timestamp when this threat was first published.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "lastUpdateTime": {
+          "description": "UTC timestamp when this threat was last updated.",
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "alias",
+        "source",
+        "prerequisites",
+        "threatAction",
+        "createTime",
+        "lastUpdateTime"
+      ],
+      "title": "Threat",
+      "type": "object"
+    },
+    "ThreatContext": {
+      "additionalProperties": false,
+      "description": "A supplemental context on a threat.\n\npotentialThreatId identifies the potential threat the threat instantiates. It is present on SCOPING entries and absent on DATA_PERIMETER and REFERENCE entries.",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/ContextType"
+        },
+        "context": {
+          "description": "The explanatory statement.",
+          "type": "string"
+        },
+        "links": {
+          "default": [],
+          "description": "URL references supporting the statement.",
+          "items": {
+            "$ref": "#/$defs/Link"
+          },
+          "type": "array"
+        },
+        "potentialThreatId": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "type",
+        "context"
+      ],
+      "title": "ThreatContext",
+      "type": "object"
+    },
+    "TrustedPrincipal": {
+      "additionalProperties": false,
+      "description": "The principal a role trust-policy statement lets assume the role.",
+      "properties": {
+        "service": {
+          "description": "The AWS service principal named in the statement's Principal element, for example 'lambda.amazonaws.com' or 'ecs-tasks.amazonaws.com'.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "service"
+      ],
+      "title": "TrustedPrincipal",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The complete threat model for one AWS service.\n\nIt covers the service and all of its entities. Cross-references to the shared catalogs (mitigation goals, potential threats, threat impacts) are id-only mappings; consumers resolve them against the catalog files shipped in the same release.",
+  "properties": {
+    "metadata": {
+      "$ref": "#/$defs/NamespaceMetadata"
+    },
+    "operations": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/OperationAnalysis"
+      },
+      "type": "array"
+    },
+    "entities": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Entity"
+      },
+      "type": "array"
+    },
+    "mitigations": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Mitigation"
+      },
+      "type": "array"
+    },
+    "threats": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Threat"
+      },
+      "type": "array"
+    },
+    "implementations": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Implementation"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "metadata"
+  ],
+  "title": "NamespaceThreatModel",
+  "type": "object"
+}

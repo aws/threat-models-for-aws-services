@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "MitigationGoal": {
+      "additionalProperties": false,
+      "description": "A mitigation goal from the mitigation goal catalog.\n\nA mitigation goal is a security objective assessed against every service.",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "createTime": {
+          "description": "UTC timestamp when the goal was added to the catalog.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "name": {
+          "description": "The goal's name.",
+          "type": "string"
+        },
+        "description": {
+          "description": "The goal's description.",
+          "type": "string"
+        },
+        "category": {
+          "$ref": "#/$defs/MitigationGoalCategory",
+          "description": "The security domain this mitigation goal belongs to."
+        },
+        "replaces": {
+          "default": [],
+          "description": "Ids of predecessor mitigation goals this entry replaces; content previously derived from a predecessor may be re-issued under this goal.",
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "createTime",
+        "name",
+        "description",
+        "category"
+      ],
+      "title": "MitigationGoal",
+      "type": "object"
+    },
+    "MitigationGoalCategory": {
+      "description": "The security domain a mitigation goal belongs to, used to group related goals. Each goal has exactly one category; OTHER indicates no listed domain fits.\n\nValues:\n- ENCRYPTION: Encrypts data at rest or in transit, including key management.\n- PERMISSIONS_AND_IDENTITY: Governs who and what can access resources: authentication, authorization, and data perimeters.\n- NETWORK: Controls network placement, reachability, and traffic boundaries.\n- LOGGING: Captures activity or data-access logs.\n- MONITORING_AND_METRICS: Emits metrics or telemetry for operational and security monitoring.\n- DATA_RETENTION_AND_RESILIENCE: Preserves data and resources: backups, replication, and protection against deletion.\n- TAGGING: Applies resource tags for ownership and governance.\n- CODE_INTEGRITY: Ensures a resource runs only trusted, reviewed, or signed code or content.\n- OTHER: Does not fit a listed security domain.",
+      "enum": [
+        "ENCRYPTION",
+        "PERMISSIONS_AND_IDENTITY",
+        "NETWORK",
+        "LOGGING",
+        "MONITORING_AND_METRICS",
+        "DATA_RETENTION_AND_RESILIENCE",
+        "TAGGING",
+        "CODE_INTEGRITY",
+        "OTHER"
+      ],
+      "title": "MitigationGoalCategory",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The catalog of mitigation goals considered across all services.\n\nEach service threat model records which of these goals apply to it.",
+  "properties": {
+    "mitigationGoals": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/MitigationGoal"
+      },
+      "type": "array"
+    }
+  },
+  "title": "MitigationGoalCatalog",
+  "type": "object"
+}
