@@ -1,6 +1,6 @@
 # Threat Models for AWS Services
 
-Release version 1.0.0, 0 services.
+Release version 1.1.0, 5 services.
 
 ## Layout
 
@@ -28,3 +28,8 @@ Release version 1.0.0, 0 services.
 
 | Service | Threats | Mitigations | Implementations | Goals covered |
 |---|---|---|---|---|
+| [dsql](reports/services/dsql.md) | 17 | 14 | 38 | 13 of 38 |
+| [dynamodb](reports/services/dynamodb.md) | 28 | 24 | 90 | 16 of 38 |
+| [efs](reports/services/efs.md) | 27 | 22 | 65 | 21 of 38 |
+| [lambda](reports/services/lambda.md) | 52 | 39 | 116 | 21 of 38 |
+| [sns](reports/services/sns.md) | 26 | 21 | 65 | 16 of 38 |

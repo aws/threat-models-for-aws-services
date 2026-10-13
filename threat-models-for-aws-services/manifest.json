@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "schema": {
     "path": "schema/manifest.schema.json",
     "sha256": "ebc5b475550674973fd0fc6973b67708a588341f305d68a7c3d8906974f1c83c"
@@ -52,5 +52,61 @@
     "path": "schema/threat-model.schema.json",
     "sha256": "9668d0b48bbb807a98910674221ad19739559b25a3c9df00887a46cc8b8b873a"
   },
-  "services": []
+  "services": [
+    {
+      "namespace": "dsql",
+      "data": {
+        "path": "data/services/dsql.json",
+        "sha256": "9d117d552ff115c0dce365f285a282c9d012df43dddda3def1744eb80d11c4ae"
+      },
+      "report": {
+        "path": "reports/services/dsql.md",
+        "sha256": "37dd70c5ccf8cc126557a5dd39c6d10318fe4372cba502bae0d9dabd5672605b"
+      }
+    },
+    {
+      "namespace": "dynamodb",
+      "data": {
+        "path": "data/services/dynamodb.json",
+        "sha256": "723d35a470e591a31991152f84f5c375be22ddab86897bf0e453d1fcfa748cd1"
+      },
+      "report": {
+        "path": "reports/services/dynamodb.md",
+        "sha256": "c84f368579dfc5f670031e2b05e4f75f874ca314101c7deee8088b3c41bbec01"
+      }
+    },
+    {
+      "namespace": "efs",
+      "data": {
+        "path": "data/services/efs.json",
+        "sha256": "2f545005bf6424e3b0e1c4462f9fdd2cb3fa602379fc1532103be6cbfd5ac53c"
+      },
+      "report": {
+        "path": "reports/services/efs.md",
+        "sha256": "848997e54f3404fea8b4217240ce06d34dc2b7a2cc988a9499aff8db76d29f0f"
+      }
+    },
+    {
+      "namespace": "lambda",
+      "data": {
+        "path": "data/services/lambda.json",
+        "sha256": "3ea0aa40827592219e467902bede34c7109bdf5f8d79b3c23e4140ad5ab4527b"
+      },
+      "report": {
+        "path": "reports/services/lambda.md",
+        "sha256": "3eb29142a06d06a79b6859ddabc0fe7a70bc1aac4ec427f80d0acc61c8f8b69d"
+      }
+    },
+    {
+      "namespace": "sns",
+      "data": {
+        "path": "data/services/sns.json",
+        "sha256": "fc4e3d9b034d10a1dc5c05716987ba3838f5b10959a17aab2c6bc341a76e9ea9"
+      },
+      "report": {
+        "path": "reports/services/sns.md",
+        "sha256": "22cf0aacb506f9a79ccb337233126b0964f22220f21319184a20afa57ada6ae6"
+      }
+    }
+  ]
 }
