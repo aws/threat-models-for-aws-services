@@ -179,13 +179,6 @@
       "category": "MONITORING_AND_METRICS"
     },
     {
-      "id": "51ea715a-033b-4b39-8180-8835698a9118",
-      "createTime": "2026-04-21T00:00:00Z",
-      "name": "CloudWatch log tampering",
-      "description": "CloudWatch log entries can be deleted or made inaccessible by modifying log group retention policies, deleting log groups, or deleting log streams.",
-      "category": "LOGGING"
-    },
-    {
       "id": "d4fb5a6b-6821-4ef0-bffd-90bdacff2409",
       "createTime": "2025-11-12T16:44:03Z",
       "name": "Ungoverned AI data processing without opt-out policy",

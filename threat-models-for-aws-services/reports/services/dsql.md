@@ -6,9 +6,9 @@
 
 Amazon Aurora DSQL is a serverless, distributed relational database service built for transactional workloads. It presents a PostgreSQL-compatible interface, so existing drivers, object-relational mappings, and SQL tooling work with minimal change. Compute, I/O, and storage scale automatically with demand. There are no database instances to provision, patch, or upgrade.
 
-17 threats and 14 mitigations across 2 resource types and 16 API operations. 13 of 38 mitigation goals are covered, implemented by 38 implementations.
+17 threats and 14 mitigations across 2 resource types and 16 API operations. 13 of 38 mitigation goals are covered, implemented by 37 implementations.
 
-Source service model: [dsql](https://github.com/aws/api-models-aws/blob/a0767ac42e279dfc8b311564c33436f8abfd3031/models/dsql/service/2018-05-10/dsql-2018-05-10.json)
+Source service model: [dsql](https://github.com/aws/api-models-aws/blob/3d89dd029ebd13b775ab5d22e5075399f20b35e4/models/dsql/service/2018-05-10/dsql-2018-05-10.json)
 
 ---
 
@@ -18,7 +18,7 @@ Source service model: [dsql](https://github.com/aws/api-models-aws/blob/a0767ac4
 
 | Threat | Summary | Impacts | Mitigated by |
 |---|---|---|---|
-| [Threat.DSQL.Cluster.13](#threatdsqlcluster13) | Untrusted IAM principal, with access to configure an AWS service that has been granted access to an Aurora DSQL cluster through its resource-based policy, may be able to cause that AWS service to interact with the cluster using the principal's data or context, such as coercing AWS Backup into reading the cluster and producing a full cluster backup on their behalf. | [Data Collection](../threat-impacts.md#data-collection), [Privilege Escalation](../threat-impacts.md#privilege-escalation) | [Mitigation.DSQL.Cluster.7](#mitigationdsqlcluster7) |
+| [Threat.DSQL.Cluster.13](#threatdsqlcluster13) | Untrusted IAM principal, with access to configure an AWS service that has been granted access to an Aurora DSQL cluster through its resource-based policy, may be able to cause that AWS service to interact with the cluster using the principal's data or context. | [Privilege Escalation](../threat-impacts.md#privilege-escalation) | [Mitigation.DSQL.Cluster.11](#mitigationdsqlcluster11) |
 
 ### [Data inaccessibility through resource-based policy lockout](../potential-threats.md#data-inaccessibility-through-resource-based-policy-lockout)
 
@@ -66,7 +66,7 @@ Source service model: [dsql](https://github.com/aws/api-models-aws/blob/a0767ac4
 
 | Threat | Summary | Impacts | Mitigated by |
 |---|---|---|---|
-| [Threat.DSQL.Stream.2](#threatdsqlstream2) | Untrusted IAM principal, that has been granted access to my Aurora DSQL stream's CDC service role through its trust policy, can assume my CDC service role and act with its permissions. | [Account and Resource Discovery](../threat-impacts.md#account-and-resource-discovery), [Initial Access](../threat-impacts.md#initial-access) | [Mitigation.DSQL.Stream.1](#mitigationdsqlstream1) |
+| [Threat.DSQL.Stream.2](#threatdsqlstream2) | Untrusted IAM principal, that has been granted access to my Aurora DSQL stream's IAM service role through its trust policy, can assume my service role and act with its permissions. | [Account and Resource Discovery](../threat-impacts.md#account-and-resource-discovery), [Initial Access](../threat-impacts.md#initial-access) | [Mitigation.DSQL.Stream.1](#mitigationdsqlstream1) |
 
 ### [Limited encryption governance with AWS owned or managed KMS keys](../potential-threats.md#limited-encryption-governance-with-aws-owned-or-managed-kms-keys)
 
@@ -354,20 +354,20 @@ Untrusted IAM principal, that has been granted access to my Aurora DSQL cluster 
 
 **Mitigations:** [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6)
 
-**Frameworks:** MITRE ATT&CK [T1078.004](https://attack.mitre.org/techniques/T1078/004/), [T1199](https://attack.mitre.org/techniques/T1199/), [T1213.006](https://attack.mitre.org/techniques/T1213/006/), [T1485](https://attack.mitre.org/techniques/T1485/), [T1537](https://attack.mitre.org/techniques/T1537/)
+**Frameworks:** MITRE ATT&CK [T1078.004](https://attack.mitre.org/techniques/T1078/004/), [T1199](https://attack.mitre.org/techniques/T1199/), [T1213.006](https://attack.mitre.org/techniques/T1213/006/), [T1485](https://attack.mitre.org/techniques/T1485/)
 
 **Protocols:** `PostgreSQL`
 
-**Scoping** (for [Identity Perimeter - Untrusted principal access to my resources](../potential-threats.md#identity-perimeter---untrusted-principal-access-to-my-resources)): Aurora DSQL does not currently support cross-account access through resource-based policies, so your clusters can be accessed only by principals in the same account. If cross-account access becomes available, an untrusted IAM principal named in the policy could read, alter, or drop your schemas, tables, and rows.
+**Scoping** (for [Identity Perimeter - Untrusted principal access to my resources](../potential-threats.md#identity-perimeter---untrusted-principal-access-to-my-resources)): Aurora DSQL does not currently support cross-account access through resource-based policies, so your clusters can be accessed only by principals in the same account. If cross-account access becomes available, an untrusted IAM principal named in the policy could then read, alter, or drop your schemas, tables, and rows.
 
 **Request parameters**
 
 | Operation | Parameters |
 |---|---|
-| `dsql:DeleteCluster` | `$.identifier` |
-| `dsql:DeleteClusterPolicy` | `$.identifier` |
-| `dsql:PutClusterPolicy` | `$.identifier`, `$.policy` |
-| `dsql:UpdateCluster` | `$.deletionProtectionEnabled`, `$.identifier`, `$.kmsEncryptionKey` |
+| `dsql:DeleteCluster` | *(any parameter)* |
+| `dsql:DeleteClusterPolicy` | *(any parameter)* |
+| `dsql:PutClusterPolicy` | `$.policy` |
+| `dsql:UpdateCluster` | `$.deletionProtectionEnabled`, `$.kmsEncryptionKey` |
 
 ### Threat.DSQL.Cluster.11
 
@@ -399,24 +399,24 @@ IAM principal, with unintended IAM permissions to read the table data from an Au
 
 ### Threat.DSQL.Cluster.13
 
-Untrusted IAM principal, with access to configure an AWS service that has been granted access to an Aurora DSQL cluster through its resource-based policy, may be able to cause that AWS service to interact with the cluster using the principal's data or context, such as coercing AWS Backup into reading the cluster and producing a full cluster backup on their behalf.
+Untrusted IAM principal, with access to configure an AWS service that has been granted access to an Aurora DSQL cluster through its resource-based policy, may be able to cause that AWS service to interact with the cluster using the principal's data or context.
 
-**Impacts:** [Data Collection](../threat-impacts.md#data-collection), [Privilege Escalation](../threat-impacts.md#privilege-escalation)
+**Impacts:** [Privilege Escalation](../threat-impacts.md#privilege-escalation)
 
-**Mitigations:** [Mitigation.DSQL.Cluster.7](#mitigationdsqlcluster7)
+**Mitigations:** [Mitigation.DSQL.Cluster.11](#mitigationdsqlcluster11)
 
-**Frameworks:** MITRE ATT&CK [T1213.006](https://attack.mitre.org/techniques/T1213/006/), [T1548.005](https://attack.mitre.org/techniques/T1548/005/)
+**Frameworks:** MITRE ATT&CK [T1548.005](https://attack.mitre.org/techniques/T1548/005/)
 
-**Scoping** (for [Cross-service confused deputy problem through resource-based policies](../potential-threats.md#cross-service-confused-deputy-problem-through-resource-based-policies)): The resource-based policy on your cluster can grant access to an AWS service principal such as `backup.amazonaws.com`. An untrusted IAM principal who can configure AWS Backup may then have it produce a full backup of your cluster on their behalf.
+**Scoping** (for [Cross-service confused deputy problem through resource-based policies](../potential-threats.md#cross-service-confused-deputy-problem-through-resource-based-policies)): Aurora DSQL does not currently support AWS service principals in resource-based policies. If that support becomes available, your Aurora DSQL cluster's resource-based policy could then grant the `dsql:GetCluster` permission to an AWS service such as `backup.amazonaws.com`. An untrusted IAM principal who can configure that service may cause it to retrieve information about your cluster for their backup jobs.
 
 **Request parameters**
 
 | Operation | Parameters |
 |---|---|
-| `backup:CreateBackupSelection` | `$.BackupSelection.IamRoleArn`, `$.BackupSelection.Resources[*]` |
-| `backup:StartBackupJob` | `$.IamRoleArn`, `$.ResourceArn` |
+| `backup:CreateBackupSelection` | `$.BackupSelection.Resources[*]` |
+| `backup:StartBackupJob` | `$.ResourceArn` |
 | `dsql:CreateCluster` | `$.policy` |
-| `dsql:PutClusterPolicy` | `$.identifier`, `$.policy` |
+| `dsql:PutClusterPolicy` | `$.policy` |
 
 ### Threat.DSQL.Stream.1
 
@@ -440,7 +440,7 @@ IAM principal, with IAM permissions to create or modify an Aurora DSQL stream, c
 
 ### Threat.DSQL.Stream.2
 
-Untrusted IAM principal, that has been granted access to my Aurora DSQL stream's CDC service role through its trust policy, can assume my CDC service role and act with its permissions.
+Untrusted IAM principal, that has been granted access to my Aurora DSQL stream's IAM service role through its trust policy, can assume my service role and act with its permissions.
 
 **Impacts:** [Account and Resource Discovery](../threat-impacts.md#account-and-resource-discovery), [Initial Access](../threat-impacts.md#initial-access)
 
@@ -448,7 +448,7 @@ Untrusted IAM principal, that has been granted access to my Aurora DSQL stream's
 
 **Frameworks:** MITRE ATT&CK [T1078.004](https://attack.mitre.org/techniques/T1078/004/), [T1550.001](https://attack.mitre.org/techniques/T1550/001/), [T1580](https://attack.mitre.org/techniques/T1580/)
 
-**Scoping** (for [Identity Perimeter - Untrusted principal assumption of my IAM roles](../potential-threats.md#identity-perimeter---untrusted-principal-assumption-of-my-iam-roles)): Aurora DSQL assumes a CDC service role that you create (designated by `$.targetDefinition.kinesis.roleArn`) to deliver your stream's change records. If that role's trust policy grants unrestricted assumption, an identity outside your organization could assume the role and act with its permissions.
+**Scoping** (for [Identity Perimeter - Untrusted principal assumption of my IAM roles](../potential-threats.md#identity-perimeter---untrusted-principal-assumption-of-my-iam-roles)): Your Aurora DSQL stream designates a CDC service role through `$.targetDefinition.kinesis.roleArn`, and you author its trust policy. That trust policy can allow identities outside your organization to assume the role and act with its permissions, such as writing records to your target Kinesis data stream.
 
 **Request parameters**
 
@@ -659,7 +659,7 @@ An Aurora DSQL cluster should be accessed only by trusted identities or AWS serv
 
 **Implemented by:** [Implementation.DSQL.Cluster.13](#implementationdsqlcluster13), [Implementation.DSQL.Cluster.14](#implementationdsqlcluster14), [Implementation.DSQL.Cluster.15](#implementationdsqlcluster15), [Implementation.DSQL.Cluster.16](#implementationdsqlcluster16)
 
-**Scoping** (for [Identity Perimeter - Only trusted identities can access my resources](../mitigation-goals.md#identity-perimeter---only-trusted-identities-can-access-my-resources)): Aurora DSQL supports a resource-based policy that specifies who can access the cluster and what actions they can perform. The service does not currently support cross-account access through the resource-based policy, so restricting access to principals in your organization is a defense-in-depth measure.
+**Scoping** (for [Identity Perimeter - Only trusted identities can access my resources](../mitigation-goals.md#identity-perimeter---only-trusted-identities-can-access-my-resources)): An Aurora DSQL cluster supports a resource-based policy that specifies who can access it and what actions they can perform. The service does not currently support cross-account access through the resource-based policy, so restricting access to principals in your organization is a defense-in-depth measure.
 
 **Configure via**
 
@@ -667,7 +667,7 @@ An Aurora DSQL cluster should be accessed only by trusted identities or AWS serv
 |---|---|
 | `dsql:CreateCluster` | `$.policy` |
 | `dsql:DeleteClusterPolicy` | `$.identifier` |
-| `dsql:PutClusterPolicy` | `$.identifier`, `$.policy` |
+| `dsql:PutClusterPolicy` | `$.policy` |
 
 **Verify via**
 
@@ -675,7 +675,7 @@ An Aurora DSQL cluster should be accessed only by trusted identities or AWS serv
 |---|---|
 | `dsql:GetClusterPolicy` | `$.identifier` |
 
-### Mitigation.DSQL.Cluster.7
+### Mitigation.DSQL.Cluster.11
 
 An Aurora DSQL cluster should be accessed by an AWS service principal, such as the AWS Backup service principal, only when the service principal is acting on behalf of a trusted resource, AWS account, or organization
 
@@ -683,16 +683,16 @@ An Aurora DSQL cluster should be accessed by an AWS service principal, such as t
 
 **Addresses:** [Threat.DSQL.Cluster.13](#threatdsqlcluster13)
 
-**Implemented by:** [Implementation.DSQL.Cluster.17](#implementationdsqlcluster17), [Implementation.DSQL.Cluster.18](#implementationdsqlcluster18), [Implementation.DSQL.Cluster.19](#implementationdsqlcluster19), [Implementation.DSQL.Cluster.20](#implementationdsqlcluster20)
+**Implemented by:** [Implementation.DSQL.Cluster.30](#implementationdsqlcluster30), [Implementation.DSQL.Cluster.31](#implementationdsqlcluster31), [Implementation.DSQL.Cluster.32](#implementationdsqlcluster32)
 
-**Scoping** (for [Cross-Service Confused Deputy Prevention - Resource-based policies](../mitigation-goals.md#cross-service-confused-deputy-prevention---resource-based-policies)): Your Aurora DSQL cluster supports a resource-based policy that can grant cluster actions such as `dsql:GetCluster` to the AWS Backup service principal, `backup.amazonaws.com`. Such a grant may raise the cross-service confused deputy problem, where the service calls Aurora DSQL on behalf of a resource outside your organization.
+**Scoping** (for [Cross-Service Confused Deputy Prevention - Resource-based policies](../mitigation-goals.md#cross-service-confused-deputy-prevention---resource-based-policies)): An Aurora DSQL cluster supports a resource-based policy that specifies who can access it and what actions they can perform. The service does not currently support AWS service principals in the resource-based policy, so restricting which accounts or resources a service may act on behalf of is a defense-in-depth measure.
 
 **Configure via**
 
 | Operation | Parameters |
 |---|---|
 | `dsql:CreateCluster` | `$.policy` |
-| `dsql:PutClusterPolicy` | `$.identifier`, `$.policy` |
+| `dsql:PutClusterPolicy` | `$.policy` |
 
 **Verify via**
 
@@ -792,7 +792,7 @@ An Aurora DSQL stream's service role should be assumed only by Aurora DSQL actin
 
 | Operation | Parameters |
 |---|---|
-| `dsql:CreateStream` | `$.clusterIdentifier`, `$.targetDefinition.kinesis.roleArn` |
+| `dsql:CreateStream` | `$.targetDefinition.kinesis.roleArn` |
 
 **Verify via**
 
@@ -1069,7 +1069,7 @@ Attaches to `AWS::DSQL::Cluster` and governs the IAM permissions below.
 
 **Implements:** [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6)
 
-**Scoping** (for [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6)): This implementation governs Aurora DSQL API calls against your cluster with `aws:PrincipalOrgID`, while exempting AWS services that access it on your behalf (`aws:PrincipalIsAWSService`). As a result, identities outside your organization are restricted from accessing your cluster, and those service requests are scoped by `aws:SourceOrgID`.
+**Scoping** (for [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6)): This implementation guidance recommends governing Aurora DSQL API calls against your cluster with the `aws:PrincipalOrgID` condition key in its resource-based policy, while exempting AWS services that access it on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent identities outside your organization from accessing your cluster.
 
 **Reference:** Confirm that resource-based policies grant access only to trusted identities and to services acting on your behalf.
 
@@ -1090,11 +1090,9 @@ Validates template properties before provisioning.
 
 **Implements:** [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6)
 
-**Scoping** (for [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6)): This implementation flags `dsql:DbConnect` and `dsql:DbConnectAdmin` grants in your cluster resource-based policy (`$.PolicyDocument`) to principals beyond your reference policy's allowlist. Reviewing those grants before your cluster is created or updated helps you establish an identity perimeter.
+**Scoping** (for [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6)): This implementation guidance recommends validating `$.PolicyDocument`, the cluster's resource-based policy, before provisioning your Aurora DSQL cluster. The hook helps prevent a policy that can grant access beyond your reference policy, permissions you specify (such as `dsql:DbConnect` and `dsql:DbConnectAdmin`), or access to an AWS service principal beyond a reference policy containing the source conditions you accept from being provisioned.
 
-**Reference:** This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks on your cluster resource-based policy (`$.PolicyDocument`). Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. `ValidatePolicy` reports the `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL` finding when a grant to AWS services acting on your behalf does not specify a source. Custom policy checks (`CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to analyze the access your policy can grant. `CheckNoNewAccess` compares your policy with a reference policy that you maintain (`$.existingPolicyDocument`). The reference policy allowlists the principals that may be granted access to your cluster. The check fails when your policy might grant access beyond that allowlist. `CheckAccessNotGranted` fails when your policy might grant `dsql:DbConnect` or `dsql:DbConnectAdmin`. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
-- [IAM JSON policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [Security best practices in IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks. Custom policy checks (`CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain or grant specified permissions. The first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository. The second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.
 - [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
 - [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
@@ -1108,17 +1106,15 @@ A change-triggered rule that evaluates configuration item properties on change.
 
 **Implements:** [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6)
 
-**Scoping** (for [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6)): This implementation flags grants in your cluster's resource-based policy (`$.configuration.PolicyDocument`) to identities outside your reference policy or to AWS services without source condition keys. Flagging these grants helps you detect access to your cluster that extends beyond trusted identities.
+**Scoping** (for [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6)): This implementation guidance recommends reading `$.configuration.PolicyDocument`, your cluster's resource-based policy, and evaluating it for access beyond your reference policy, permissions you specify, and AWS service grants beyond a reference policy containing the source conditions you accept. Flagging those grants helps you detect access to your cluster that extends beyond trusted identities.
 
-**Reference:** This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.
-
-Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
 Custom policy checks (`CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain or grant specified permissions.
 
-The reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+The first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
+
+The second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.
 - [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
 - [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
@@ -1135,30 +1131,13 @@ Governs the IAM permissions below.
 
 **Implements:** [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6)
 
-**Scoping** (for [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6)): This implementation governs Aurora DSQL API calls against your clusters with `aws:PrincipalOrgID` and `aws:SourceOrgID` condition keys, exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`). As a result, identities outside your organization are restricted from accessing your clusters.
+**Scoping** (for [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6)): This implementation guidance recommends governing Aurora DSQL API calls against your resources with the `aws:PrincipalOrgID` condition key in a resource control policy (RCP), while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent identities outside your organization from accessing your resources.
 
 **Reference:** To restrict access to trusted identities, use the `aws:PrincipalOrgID`, `aws:PrincipalOrgPaths`, or `aws:PrincipalAccount` condition keys. These scope access to IAM principals within a particular organization, specific organizational units, or a specific AWS account, respectively. These keys do not contain your organization or account values for requests by AWS service principals, so apply them only when `aws:PrincipalIsAWSService` is `false`. To restrict service access to your resources, use the `aws:SourceOrgID`, `aws:SourceOrgPaths`, `aws:SourceAccount`, or `aws:SourceArn` condition keys. These scope access performed on behalf of resources within a particular organization, specific organizational units, a specific AWS account, or a particular resource, respectively. Apply them only when `aws:PrincipalIsAWSService` is `true`. Also require that `aws:SourceAccount` is present in the request context, because not every service integration populates these keys. Choose the condition key that matches the granularity of the restriction you want to enforce.
 - [Establishing an identity perimeter](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_data-perimeters.html#access_policies_data-perimeters-identity)
 - [RCP sample: identity perimeter policy](https://github.com/aws-samples/data-perimeter-policy-examples/blob/main/resource_control_policies/identity_perimeter_rcp.json)
 
-### Implementation.DSQL.Cluster.17
-
-*Resource policy — Preventive*
-
-Attaches to `AWS::DSQL::Cluster` and governs the IAM permissions below.
-
-| Actions | Resources | Condition keys |
-|---|---|---|
-| `dsql:GetCluster`, `dsql:ListTagsForResource`, `dsql:StartBackupJob` | `arn:${Partition}:dsql:${Region}:${Account}:cluster/${Identifier}` | `aws:SourceAccount`, `aws:SourceArn` |
-
-**Implements:** [Mitigation.DSQL.Cluster.7](#mitigationdsqlcluster7)
-
-**Scoping** (for [Mitigation.DSQL.Cluster.7](#mitigationdsqlcluster7)): A resource-based policy on your Aurora DSQL cluster can grant access to AWS services acting on your behalf, such as AWS Backup. The `aws:SourceArn` and `aws:SourceAccount` condition keys restrict that access to requests made on behalf of a resource in your account.
-
-**Reference:** To restrict service access to your resources, use the `aws:SourceOrgID`, `aws:SourceOrgPaths`, `aws:SourceAccount`, or `aws:SourceArn` condition keys. These scope access performed on behalf of resources within a particular organization, specific organizational units, a specific AWS account, or a particular resource, respectively. Choose the condition key that matches the granularity of the restriction you want to enforce.
-- [Establishing an identity perimeter](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_data-perimeters.html#access_policies_data-perimeters-identity)
-
-### Implementation.DSQL.Cluster.18
+### Implementation.DSQL.Cluster.30
 
 *CloudFormation hook — Proactive*
 
@@ -1166,17 +1145,15 @@ Validates template properties before provisioning.
 
 - `AWS::DSQL::Cluster`: `$.PolicyDocument`
 
-**Implements:** [Mitigation.DSQL.Cluster.7](#mitigationdsqlcluster7)
+**Implements:** [Mitigation.DSQL.Cluster.11](#mitigationdsqlcluster11)
 
-**Scoping** (for [Mitigation.DSQL.Cluster.7](#mitigationdsqlcluster7)): This implementation validates the resource-based policy your template declares in `$.PolicyDocument`, helping address the cross-service confused deputy problem for your cluster. When a grant to an AWS service principal omits the `aws:SourceArn`, `aws:SourceAccount`, or `aws:SourceOrgID` condition keys, the hook fails the stack operation.
+**Scoping** (for [Mitigation.DSQL.Cluster.11](#mitigationdsqlcluster11)): This implementation guidance recommends validating `$.PolicyDocument`, your Aurora DSQL cluster's resource-based policy, before provisioning. When a grant to an AWS service principal extends beyond a reference policy containing the source conditions you accept, the hook fails the stack operation, which helps prevent such a grant from being provisioned.
 
-**Reference:** This implementation recommends using IAM Access Analyzer basic policy checks.
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks. Custom policy checks (`CheckNoNewAccess`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain. The reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`. The IAM Access Analyzer custom policy checks samples repository shows the reference policy format; compose the policy from the key combinations you accept.
+- [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
+- [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
-Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
-
-### Implementation.DSQL.Cluster.19
+### Implementation.DSQL.Cluster.31
 
 *AWS Config rule — Detective*
 
@@ -1184,17 +1161,19 @@ A change-triggered rule that evaluates configuration item properties on change.
 
 - `AWS::DSQL::Cluster`: `$.configuration.PolicyDocument`
 
-**Implements:** [Mitigation.DSQL.Cluster.7](#mitigationdsqlcluster7)
+**Implements:** [Mitigation.DSQL.Cluster.11](#mitigationdsqlcluster11)
 
-**Scoping** (for [Mitigation.DSQL.Cluster.7](#mitigationdsqlcluster7)): This rule reads the resource-based policy on your cluster from `$.configuration.PolicyDocument`, then flags grants that omit an `aws:SourceArn`, `aws:SourceAccount`, or `aws:SourceOrgID` condition key. Flagging those grants helps you detect access by AWS services acting on your behalf that lacks a source restriction.
+**Scoping** (for [Mitigation.DSQL.Cluster.11](#mitigationdsqlcluster11)): This implementation guidance recommends reading `$.configuration.PolicyDocument`, your Aurora DSQL cluster's resource-based policy, and flagging grants to an AWS service principal that extend beyond a reference policy containing the source conditions you accept. Flagging those grants helps you detect access by AWS services acting on your behalf that lacks a source restriction you accept.
 
-**Reference:** This implementation recommends using IAM Access Analyzer basic policy checks.
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
-Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+Custom policy checks (`CheckNoNewAccess`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain.
 
-### Implementation.DSQL.Cluster.20
+The reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`. The IAM Access Analyzer custom policy checks samples repository shows the reference policy format; compose the policy from the key combinations you accept.
+- [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
+- [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
+
+### Implementation.DSQL.Cluster.32
 
 *Resource control policy (RCP) — Preventive*
 
@@ -1204,9 +1183,9 @@ Governs the IAM permissions below.
 |---|---|---|
 | `dsql:*` | `*` | `aws:PrincipalIsAWSService`, `aws:SourceAccount`, `aws:SourceOrgID` (alternatives: `aws:SourceOrgPaths`) |
 
-**Implements:** [Mitigation.DSQL.Cluster.7](#mitigationdsqlcluster7)
+**Implements:** [Mitigation.DSQL.Cluster.11](#mitigationdsqlcluster11)
 
-**Scoping** (for [Mitigation.DSQL.Cluster.7](#mitigationdsqlcluster7)): This implementation restricts Amazon Aurora DSQL API calls against your clusters with the `aws:SourceOrgID`, `aws:SourceAccount`, and `aws:PrincipalIsAWSService` condition keys. Requests that do not satisfy those conditions are denied, so AWS services cannot access your cluster on behalf of resources outside your organization.
+**Scoping** (for [Mitigation.DSQL.Cluster.11](#mitigationdsqlcluster11)): This implementation guidance recommends restricting Aurora DSQL API calls AWS services make against your clusters on your behalf (`aws:PrincipalIsAWSService`) with the `aws:SourceOrgID` and `aws:SourceAccount` condition keys in a resource control policy (RCP). These conditions help prevent AWS services from accessing your clusters on behalf of resources outside your organization, regardless of what each cluster's resource-based policy grants.
 
 **Reference:** To restrict service access to your resources at scale, use the `aws:SourceOrgID`, `aws:SourceOrgPaths`, `aws:SourceAccount`, or `aws:SourceArn` condition keys. These scope access performed on behalf of resources within a particular organization, specific organizational units, a specific AWS account, or a particular resource, respectively. These keys are included in the request context only for requests by AWS service principals, so apply them when `aws:PrincipalIsAWSService` is `true`. Also require that `aws:SourceAccount` is present in the request context, because not every service integration populates these keys. Choose the condition key that matches the granularity of the restriction you want to enforce.
 - [Establishing an identity perimeter](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_data-perimeters.html#access_policies_data-perimeters-identity)
@@ -1351,21 +1330,19 @@ A periodic rule that evaluates via the API operation chain below.
 4. Call `iam:GetRole` with `$.RoleName`; check `$.Role.AssumeRolePolicyDocument`
 5. Call `accessanalyzer:CheckNoPublicAccess` with `$.policyDocument`, `$.resourceType` = `AWS::IAM::AssumeRolePolicyDocument`; check `$.result` = `PASS`
 6. Call `accessanalyzer:CheckNoNewAccess` with `$.newPolicyDocument`, `$.existingPolicyDocument`, `$.policyType` = `RESOURCE_POLICY`; check `$.result` = `PASS`
-7. Call `accessanalyzer:ValidatePolicy` with `$.policyDocument`, `$.policyType` = `RESOURCE_POLICY`, `$.validatePolicyResourceType` = `AWS::IAM::AssumeRolePolicyDocument`; check `$.findings[*].issueCode` = `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL`
+7. Call `accessanalyzer:CheckNoNewAccess` with `$.newPolicyDocument`, `$.existingPolicyDocument`, `$.policyType` = `RESOURCE_POLICY`; check `$.result` = `PASS`
 
 **Implements:** [Mitigation.DSQL.Stream.1](#mitigationdsqlstream1)
 
-**Scoping** (for [Mitigation.DSQL.Stream.1](#mitigationdsqlstream1)): This implementation reads `$.targetDefinition.kinesis.roleArn`, your CDC stream's service role, then inspects `$.Role.AssumeRolePolicyDocument`, that role's trust policy. Flagging policies that allow public role assumption, or that omit the `aws:SourceArn`, `aws:SourceAccount`, or `aws:SourceOrgID` condition keys, helps you detect overly permissive role assumption.
+**Scoping** (for [Mitigation.DSQL.Stream.1](#mitigationdsqlstream1)): This implementation guidance recommends reading `$.targetDefinition.kinesis.roleArn`, your stream's service role, then evaluating `$.Role.AssumeRolePolicyDocument`, that role's trust policy, with IAM Access Analyzer. Flagging trust policies that allow public role assumption, or assumption beyond your reference policy, or that omit the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, helps you detect overly permissive role assumption.
 
-**Reference:** This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.
-
-Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
 Custom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access or grant new access beyond a reference policy you maintain.
 
-The reference policy for `CheckNoNewAccess` allowlists the principals this role's trust policy may grant assumption to. The check fails when the trust policy grants role assumption beyond that allowlist. Example reference policies for role trust policies are available in the IAM Access Analyzer custom policy checks samples repository.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+The first reference policy for `CheckNoNewAccess` allowlists the principals this role's trust policy may grant assumption to. The check fails when the trust policy grants role assumption beyond that allowlist. Example reference policies for role trust policies are available in the IAM Access Analyzer custom policy checks samples repository.
+
+The second reference policy for `CheckNoNewAccess` encodes the source conditions you accept when the service principal assumes the role: one role-assumption statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the trust policy grants role assumption that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.
 - [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
 - [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
@@ -1381,7 +1358,7 @@ Governs the IAM role trust policy statements below (the role is the resource).
 
 **Implements:** [Mitigation.DSQL.Stream.1](#mitigationdsqlstream1)
 
-**Scoping** (for [Mitigation.DSQL.Stream.1](#mitigationdsqlstream1)): This implementation guidance recommends restricting `sts:AssumeRole` on the CDC service role you pass in `$.targetDefinition.kinesis.roleArn` to `dsql.amazonaws.com` with the `aws:SourceArn` and `aws:SourceAccount` condition keys in the role's trust policy. They help prevent Aurora DSQL from assuming the role on behalf of streams outside the ARNs and account you specify.
+**Scoping** (for [Mitigation.DSQL.Stream.1](#mitigationdsqlstream1)): This implementation guidance recommends a trust policy that restricts assumption of your Aurora DSQL stream's service role, `$.targetDefinition.kinesis.roleArn`, to the `dsql.amazonaws.com` service principal with the `aws:SourceArn` and `aws:SourceAccount` condition keys. These conditions help prevent Aurora DSQL from assuming the role on behalf of CDC streams outside the sources you specify.
 
 **Reference:** Confirm that IAM role trust policies grant access only to the AWS service principals you intend. Review the `Principal` element of each policy and verify it names only the service principals your workload requires.
 
@@ -1401,7 +1378,7 @@ Governs the IAM permissions below.
 
 **Implements:** [Mitigation.DSQL.Stream.1](#mitigationdsqlstream1)
 
-**Scoping** (for [Mitigation.DSQL.Stream.1](#mitigationdsqlstream1)): This implementation restricts `sts:AssumeRole` with the `aws:PrincipalOrgID` and `aws:SourceOrgID` condition keys, while exempting AWS services that assume your role on your behalf (`aws:PrincipalIsAWSService`). Requests that do not satisfy these conditions are denied, so identities outside your organization cannot assume your CDC stream service role (`$.targetDefinition.kinesis.roleArn`).
+**Scoping** (for [Mitigation.DSQL.Stream.1](#mitigationdsqlstream1)): This implementation guidance recommends restricting `sts:AssumeRole` with the `aws:PrincipalOrgID` condition key in a resource control policy (RCP), while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent principals outside your organization from assuming your Aurora DSQL stream's service role, `$.targetDefinition.kinesis.roleArn`.
 
 **Reference:** To restrict access to trusted identities, use the `aws:PrincipalOrgID`, `aws:PrincipalOrgPaths`, or `aws:PrincipalAccount` condition keys. These scope access to IAM principals within a particular organization, specific organizational units, or a specific AWS account, respectively. These keys do not contain your organization or account values for requests by AWS service principals, so apply them only when `aws:PrincipalIsAWSService` is `false`. As a defense-in-depth measure, use the `aws:SourceOrgID`, `aws:SourceOrgPaths`, `aws:SourceAccount`, or `aws:SourceArn` condition keys to restrict service access to your roles. These scope access performed on behalf of resources within a particular organization, specific organizational units, a specific AWS account, or a particular resource, respectively. Apply them only when `aws:PrincipalIsAWSService` is `true`. Also require that `aws:SourceAccount` is present in the request context, because not every service integration populates these keys. Choose the condition key that matches the granularity of the restriction you want to enforce.
 - [Establishing an identity perimeter](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_data-perimeters.html#access_policies_data-perimeters-identity)
@@ -1509,19 +1486,19 @@ An Aurora DSQL stream provides change data capture for a single cluster. It read
 
 | Operation | Analyses | Resources | Mitigations |
 |---|---|---|---|
-| `CreateCluster` | DOCUMENTATION, DATA_PERIMETER | [Cluster](#cluster) | [Mitigation.DSQL.Cluster.1](#mitigationdsqlcluster1), [Mitigation.DSQL.Cluster.2](#mitigationdsqlcluster2), [Mitigation.DSQL.Cluster.4](#mitigationdsqlcluster4), [Mitigation.DSQL.Cluster.5](#mitigationdsqlcluster5), [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6), [Mitigation.DSQL.Cluster.7](#mitigationdsqlcluster7), [Mitigation.DSQL.Cluster.8](#mitigationdsqlcluster8), [Mitigation.DSQL.Cluster.9](#mitigationdsqlcluster9), [Mitigation.DSQL.Cluster.10](#mitigationdsqlcluster10) |
+| `CreateCluster` | DOCUMENTATION, DATA_PERIMETER | [Cluster](#cluster) | [Mitigation.DSQL.Cluster.1](#mitigationdsqlcluster1), [Mitigation.DSQL.Cluster.2](#mitigationdsqlcluster2), [Mitigation.DSQL.Cluster.4](#mitigationdsqlcluster4), [Mitigation.DSQL.Cluster.5](#mitigationdsqlcluster5), [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6), [Mitigation.DSQL.Cluster.8](#mitigationdsqlcluster8), [Mitigation.DSQL.Cluster.9](#mitigationdsqlcluster9), [Mitigation.DSQL.Cluster.10](#mitigationdsqlcluster10), [Mitigation.DSQL.Cluster.11](#mitigationdsqlcluster11) |
 | `CreateStream` | DOCUMENTATION | [Stream](#stream) | [Mitigation.DSQL.1](#mitigationdsql1), [Mitigation.DSQL.2](#mitigationdsql2), [Mitigation.DSQL.Stream.1](#mitigationdsqlstream1), [Mitigation.DSQL.Stream.2](#mitigationdsqlstream2) |
 | `DeleteCluster` | DOCUMENTATION, DATA_PERIMETER | [Cluster](#cluster) | [Mitigation.DSQL.1](#mitigationdsql1), [Mitigation.DSQL.2](#mitigationdsql2), [Mitigation.DSQL.Cluster.1](#mitigationdsqlcluster1), [Mitigation.DSQL.Cluster.2](#mitigationdsqlcluster2), [Mitigation.DSQL.Cluster.3](#mitigationdsqlcluster3), [Mitigation.DSQL.Cluster.5](#mitigationdsqlcluster5), [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6), [Mitigation.DSQL.Cluster.10](#mitigationdsqlcluster10) |
 | `DeleteClusterPolicy` | DOCUMENTATION, DATA_PERIMETER | [Cluster](#cluster) | [Mitigation.DSQL.2](#mitigationdsql2), [Mitigation.DSQL.Cluster.1](#mitigationdsqlcluster1), [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6) |
 | `DeleteStream` | DOCUMENTATION | [Stream](#stream) |  |
 | `GetCluster` | DOCUMENTATION, DATA_PERIMETER | [Cluster](#cluster) | [Mitigation.DSQL.Cluster.4](#mitigationdsqlcluster4), [Mitigation.DSQL.Cluster.5](#mitigationdsqlcluster5), [Mitigation.DSQL.Cluster.8](#mitigationdsqlcluster8), [Mitigation.DSQL.Cluster.10](#mitigationdsqlcluster10) |
-| `GetClusterPolicy` | DOCUMENTATION, DATA_PERIMETER | [Cluster](#cluster) | [Mitigation.DSQL.Cluster.1](#mitigationdsqlcluster1), [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6), [Mitigation.DSQL.Cluster.7](#mitigationdsqlcluster7), [Mitigation.DSQL.Cluster.9](#mitigationdsqlcluster9) |
+| `GetClusterPolicy` | DOCUMENTATION, DATA_PERIMETER | [Cluster](#cluster) | [Mitigation.DSQL.Cluster.1](#mitigationdsqlcluster1), [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6), [Mitigation.DSQL.Cluster.9](#mitigationdsqlcluster9), [Mitigation.DSQL.Cluster.11](#mitigationdsqlcluster11) |
 | `GetStream` | DOCUMENTATION | [Stream](#stream) | [Mitigation.DSQL.Stream.1](#mitigationdsqlstream1), [Mitigation.DSQL.Stream.2](#mitigationdsqlstream2) |
 | `GetVpcEndpointServiceName` | DOCUMENTATION, DATA_PERIMETER | [Cluster](#cluster) |  |
 | `ListClusters` | DOCUMENTATION, DATA_PERIMETER | [Cluster](#cluster) |  |
 | `ListStreams` | DOCUMENTATION | [Stream](#stream) | [Mitigation.DSQL.Stream.1](#mitigationdsqlstream1), [Mitigation.DSQL.Stream.2](#mitigationdsqlstream2) |
 | `ListTagsForResource` | DOCUMENTATION, DATA_PERIMETER | [Cluster](#cluster), [Stream](#stream) | [Mitigation.DSQL.Cluster.8](#mitigationdsqlcluster8), [Mitigation.DSQL.Stream.2](#mitigationdsqlstream2) |
-| `PutClusterPolicy` | DOCUMENTATION, DATA_PERIMETER | [Cluster](#cluster) | [Mitigation.DSQL.1](#mitigationdsql1), [Mitigation.DSQL.2](#mitigationdsql2), [Mitigation.DSQL.Cluster.1](#mitigationdsqlcluster1), [Mitigation.DSQL.Cluster.2](#mitigationdsqlcluster2), [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6), [Mitigation.DSQL.Cluster.7](#mitigationdsqlcluster7), [Mitigation.DSQL.Cluster.9](#mitigationdsqlcluster9) |
+| `PutClusterPolicy` | DOCUMENTATION, DATA_PERIMETER | [Cluster](#cluster) | [Mitigation.DSQL.1](#mitigationdsql1), [Mitigation.DSQL.2](#mitigationdsql2), [Mitigation.DSQL.Cluster.1](#mitigationdsqlcluster1), [Mitigation.DSQL.Cluster.2](#mitigationdsqlcluster2), [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6), [Mitigation.DSQL.Cluster.9](#mitigationdsqlcluster9), [Mitigation.DSQL.Cluster.11](#mitigationdsqlcluster11) |
 | `TagResource` | DOCUMENTATION, DATA_PERIMETER | [Cluster](#cluster), [Stream](#stream) | [Mitigation.DSQL.Cluster.8](#mitigationdsqlcluster8), [Mitigation.DSQL.Stream.2](#mitigationdsqlstream2) |
 | `UntagResource` | DOCUMENTATION, DATA_PERIMETER | [Cluster](#cluster), [Stream](#stream) | [Mitigation.DSQL.Cluster.8](#mitigationdsqlcluster8), [Mitigation.DSQL.Stream.2](#mitigationdsqlstream2) |
 | `UpdateCluster` | DOCUMENTATION, DATA_PERIMETER | [Cluster](#cluster) | [Mitigation.DSQL.1](#mitigationdsql1), [Mitigation.DSQL.2](#mitigationdsql2), [Mitigation.DSQL.Cluster.1](#mitigationdsqlcluster1), [Mitigation.DSQL.Cluster.2](#mitigationdsqlcluster2), [Mitigation.DSQL.Cluster.4](#mitigationdsqlcluster4), [Mitigation.DSQL.Cluster.5](#mitigationdsqlcluster5), [Mitigation.DSQL.Cluster.6](#mitigationdsqlcluster6), [Mitigation.DSQL.Cluster.10](#mitigationdsqlcluster10) |
@@ -1539,7 +1516,7 @@ Mitigations attach to an operation directly (the operation appears in the mitiga
 | [CloudWatch Logging - Vended Logs Delivery V2](../mitigation-goals.md#cloudwatch-logging---vended-logs-delivery-v2) | — |  |
 | [Configure Optional Encryption at Rest](../mitigation-goals.md#configure-optional-encryption-at-rest) | — |  |
 | [Cross-Region Replication](../mitigation-goals.md#cross-region-replication) | yes | [Mitigation.DSQL.Cluster.5](#mitigationdsqlcluster5) |
-| [Cross-Service Confused Deputy Prevention - Resource-based policies](../mitigation-goals.md#cross-service-confused-deputy-prevention---resource-based-policies) | yes | [Mitigation.DSQL.Cluster.7](#mitigationdsqlcluster7) |
+| [Cross-Service Confused Deputy Prevention - Resource-based policies](../mitigation-goals.md#cross-service-confused-deputy-prevention---resource-based-policies) | yes | [Mitigation.DSQL.Cluster.11](#mitigationdsqlcluster11) |
 | [Customer Code Execution - Govern Code Content](../mitigation-goals.md#customer-code-execution---govern-code-content) | — |  |
 | [Default Customer Managed Key Usage](../mitigation-goals.md#default-customer-managed-key-usage) | — |  |
 | [Deletion/Termination Protection](../mitigation-goals.md#deletiontermination-protection) | yes | [Mitigation.DSQL.Cluster.10](#mitigationdsqlcluster10) |
@@ -1577,7 +1554,7 @@ Mitigations attach to an operation directly (the operation appears in the mitiga
 |---|---|
 | [Account Access Removal](../threat-impacts.md#account-access-removal) | [Threat.DSQL.Cluster.2](#threatdsqlcluster2) |
 | [Account and Resource Discovery](../threat-impacts.md#account-and-resource-discovery) | [Threat.DSQL.Stream.2](#threatdsqlstream2) |
-| [Data Collection](../threat-impacts.md#data-collection) | [Threat.DSQL.1](#threatdsql1), [Threat.DSQL.2](#threatdsql2), [Threat.DSQL.Cluster.6](#threatdsqlcluster6), [Threat.DSQL.Cluster.7](#threatdsqlcluster7), [Threat.DSQL.Cluster.9](#threatdsqlcluster9), [Threat.DSQL.Cluster.10](#threatdsqlcluster10), [Threat.DSQL.Cluster.12](#threatdsqlcluster12), [Threat.DSQL.Cluster.13](#threatdsqlcluster13) |
+| [Data Collection](../threat-impacts.md#data-collection) | [Threat.DSQL.1](#threatdsql1), [Threat.DSQL.2](#threatdsql2), [Threat.DSQL.Cluster.6](#threatdsqlcluster6), [Threat.DSQL.Cluster.7](#threatdsqlcluster7), [Threat.DSQL.Cluster.9](#threatdsqlcluster9), [Threat.DSQL.Cluster.10](#threatdsqlcluster10), [Threat.DSQL.Cluster.12](#threatdsqlcluster12) |
 | [Data Destruction](../threat-impacts.md#data-destruction) | [Threat.DSQL.Cluster.1](#threatdsqlcluster1), [Threat.DSQL.Cluster.2](#threatdsqlcluster2), [Threat.DSQL.Cluster.3](#threatdsqlcluster3), [Threat.DSQL.Cluster.8](#threatdsqlcluster8), [Threat.DSQL.Cluster.10](#threatdsqlcluster10), [Threat.DSQL.Cluster.11](#threatdsqlcluster11) |
 | [Data Encrypted for Impact](../threat-impacts.md#data-encrypted-for-impact) | [Threat.DSQL.Cluster.4](#threatdsqlcluster4) |
 | [Data Exfiltration](../threat-impacts.md#data-exfiltration) | [Threat.DSQL.1](#threatdsql1), [Threat.DSQL.2](#threatdsql2), [Threat.DSQL.Cluster.7](#threatdsqlcluster7), [Threat.DSQL.Cluster.8](#threatdsqlcluster8), [Threat.DSQL.Cluster.9](#threatdsqlcluster9), [Threat.DSQL.Cluster.10](#threatdsqlcluster10), [Threat.DSQL.Cluster.12](#threatdsqlcluster12) |

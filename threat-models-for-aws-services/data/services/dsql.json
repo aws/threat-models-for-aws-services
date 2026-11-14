@@ -131,7 +131,7 @@
         "reference": "https://aws.amazon.com/rds/aurora/dsql/faqs/"
       }
     ],
-    "serviceModelUrl": "https://github.com/aws/api-models-aws/blob/a0767ac42e279dfc8b311564c33436f8abfd3031/models/dsql/service/2018-05-10/dsql-2018-05-10.json"
+    "serviceModelUrl": "https://github.com/aws/api-models-aws/blob/3d89dd029ebd13b775ab5d22e5075399f20b35e4/models/dsql/service/2018-05-10/dsql-2018-05-10.json"
   },
   "operations": [
     {
@@ -1065,9 +1065,6 @@
           "operation": "PutClusterPolicy",
           "paths": [
             {
-              "path": "$.identifier"
-            },
-            {
               "path": "$.policy"
             }
           ]
@@ -1087,7 +1084,7 @@
       "mitigationContext": [
         {
           "type": "SCOPING",
-          "context": "Aurora DSQL supports a resource-based policy that specifies who can access the cluster and what actions they can perform. The service does not currently support cross-account access through the resource-based policy, so restricting access to principals in your organization is a defense-in-depth measure.",
+          "context": "An Aurora DSQL cluster supports a resource-based policy that specifies who can access it and what actions they can perform. The service does not currently support cross-account access through the resource-based policy, so restricting access to principals in your organization is a defense-in-depth measure.",
           "mitigationGoalId": "68baec3f-103a-455b-93ea-1af74ccc1ff8"
         }
       ],
@@ -1106,15 +1103,15 @@
         },
         {
           "type": "IMPLEMENTATION",
-          "id": "1216f426-8ee9-5653-a352-9f0d500021a9"
-        },
-        {
-          "type": "IMPLEMENTATION",
           "id": "32ac6b53-a673-5f05-b14f-a7c292fc2e2e"
         },
         {
           "type": "IMPLEMENTATION",
-          "id": "435a85ea-fda6-56a8-bf35-e8627d47a0fb"
+          "id": "8bad46aa-f463-5616-8a12-8f144472fb08"
+        },
+        {
+          "type": "IMPLEMENTATION",
+          "id": "9758c2ef-2ffb-53c5-aa87-811400a952f5"
         },
         {
           "type": "IMPLEMENTATION",
@@ -1122,11 +1119,11 @@
         }
       ],
       "createTime": "2026-08-26T22:12:42Z",
-      "lastUpdateTime": "2026-10-13T03:18:11Z"
+      "lastUpdateTime": "2026-11-09T23:41:22Z"
     },
     {
       "id": "5ccc0b97-a7a8-5671-83cc-1162e939164d",
-      "alias": "Mitigation.DSQL.Cluster.7",
+      "alias": "Mitigation.DSQL.Cluster.11",
       "statement": "An Aurora DSQL cluster should be accessed by an AWS service principal, such as the AWS Backup service principal, only when the service principal is acting on behalf of a trusted resource, AWS account, or organization",
       "configurationRequestParameters": [
         {
@@ -1142,9 +1139,6 @@
           "service": "dsql",
           "operation": "PutClusterPolicy",
           "paths": [
-            {
-              "path": "$.identifier"
-            },
             {
               "path": "$.policy"
             }
@@ -1165,7 +1159,7 @@
       "mitigationContext": [
         {
           "type": "SCOPING",
-          "context": "Your Aurora DSQL cluster supports a resource-based policy that can grant cluster actions such as `dsql:GetCluster` to the AWS Backup service principal, `backup.amazonaws.com`. Such a grant may raise the cross-service confused deputy problem, where the service calls Aurora DSQL on behalf of a resource outside your organization.",
+          "context": "An Aurora DSQL cluster supports a resource-based policy that specifies who can access it and what actions they can perform. The service does not currently support AWS service principals in the resource-based policy, so restricting which accounts or resources a service may act on behalf of is a defense-in-depth measure.",
           "mitigationGoalId": "78ba33f0-911f-445c-9895-0d76096d86d7"
         }
       ],
@@ -1184,23 +1178,19 @@
         },
         {
           "type": "IMPLEMENTATION",
+          "id": "3e7700ba-7e83-55f4-bf5f-2ef20677d96a"
+        },
+        {
+          "type": "IMPLEMENTATION",
           "id": "4ad61a0e-0817-5fb0-a76a-689ea2d8bd83"
         },
         {
           "type": "IMPLEMENTATION",
-          "id": "81036bcc-b757-5250-a8d3-4e65e2a39eea"
-        },
-        {
-          "type": "IMPLEMENTATION",
-          "id": "9e90b42a-6db0-52a5-a2c5-84bfb4865a71"
-        },
-        {
-          "type": "IMPLEMENTATION",
-          "id": "ebadc2c0-6450-5e6c-8cea-72ecebb50170"
+          "id": "87fecc06-b16f-53f4-a0e5-3bab36377215"
         }
       ],
-      "createTime": "2026-08-26T22:12:42Z",
-      "lastUpdateTime": "2026-10-01T19:56:51Z"
+      "createTime": "2026-11-09T08:19:49Z",
+      "lastUpdateTime": "2026-11-14T02:13:01Z"
     },
     {
       "id": "d8cf92d4-8ab6-5447-a7e1-ca2d61547cb3",
@@ -1453,9 +1443,6 @@
           "operation": "CreateStream",
           "paths": [
             {
-              "path": "$.clusterIdentifier"
-            },
-            {
               "path": "$.targetDefinition.kinesis.roleArn"
             }
           ]
@@ -1506,7 +1493,7 @@
         },
         {
           "type": "IMPLEMENTATION",
-          "id": "24b500ec-c2ad-525d-a8b8-f7498e62dfb4"
+          "id": "bf0e0863-07e8-5845-93d5-6a3d6918dac3"
         },
         {
           "type": "IMPLEMENTATION",
@@ -1518,7 +1505,7 @@
         }
       ],
       "createTime": "2026-09-09T03:25:24Z",
-      "lastUpdateTime": "2026-10-06T23:17:36Z"
+      "lastUpdateTime": "2026-11-09T23:41:27Z"
     },
     {
       "id": "030b21f4-efa9-589d-90f5-fe2908982791",
@@ -2608,7 +2595,7 @@
           "operation": "DeleteCluster",
           "paths": [
             {
-              "path": "$.identifier"
+              "path": "$."
             }
           ]
         },
@@ -2617,7 +2604,7 @@
           "operation": "DeleteClusterPolicy",
           "paths": [
             {
-              "path": "$.identifier"
+              "path": "$."
             }
           ]
         },
@@ -2625,9 +2612,6 @@
           "service": "dsql",
           "operation": "PutClusterPolicy",
           "paths": [
-            {
-              "path": "$.identifier"
-            },
             {
               "path": "$.policy"
             }
@@ -2641,9 +2625,6 @@
               "path": "$.deletionProtectionEnabled"
             },
             {
-              "path": "$.identifier"
-            },
-            {
               "path": "$.kmsEncryptionKey"
             }
           ]
@@ -2655,7 +2636,7 @@
       "threatContext": [
         {
           "type": "SCOPING",
-          "context": "Aurora DSQL does not currently support cross-account access through resource-based policies, so your clusters can be accessed only by principals in the same account. If cross-account access becomes available, an untrusted IAM principal named in the policy could read, alter, or drop your schemas, tables, and rows.",
+          "context": "Aurora DSQL does not currently support cross-account access through resource-based policies, so your clusters can be accessed only by principals in the same account. If cross-account access becomes available, an untrusted IAM principal named in the policy could then read, alter, or drop your schemas, tables, and rows.",
           "potentialThreatId": "7fa4cdd4-d3cd-418c-8cec-ea25a0c174e2"
         }
       ],
@@ -2706,14 +2687,6 @@
         },
         {
           "type": "FRAMEWORK",
-          "id": "T1537",
-          "framework": {
-            "name": "MITRE ATT&CK",
-            "version": "18.1"
-          }
-        },
-        {
-          "type": "FRAMEWORK",
           "id": "T1485",
           "framework": {
             "name": "MITRE ATT&CK",
@@ -2730,7 +2703,7 @@
         }
       ],
       "createTime": "2026-08-26T22:12:42Z",
-      "lastUpdateTime": "2026-10-13T03:59:20Z"
+      "lastUpdateTime": "2026-11-09T23:41:22Z"
     },
     {
       "id": "df317096-d80c-5bf3-b981-e311cb1fd134",
@@ -2839,15 +2812,12 @@
       "alias": "Threat.DSQL.Cluster.13",
       "source": "Untrusted IAM principal",
       "prerequisites": "with access to configure an AWS service that has been granted access to an Aurora DSQL cluster through its resource-based policy",
-      "threatAction": "may be able to cause that AWS service to interact with the cluster using the principal's data or context, such as coercing AWS Backup into reading the cluster and producing a full cluster backup on their behalf",
+      "threatAction": "may be able to cause that AWS service to interact with the cluster using the principal's data or context",
       "requestParameters": [
         {
           "service": "backup",
           "operation": "CreateBackupSelection",
           "paths": [
-            {
-              "path": "$.BackupSelection.IamRoleArn"
-            },
             {
               "path": "$.BackupSelection.Resources[*]"
             }
@@ -2857,9 +2827,6 @@
           "service": "backup",
           "operation": "StartBackupJob",
           "paths": [
-            {
-              "path": "$.IamRoleArn"
-            },
             {
               "path": "$.ResourceArn"
             }
@@ -2879,9 +2846,6 @@
           "operation": "PutClusterPolicy",
           "paths": [
             {
-              "path": "$.identifier"
-            },
-            {
               "path": "$.policy"
             }
           ]
@@ -2890,7 +2854,7 @@
       "threatContext": [
         {
           "type": "SCOPING",
-          "context": "The resource-based policy on your cluster can grant access to an AWS service principal such as `backup.amazonaws.com`. An untrusted IAM principal who can configure AWS Backup may then have it produce a full backup of your cluster on their behalf.",
+          "context": "Aurora DSQL does not currently support AWS service principals in resource-based policies. If that support becomes available, your Aurora DSQL cluster's resource-based policy could then grant the `dsql:GetCluster` permission to an AWS service such as `backup.amazonaws.com`. An untrusted IAM principal who can configure that service may cause it to retrieve information about your cluster for their backup jobs.",
           "potentialThreatId": "c69d4a95-e060-42aa-a395-a07aaaca802a"
         }
       ],
@@ -2908,10 +2872,6 @@
           "id": "ad5e4ee7-4af3-457e-9e55-3d14bf27819e"
         },
         {
-          "type": "THREAT_IMPACT",
-          "id": "b9d4e6f2-8a7c-4e3b-9f5d-2c8a1e6b4f7c"
-        },
-        {
           "type": "MITIGATION",
           "id": "5ccc0b97-a7a8-5671-83cc-1162e939164d"
         },
@@ -2922,18 +2882,10 @@
             "name": "MITRE ATT&CK",
             "version": "18.1"
           }
-        },
-        {
-          "type": "FRAMEWORK",
-          "id": "T1213.006",
-          "framework": {
-            "name": "MITRE ATT&CK",
-            "version": "18.1"
-          }
         }
       ],
-      "createTime": "2026-08-26T22:12:42Z",
-      "lastUpdateTime": "2026-09-22T19:55:58Z"
+      "createTime": "2026-11-09T19:24:36Z",
+      "lastUpdateTime": "2026-11-14T02:13:01Z"
     },
     {
       "id": "947b4f14-83b7-508d-9e00-269e986a0102",
@@ -3019,8 +2971,8 @@
       "id": "abf2136e-1d18-5cf0-88d8-777fa10525ad",
       "alias": "Threat.DSQL.Stream.2",
       "source": "Untrusted IAM principal",
-      "prerequisites": "that has been granted access to my Aurora DSQL stream's CDC service role through its trust policy",
-      "threatAction": "can assume my CDC service role and act with its permissions",
+      "prerequisites": "that has been granted access to my Aurora DSQL stream's IAM service role through its trust policy",
+      "threatAction": "can assume my service role and act with its permissions",
       "requestParameters": [
         {
           "service": "dsql",
@@ -3044,7 +2996,7 @@
       "threatContext": [
         {
           "type": "SCOPING",
-          "context": "Aurora DSQL assumes a CDC service role that you create (designated by `$.targetDefinition.kinesis.roleArn`) to deliver your stream's change records. If that role's trust policy grants unrestricted assumption, an identity outside your organization could assume the role and act with its permissions.",
+          "context": "Your Aurora DSQL stream designates a CDC service role through `$.targetDefinition.kinesis.roleArn`, and you author its trust policy. That trust policy can allow identities outside your organization to assume the role and act with its permissions, such as writing records to your target Kinesis data stream.",
           "potentialThreatId": "9dc4f10a-c396-462f-ae45-23e804ea2bd2"
         }
       ],
@@ -3095,7 +3047,7 @@
         }
       ],
       "createTime": "2026-09-09T03:25:24Z",
-      "lastUpdateTime": "2026-10-01T21:01:18Z"
+      "lastUpdateTime": "2026-11-09T23:41:27Z"
     }
   ],
   "implementations": [
@@ -4217,7 +4169,7 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This implementation governs Aurora DSQL API calls against your cluster with `aws:PrincipalOrgID`, while exempting AWS services that access it on your behalf (`aws:PrincipalIsAWSService`). As a result, identities outside your organization are restricted from accessing your cluster, and those service requests are scoped by `aws:SourceOrgID`.",
+          "context": "This implementation guidance recommends governing Aurora DSQL API calls against your cluster with the `aws:PrincipalOrgID` condition key in its resource-based policy, while exempting AWS services that access it on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent identities outside your organization from accessing your cluster.",
           "mitigationId": "8bf8e1b3-7609-5976-b49e-2affa4faa13c"
         },
         {
@@ -4242,10 +4194,10 @@
         }
       ],
       "createTime": "2026-09-22T16:59:09Z",
-      "lastUpdateTime": "2026-09-24T00:55:32Z"
+      "lastUpdateTime": "2026-11-08T23:52:29Z"
     },
     {
-      "id": "435a85ea-fda6-56a8-bf35-e8627d47a0fb",
+      "id": "9758c2ef-2ffb-53c5-aa87-811400a952f5",
       "alias": "Implementation.DSQL.Cluster.14",
       "behavior": "PROACTIVE",
       "implementationType": "AWS::CloudFormation::Type::HOOK",
@@ -4308,10 +4260,13 @@
             },
             {
               "service": "accessanalyzer",
-              "operation": "ValidatePolicy",
+              "operation": "CheckNoNewAccess",
               "requestParameters": [
                 {
-                  "path": "$.policyDocument"
+                  "path": "$.newPolicyDocument"
+                },
+                {
+                  "path": "$.existingPolicyDocument"
                 },
                 {
                   "path": "$.policyType",
@@ -4320,8 +4275,8 @@
               ],
               "responseParameters": [
                 {
-                  "path": "$.findings[*].issueCode",
-                  "expectedValue": "RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL"
+                  "path": "$.result",
+                  "expectedValue": "PASS"
                 }
               ]
             }
@@ -4331,21 +4286,13 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This implementation flags `dsql:DbConnect` and `dsql:DbConnectAdmin` grants in your cluster resource-based policy (`$.PolicyDocument`) to principals beyond your reference policy's allowlist. Reviewing those grants before your cluster is created or updated helps you establish an identity perimeter.",
+          "context": "This implementation guidance recommends validating `$.PolicyDocument`, the cluster's resource-based policy, before provisioning your Aurora DSQL cluster. The hook helps prevent a policy that can grant access beyond your reference policy, permissions you specify (such as `dsql:DbConnect` and `dsql:DbConnectAdmin`), or access to an AWS service principal beyond a reference policy containing the source conditions you accept from being provisioned.",
           "mitigationId": "8bf8e1b3-7609-5976-b49e-2affa4faa13c"
         },
         {
           "type": "REFERENCE",
-          "context": "This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks on your cluster resource-based policy (`$.PolicyDocument`). Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. `ValidatePolicy` reports the `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL` finding when a grant to AWS services acting on your behalf does not specify a source. Custom policy checks (`CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to analyze the access your policy can grant. `CheckNoNewAccess` compares your policy with a reference policy that you maintain (`$.existingPolicyDocument`). The reference policy allowlists the principals that may be granted access to your cluster. The check fails when your policy might grant access beyond that allowlist. `CheckAccessNotGranted` fails when your policy might grant `dsql:DbConnect` or `dsql:DbConnectAdmin`. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.",
+          "context": "This implementation recommends using IAM Access Analyzer custom policy checks. Custom policy checks (`CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain or grant specified permissions. The first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository. The second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.",
           "links": [
-            {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html",
-              "title": "IAM JSON policy grammar"
-            },
-            {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
-              "title": "Security best practices in IAM"
-            },
             {
               "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html",
               "title": "IAM Access Analyzer custom policy checks"
@@ -4368,10 +4315,10 @@
         }
       ],
       "createTime": "2026-09-24T01:54:08Z",
-      "lastUpdateTime": "2026-09-24T01:54:08Z"
+      "lastUpdateTime": "2026-11-09T23:41:22Z"
     },
     {
-      "id": "1216f426-8ee9-5653-a352-9f0d500021a9",
+      "id": "8bad46aa-f463-5616-8a12-8f144472fb08",
       "alias": "Implementation.DSQL.Cluster.15",
       "behavior": "DETECTIVE",
       "implementationType": "AWS::Config::ConfigRule",
@@ -4435,10 +4382,13 @@
             },
             {
               "service": "accessanalyzer",
-              "operation": "ValidatePolicy",
+              "operation": "CheckNoNewAccess",
               "requestParameters": [
                 {
-                  "path": "$.policyDocument"
+                  "path": "$.newPolicyDocument"
+                },
+                {
+                  "path": "$.existingPolicyDocument"
                 },
                 {
                   "path": "$.policyType",
@@ -4447,8 +4397,8 @@
               ],
               "responseParameters": [
                 {
-                  "path": "$.findings[*].issueCode",
-                  "expectedValue": "RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL"
+                  "path": "$.result",
+                  "expectedValue": "PASS"
                 }
               ]
             }
@@ -4458,21 +4408,13 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This implementation flags grants in your cluster's resource-based policy (`$.configuration.PolicyDocument`) to identities outside your reference policy or to AWS services without source condition keys. Flagging these grants helps you detect access to your cluster that extends beyond trusted identities.",
+          "context": "This implementation guidance recommends reading `$.configuration.PolicyDocument`, your cluster's resource-based policy, and evaluating it for access beyond your reference policy, permissions you specify, and AWS service grants beyond a reference policy containing the source conditions you accept. Flagging those grants helps you detect access to your cluster that extends beyond trusted identities.",
           "mitigationId": "8bf8e1b3-7609-5976-b49e-2affa4faa13c"
         },
         {
           "type": "REFERENCE",
-          "context": "This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.\n\nBasic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.\n\nCustom policy checks (`CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain or grant specified permissions.\n\nThe reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.",
+          "context": "This implementation recommends using IAM Access Analyzer custom policy checks.\n\nCustom policy checks (`CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain or grant specified permissions.\n\nThe first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.\n\nThe second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.",
           "links": [
-            {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html",
-              "title": "IAM policy grammar"
-            },
-            {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
-              "title": "AWS best practices"
-            },
             {
               "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html",
               "title": "IAM Access Analyzer custom policy checks"
@@ -4495,7 +4437,7 @@
         }
       ],
       "createTime": "2026-09-24T01:54:08Z",
-      "lastUpdateTime": "2026-10-09T21:16:29Z"
+      "lastUpdateTime": "2026-11-09T23:41:22Z"
     },
     {
       "id": "cb8d17df-d583-5945-94a2-498e23e40d4c",
@@ -4567,7 +4509,7 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This implementation governs Aurora DSQL API calls against your clusters with `aws:PrincipalOrgID` and `aws:SourceOrgID` condition keys, exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`). As a result, identities outside your organization are restricted from accessing your clusters.",
+          "context": "This implementation guidance recommends governing Aurora DSQL API calls against your resources with the `aws:PrincipalOrgID` condition key in a resource control policy (RCP), while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent identities outside your organization from accessing your resources.",
           "mitigationId": "8bf8e1b3-7609-5976-b49e-2affa4faa13c"
         },
         {
@@ -4596,79 +4538,11 @@
         }
       ],
       "createTime": "2026-09-22T16:59:09Z",
-      "lastUpdateTime": "2026-09-24T00:55:32Z"
+      "lastUpdateTime": "2026-11-08T23:52:29Z"
     },
     {
-      "id": "81036bcc-b757-5250-a8d3-4e65e2a39eea",
-      "alias": "Implementation.DSQL.Cluster.17",
-      "behavior": "PREVENTIVE",
-      "implementationType": "AWS::*::*::RESOURCE_POLICY",
-      "implementationGuide": {
-        "authorizationPolicy": {
-          "governedIamPermissions": [
-            {
-              "actions": [
-                {
-                  "action": "dsql:GetCluster"
-                },
-                {
-                  "action": "dsql:ListTagsForResource"
-                },
-                {
-                  "action": "dsql:StartBackupJob"
-                }
-              ],
-              "resources": [
-                {
-                  "resource": "arn:${Partition}:dsql:${Region}:${Account}:cluster/${Identifier}"
-                }
-              ],
-              "conditionKeys": [
-                {
-                  "key": "aws:SourceAccount"
-                },
-                {
-                  "key": "aws:SourceArn"
-                }
-              ]
-            }
-          ],
-          "governedResourceType": "AWS::DSQL::Cluster"
-        }
-      },
-      "implementationContext": [
-        {
-          "type": "SCOPING",
-          "context": "A resource-based policy on your Aurora DSQL cluster can grant access to AWS services acting on your behalf, such as AWS Backup. The `aws:SourceArn` and `aws:SourceAccount` condition keys restrict that access to requests made on behalf of a resource in your account.",
-          "mitigationId": "5ccc0b97-a7a8-5671-83cc-1162e939164d"
-        },
-        {
-          "type": "REFERENCE",
-          "context": "To restrict service access to your resources, use the `aws:SourceOrgID`, `aws:SourceOrgPaths`, `aws:SourceAccount`, or `aws:SourceArn` condition keys. These scope access performed on behalf of resources within a particular organization, specific organizational units, a specific AWS account, or a particular resource, respectively. Choose the condition key that matches the granularity of the restriction you want to enforce.",
-          "links": [
-            {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_data-perimeters.html#access_policies_data-perimeters-identity",
-              "title": "Establishing an identity perimeter"
-            }
-          ]
-        }
-      ],
-      "mappings": [
-        {
-          "type": "ENTITY",
-          "id": "0fb25b34-6aaa-58a3-b621-4e468552d6de"
-        },
-        {
-          "type": "MITIGATION",
-          "id": "5ccc0b97-a7a8-5671-83cc-1162e939164d"
-        }
-      ],
-      "createTime": "2026-09-10T16:48:14Z",
-      "lastUpdateTime": "2026-09-24T00:55:32Z"
-    },
-    {
-      "id": "ebadc2c0-6450-5e6c-8cea-72ecebb50170",
-      "alias": "Implementation.DSQL.Cluster.18",
+      "id": "87fecc06-b16f-53f4-a0e5-3bab36377215",
+      "alias": "Implementation.DSQL.Cluster.30",
       "behavior": "PROACTIVE",
       "implementationType": "AWS::CloudFormation::Type::HOOK",
       "implementationGuide": {
@@ -4686,10 +4560,13 @@
           "governedApiOperations": [
             {
               "service": "accessanalyzer",
-              "operation": "ValidatePolicy",
+              "operation": "CheckNoNewAccess",
               "requestParameters": [
                 {
-                  "path": "$.policyDocument"
+                  "path": "$.newPolicyDocument"
+                },
+                {
+                  "path": "$.existingPolicyDocument"
                 },
                 {
                   "path": "$.policyType",
@@ -4698,8 +4575,8 @@
               ],
               "responseParameters": [
                 {
-                  "path": "$.findings[*].issueCode",
-                  "expectedValue": "RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL"
+                  "path": "$.result",
+                  "expectedValue": "PASS"
                 }
               ]
             }
@@ -4709,20 +4586,20 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This implementation validates the resource-based policy your template declares in `$.PolicyDocument`, helping address the cross-service confused deputy problem for your cluster. When a grant to an AWS service principal omits the `aws:SourceArn`, `aws:SourceAccount`, or `aws:SourceOrgID` condition keys, the hook fails the stack operation.",
+          "context": "This implementation guidance recommends validating `$.PolicyDocument`, your Aurora DSQL cluster's resource-based policy, before provisioning. When a grant to an AWS service principal extends beyond a reference policy containing the source conditions you accept, the hook fails the stack operation, which helps prevent such a grant from being provisioned.",
           "mitigationId": "5ccc0b97-a7a8-5671-83cc-1162e939164d"
         },
         {
           "type": "REFERENCE",
-          "context": "This implementation recommends using IAM Access Analyzer basic policy checks.\n\nBasic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.",
+          "context": "This implementation recommends using IAM Access Analyzer custom policy checks. Custom policy checks (`CheckNoNewAccess`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain. The reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`. The IAM Access Analyzer custom policy checks samples repository shows the reference policy format; compose the policy from the key combinations you accept.",
           "links": [
             {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html",
-              "title": "IAM policy grammar"
+              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html",
+              "title": "IAM Access Analyzer custom policy checks"
             },
             {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
-              "title": "AWS best practices"
+              "href": "https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples",
+              "title": "IAM Access Analyzer custom policy checks samples"
             }
           ]
         }
@@ -4737,12 +4614,12 @@
           "id": "5ccc0b97-a7a8-5671-83cc-1162e939164d"
         }
       ],
-      "createTime": "2026-08-26T22:12:42Z",
-      "lastUpdateTime": "2026-10-01T21:01:13Z"
+      "createTime": "2026-11-09T08:19:49Z",
+      "lastUpdateTime": "2026-11-09T23:41:22Z"
     },
     {
-      "id": "9e90b42a-6db0-52a5-a2c5-84bfb4865a71",
-      "alias": "Implementation.DSQL.Cluster.19",
+      "id": "3e7700ba-7e83-55f4-bf5f-2ef20677d96a",
+      "alias": "Implementation.DSQL.Cluster.31",
       "behavior": "DETECTIVE",
       "implementationType": "AWS::Config::ConfigRule",
       "implementationGuide": {
@@ -4761,10 +4638,13 @@
           "governedApiOperations": [
             {
               "service": "accessanalyzer",
-              "operation": "ValidatePolicy",
+              "operation": "CheckNoNewAccess",
               "requestParameters": [
                 {
-                  "path": "$.policyDocument"
+                  "path": "$.newPolicyDocument"
+                },
+                {
+                  "path": "$.existingPolicyDocument"
                 },
                 {
                   "path": "$.policyType",
@@ -4773,8 +4653,7 @@
               ],
               "responseParameters": [
                 {
-                  "path": "$.findings[*].issueCode",
-                  "expectedValue": "RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL"
+                  "path": "$.result"
                 }
               ]
             }
@@ -4784,20 +4663,20 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This rule reads the resource-based policy on your cluster from `$.configuration.PolicyDocument`, then flags grants that omit an `aws:SourceArn`, `aws:SourceAccount`, or `aws:SourceOrgID` condition key. Flagging those grants helps you detect access by AWS services acting on your behalf that lacks a source restriction.",
+          "context": "This implementation guidance recommends reading `$.configuration.PolicyDocument`, your Aurora DSQL cluster's resource-based policy, and flagging grants to an AWS service principal that extend beyond a reference policy containing the source conditions you accept. Flagging those grants helps you detect access by AWS services acting on your behalf that lacks a source restriction you accept.",
           "mitigationId": "5ccc0b97-a7a8-5671-83cc-1162e939164d"
         },
         {
           "type": "REFERENCE",
-          "context": "This implementation recommends using IAM Access Analyzer basic policy checks.\n\nBasic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.",
+          "context": "This implementation recommends using IAM Access Analyzer custom policy checks.\n\nCustom policy checks (`CheckNoNewAccess`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain.\n\nThe reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`. The IAM Access Analyzer custom policy checks samples repository shows the reference policy format; compose the policy from the key combinations you accept.",
           "links": [
             {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html",
-              "title": "IAM policy grammar"
+              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html",
+              "title": "IAM Access Analyzer custom policy checks"
             },
             {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
-              "title": "AWS best practices"
+              "href": "https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples",
+              "title": "IAM Access Analyzer custom policy checks samples"
             }
           ]
         }
@@ -4812,12 +4691,12 @@
           "id": "5ccc0b97-a7a8-5671-83cc-1162e939164d"
         }
       ],
-      "createTime": "2026-09-22T16:59:09Z",
-      "lastUpdateTime": "2026-10-01T19:56:51Z"
+      "createTime": "2026-11-09T08:19:49Z",
+      "lastUpdateTime": "2026-11-09T23:41:22Z"
     },
     {
       "id": "4ad61a0e-0817-5fb0-a76a-689ea2d8bd83",
-      "alias": "Implementation.DSQL.Cluster.20",
+      "alias": "Implementation.DSQL.Cluster.32",
       "behavior": "PREVENTIVE",
       "implementationType": "AWS::Organizations::Policy::RESOURCE_CONTROL_POLICY",
       "implementationGuide": {
@@ -4857,7 +4736,7 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This implementation restricts Amazon Aurora DSQL API calls against your clusters with the `aws:SourceOrgID`, `aws:SourceAccount`, and `aws:PrincipalIsAWSService` condition keys. Requests that do not satisfy those conditions are denied, so AWS services cannot access your cluster on behalf of resources outside your organization.",
+          "context": "This implementation guidance recommends restricting Aurora DSQL API calls AWS services make against your clusters on your behalf (`aws:PrincipalIsAWSService`) with the `aws:SourceOrgID` and `aws:SourceAccount` condition keys in a resource control policy (RCP). These conditions help prevent AWS services from accessing your clusters on behalf of resources outside your organization, regardless of what each cluster's resource-based policy grants.",
           "mitigationId": "5ccc0b97-a7a8-5671-83cc-1162e939164d"
         },
         {
@@ -4885,8 +4764,8 @@
           "id": "5ccc0b97-a7a8-5671-83cc-1162e939164d"
         }
       ],
-      "createTime": "2026-09-22T16:59:09Z",
-      "lastUpdateTime": "2026-09-24T00:55:32Z"
+      "createTime": "2026-11-09T08:19:49Z",
+      "lastUpdateTime": "2026-11-09T08:19:49Z"
     },
     {
       "id": "7e4d0bfd-8da5-5356-8a72-b40575cf0c36",
@@ -5431,7 +5310,7 @@
       "lastUpdateTime": "2026-09-24T00:55:32Z"
     },
     {
-      "id": "24b500ec-c2ad-525d-a8b8-f7498e62dfb4",
+      "id": "bf0e0863-07e8-5845-93d5-6a3d6918dac3",
       "alias": "Implementation.DSQL.Stream.1",
       "behavior": "DETECTIVE",
       "implementationType": "AWS::Config::ConfigRule",
@@ -5539,24 +5418,23 @@
             },
             {
               "service": "accessanalyzer",
-              "operation": "ValidatePolicy",
+              "operation": "CheckNoNewAccess",
               "requestParameters": [
                 {
-                  "path": "$.policyDocument"
+                  "path": "$.newPolicyDocument"
+                },
+                {
+                  "path": "$.existingPolicyDocument"
                 },
                 {
                   "path": "$.policyType",
                   "expectedValue": "RESOURCE_POLICY"
-                },
-                {
-                  "path": "$.validatePolicyResourceType",
-                  "expectedValue": "AWS::IAM::AssumeRolePolicyDocument"
                 }
               ],
               "responseParameters": [
                 {
-                  "path": "$.findings[*].issueCode",
-                  "expectedValue": "RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL"
+                  "path": "$.result",
+                  "expectedValue": "PASS"
                 }
               ]
             }
@@ -5566,21 +5444,13 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This implementation reads `$.targetDefinition.kinesis.roleArn`, your CDC stream's service role, then inspects `$.Role.AssumeRolePolicyDocument`, that role's trust policy. Flagging policies that allow public role assumption, or that omit the `aws:SourceArn`, `aws:SourceAccount`, or `aws:SourceOrgID` condition keys, helps you detect overly permissive role assumption.",
+          "context": "This implementation guidance recommends reading `$.targetDefinition.kinesis.roleArn`, your stream's service role, then evaluating `$.Role.AssumeRolePolicyDocument`, that role's trust policy, with IAM Access Analyzer. Flagging trust policies that allow public role assumption, or assumption beyond your reference policy, or that omit the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, helps you detect overly permissive role assumption.",
           "mitigationId": "0e51e4f7-d22e-52a1-b0ef-db322aa19360"
         },
         {
           "type": "REFERENCE",
-          "context": "This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.\n\nBasic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.\n\nCustom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access or grant new access beyond a reference policy you maintain.\n\nThe reference policy for `CheckNoNewAccess` allowlists the principals this role's trust policy may grant assumption to. The check fails when the trust policy grants role assumption beyond that allowlist. Example reference policies for role trust policies are available in the IAM Access Analyzer custom policy checks samples repository.",
+          "context": "This implementation recommends using IAM Access Analyzer custom policy checks.\n\nCustom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access or grant new access beyond a reference policy you maintain.\n\nThe first reference policy for `CheckNoNewAccess` allowlists the principals this role's trust policy may grant assumption to. The check fails when the trust policy grants role assumption beyond that allowlist. Example reference policies for role trust policies are available in the IAM Access Analyzer custom policy checks samples repository.\n\nThe second reference policy for `CheckNoNewAccess` encodes the source conditions you accept when the service principal assumes the role: one role-assumption statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the trust policy grants role assumption that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.",
           "links": [
-            {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html",
-              "title": "IAM policy grammar"
-            },
-            {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
-              "title": "AWS best practices"
-            },
             {
               "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html",
               "title": "IAM Access Analyzer custom policy checks"
@@ -5603,7 +5473,7 @@
         }
       ],
       "createTime": "2026-09-25T00:16:01Z",
-      "lastUpdateTime": "2026-10-01T21:01:18Z"
+      "lastUpdateTime": "2026-11-09T23:41:27Z"
     },
     {
       "id": "c676b48c-2cc6-571f-966f-858ef9429e3b",
@@ -5645,7 +5515,7 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This implementation guidance recommends restricting `sts:AssumeRole` on the CDC service role you pass in `$.targetDefinition.kinesis.roleArn` to `dsql.amazonaws.com` with the `aws:SourceArn` and `aws:SourceAccount` condition keys in the role's trust policy. They help prevent Aurora DSQL from assuming the role on behalf of streams outside the ARNs and account you specify.",
+          "context": "This implementation guidance recommends a trust policy that restricts assumption of your Aurora DSQL stream's service role, `$.targetDefinition.kinesis.roleArn`, to the `dsql.amazonaws.com` service principal with the `aws:SourceArn` and `aws:SourceAccount` condition keys. These conditions help prevent Aurora DSQL from assuming the role on behalf of CDC streams outside the sources you specify.",
           "mitigationId": "0e51e4f7-d22e-52a1-b0ef-db322aa19360"
         },
         {
@@ -5670,7 +5540,7 @@
         }
       ],
       "createTime": "2026-10-01T19:56:57Z",
-      "lastUpdateTime": "2026-10-06T23:17:36Z"
+      "lastUpdateTime": "2026-11-08T23:52:34Z"
     },
     {
       "id": "ec4be1a6-c23d-5cfd-bcc7-3dceead35e7f",
@@ -5742,7 +5612,7 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This implementation restricts `sts:AssumeRole` with the `aws:PrincipalOrgID` and `aws:SourceOrgID` condition keys, while exempting AWS services that assume your role on your behalf (`aws:PrincipalIsAWSService`). Requests that do not satisfy these conditions are denied, so identities outside your organization cannot assume your CDC stream service role (`$.targetDefinition.kinesis.roleArn`).",
+          "context": "This implementation guidance recommends restricting `sts:AssumeRole` with the `aws:PrincipalOrgID` condition key in a resource control policy (RCP), while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent principals outside your organization from assuming your Aurora DSQL stream's service role, `$.targetDefinition.kinesis.roleArn`.",
           "mitigationId": "0e51e4f7-d22e-52a1-b0ef-db322aa19360"
         },
         {
@@ -5771,7 +5641,7 @@
         }
       ],
       "createTime": "2026-09-22T16:59:16Z",
-      "lastUpdateTime": "2026-09-22T16:59:16Z"
+      "lastUpdateTime": "2026-11-08T23:52:34Z"
     },
     {
       "id": "6af79ce5-b742-580f-a489-572facf37aa4",

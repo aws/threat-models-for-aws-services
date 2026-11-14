@@ -207,7 +207,7 @@
         "reference": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html"
       }
     ],
-    "serviceModelUrl": "https://github.com/aws/api-models-aws/blob/a0767ac42e279dfc8b311564c33436f8abfd3031/models/dynamodb/service/2012-08-10/dynamodb-2012-08-10.json"
+    "serviceModelUrl": "https://github.com/aws/api-models-aws/blob/3d89dd029ebd13b775ab5d22e5075399f20b35e4/models/dynamodb/service/2012-08-10/dynamodb-2012-08-10.json"
   },
   "operations": [
     {
@@ -1524,9 +1524,6 @@
           "paths": [
             {
               "path": "$.Policy"
-            },
-            {
-              "path": "$.ResourceArn"
             }
           ]
         }
@@ -1545,7 +1542,7 @@
       "mitigationContext": [
         {
           "type": "SCOPING",
-          "context": "A DynamoDB stream supports its own resource-based policy, attached directly to the stream. The policy can extend access to accounts outside your organization.",
+          "context": "A DynamoDB stream supports its own resource-based policy that specifies who can access it and what actions they can perform. The identity perimeter helps restrict access to your streams to trusted identities and AWS services acting on your behalf.",
           "mitigationGoalId": "68baec3f-103a-455b-93ea-1af74ccc1ff8"
         }
       ],
@@ -1564,11 +1561,7 @@
         },
         {
           "type": "IMPLEMENTATION",
-          "id": "0bf41bd9-51be-5168-9cc1-55f0358a4cef"
-        },
-        {
-          "type": "IMPLEMENTATION",
-          "id": "195b8186-bdc4-5d60-a755-0d34a85ccb71"
+          "id": "10e58461-bc1f-5a4a-957a-e9f321761567"
         },
         {
           "type": "IMPLEMENTATION",
@@ -1580,11 +1573,15 @@
         },
         {
           "type": "IMPLEMENTATION",
-          "id": "c9d7fb55-ef61-578c-8bbf-7521f5c84432"
+          "id": "d498fe61-71b6-5c7b-b786-386298ce3450"
+        },
+        {
+          "type": "IMPLEMENTATION",
+          "id": "d656ac1d-4598-5e6f-be3e-f957c4602535"
         }
       ],
       "createTime": "2026-09-02T23:38:25Z",
-      "lastUpdateTime": "2026-10-02T00:41:05Z"
+      "lastUpdateTime": "2026-11-09T23:40:37Z"
     },
     {
       "id": "70313bf2-bdb1-550a-883e-fe76e2044374",
@@ -2611,9 +2608,6 @@
           "paths": [
             {
               "path": "$.ResourcePolicy"
-            },
-            {
-              "path": "$.TableName"
             }
           ]
         },
@@ -2632,9 +2626,6 @@
           "paths": [
             {
               "path": "$.Policy"
-            },
-            {
-              "path": "$.ResourceArn"
             }
           ]
         }
@@ -2653,7 +2644,7 @@
       "mitigationContext": [
         {
           "type": "SCOPING",
-          "context": "A DynamoDB table supports a resource-based policy that grants permissions to perform actions on the table. That policy can grant those permissions to principals outside your organization, making the identity perimeter applicable to this table.",
+          "context": "A DynamoDB table supports a resource-based policy that specifies who can access it and what actions they can perform. The identity perimeter helps restrict access to your DynamoDB tables to trusted identities and AWS services acting on your behalf.",
           "mitigationGoalId": "68baec3f-103a-455b-93ea-1af74ccc1ff8"
         }
       ],
@@ -2672,11 +2663,11 @@
         },
         {
           "type": "IMPLEMENTATION",
-          "id": "06526a79-1144-5a57-b0d0-d87cae7bc0ca"
+          "id": "12d16cae-5ae4-5f3c-a0c3-4290c34b8966"
         },
         {
           "type": "IMPLEMENTATION",
-          "id": "12d16cae-5ae4-5f3c-a0c3-4290c34b8966"
+          "id": "1c86c96f-fbe6-5704-b265-c97acdf4ad8b"
         },
         {
           "type": "IMPLEMENTATION",
@@ -2684,15 +2675,15 @@
         },
         {
           "type": "IMPLEMENTATION",
-          "id": "8d340263-da2a-57fc-adb8-810a5513a7ca"
+          "id": "7a4aa184-93ac-57b0-9d30-4703430d7400"
         },
         {
           "type": "IMPLEMENTATION",
-          "id": "8f733d6e-f4f5-57e4-97bc-0da6229895ac"
+          "id": "c4236362-3bb3-54e0-857b-67da0517d07b"
         }
       ],
       "createTime": "2026-09-02T23:38:21Z",
-      "lastUpdateTime": "2026-10-02T00:41:01Z"
+      "lastUpdateTime": "2026-11-09T23:40:32Z"
     },
     {
       "id": "f3d3b464-0ec2-5143-ae8b-49d3013ec28b",
@@ -2738,7 +2729,7 @@
       "mitigationContext": [
         {
           "type": "SCOPING",
-          "context": "A resource-based policy on your DynamoDB table can grant an AWS service principal, such as `redshift.amazonaws.com`, access to the table. Such a grant may raise the cross-service confused deputy problem, where that principal may be able to act on behalf of resources outside your organization.",
+          "context": "A resource-based policy on your Amazon DynamoDB table can grant an AWS service principal, such as the Amazon Redshift service principal (`redshift.amazonaws.com`), the `dynamodb:ExportTableToPointInTime` action. That policy should restrict which accounts or resources the service may act on behalf of.",
           "mitigationGoalId": "78ba33f0-911f-445c-9895-0d76096d86d7"
         }
       ],
@@ -2757,11 +2748,11 @@
         },
         {
           "type": "IMPLEMENTATION",
-          "id": "607223b3-19ed-5c0c-9e0b-a59d014fe3a5"
+          "id": "9122e3ee-a142-5513-9a06-60fef45524aa"
         },
         {
           "type": "IMPLEMENTATION",
-          "id": "9122e3ee-a142-5513-9a06-60fef45524aa"
+          "id": "a6bdfc74-1401-547b-8a67-345de6210384"
         },
         {
           "type": "IMPLEMENTATION",
@@ -2769,15 +2760,15 @@
         },
         {
           "type": "IMPLEMENTATION",
-          "id": "d210d9ce-571e-55f9-9379-af1e3e86079d"
+          "id": "c893846c-e1b4-51b1-a6c0-ee325133effe"
         },
         {
           "type": "IMPLEMENTATION",
-          "id": "d7565264-aa10-5f35-92db-6d263773a426"
+          "id": "f6e406a1-153a-5fac-9580-d498e9901a84"
         }
       ],
       "createTime": "2026-09-02T23:38:21Z",
-      "lastUpdateTime": "2026-10-02T00:41:01Z"
+      "lastUpdateTime": "2026-11-09T23:40:32Z"
     },
     {
       "id": "e03a8545-5484-5d0d-a994-f87ff7dab98e",
@@ -4158,9 +4149,6 @@
           "operation": "TagResource",
           "paths": [
             {
-              "path": "$.ResourceArn"
-            },
-            {
               "path": "$.Tags[*].Key"
             },
             {
@@ -4172,9 +4160,6 @@
           "service": "dynamodb",
           "operation": "UntagResource",
           "paths": [
-            {
-              "path": "$.ResourceArn"
-            },
             {
               "path": "$.TagKeys[*]"
             }
@@ -4201,9 +4186,6 @@
             },
             {
               "path": "$.ShardIteratorType"
-            },
-            {
-              "path": "$.StreamArn"
             }
           ]
         }
@@ -4211,7 +4193,7 @@
       "threatContext": [
         {
           "type": "SCOPING",
-          "context": "A resource-based policy on your stream can grant read access to identities outside your organization. Those identities can then call `GetShardIterator` and `GetRecords` to read the item-level change records the stream retains for 24 hours.",
+          "context": "A resource-based policy on your Amazon DynamoDB stream can grant read access to principals outside your organization. Those principals can then call `GetShardIterator` and `GetRecords` to read the item-level change records the stream retains for 24 hours.",
           "potentialThreatId": "7fa4cdd4-d3cd-418c-8cec-ea25a0c174e2"
         }
       ],
@@ -4274,7 +4256,7 @@
         }
       ],
       "createTime": "2026-09-02T23:38:25Z",
-      "lastUpdateTime": "2026-09-23T03:05:58Z"
+      "lastUpdateTime": "2026-11-09T23:40:37Z"
     },
     {
       "id": "6f4d0dfe-3325-5f63-88b4-ff14feea42eb",
@@ -5981,18 +5963,6 @@
         },
         {
           "service": "dynamodb",
-          "operation": "PutResourcePolicy",
-          "paths": [
-            {
-              "path": "$.Policy"
-            },
-            {
-              "path": "$.ResourceArn"
-            }
-          ]
-        },
-        {
-          "service": "dynamodb",
           "operation": "Query",
           "paths": [
             {
@@ -6040,7 +6010,7 @@
       "threatContext": [
         {
           "type": "SCOPING",
-          "context": "A resource-based policy on your Amazon DynamoDB table can grant DynamoDB actions on the table and its items to identities outside your organization. DynamoDB enforces such cross-account grants, allowing those identities to read, change, or delete your table data.",
+          "context": "A resource-based policy on your Amazon DynamoDB table can grant DynamoDB actions on the table and its items to principals outside your organization. DynamoDB enforces such cross-account grants, allowing those principals to read, change, or delete your table data.",
           "potentialThreatId": "7fa4cdd4-d3cd-418c-8cec-ea25a0c174e2"
         }
       ],
@@ -6115,7 +6085,7 @@
         }
       ],
       "createTime": "2026-09-02T23:38:21Z",
-      "lastUpdateTime": "2026-09-23T03:05:53Z"
+      "lastUpdateTime": "2026-11-09T23:40:32Z"
     },
     {
       "id": "abf2b08b-f8d1-58b6-9f05-e975fee9dd95",
@@ -6678,7 +6648,7 @@
       "threatContext": [
         {
           "type": "SCOPING",
-          "context": "Your table's resource-based policy can grant an AWS service such as `redshift.amazonaws.com` or `glue.amazonaws.com` access to the table. An untrusted principal who can configure that service may cause it to interact with your table using the principal's own data or context.",
+          "context": "Your table's resource-based policy can grant the `dynamodb:ExportTableToPointInTime`, `dynamodb:DescribeTable`, and `dynamodb:DescribeExport` permissions to an AWS service such as `redshift.amazonaws.com` or `glue.amazonaws.com`. An untrusted IAM principal who can configure that service may cause it to export your table's data to a target they control.",
           "potentialThreatId": "c69d4a95-e060-42aa-a395-a07aaaca802a"
         }
       ],
@@ -6721,7 +6691,7 @@
         }
       ],
       "createTime": "2026-09-02T23:38:21Z",
-      "lastUpdateTime": "2026-09-23T03:05:53Z"
+      "lastUpdateTime": "2026-11-09T23:40:32Z"
     },
     {
       "id": "b2f23658-c285-5a06-bb77-9cae3198c01d",
@@ -7800,7 +7770,7 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This resource-based policy governs all Amazon DynamoDB API calls against your stream with the `aws:PrincipalOrgID` condition key, while exempting AWS services that access the stream on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. As a result, reads of the stream's item-level change records are restricted to principals in your organization and services acting on your behalf.",
+          "context": "This implementation guidance recommends governing Amazon DynamoDB API calls against your stream with the `aws:PrincipalOrgID` condition key in its resource-based policy, while exempting AWS services that access it on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent identities outside your organization from accessing your stream.",
           "mitigationId": "80e20281-6029-5a10-83ae-dbaa2f4cd4fa"
         },
         {
@@ -7825,10 +7795,10 @@
         }
       ],
       "createTime": "2026-09-23T03:05:58Z",
-      "lastUpdateTime": "2026-09-23T03:05:58Z"
+      "lastUpdateTime": "2026-11-08T21:54:21Z"
     },
     {
-      "id": "195b8186-bdc4-5d60-a755-0d34a85ccb71",
+      "id": "10e58461-bc1f-5a4a-957a-e9f321761567",
       "alias": "Implementation.DYNAMODB.Stream.12",
       "behavior": "PROACTIVE",
       "implementationType": "AWS::CloudFormation::Type::HOOK",
@@ -7910,10 +7880,13 @@
             },
             {
               "service": "accessanalyzer",
-              "operation": "ValidatePolicy",
+              "operation": "CheckNoNewAccess",
               "requestParameters": [
                 {
-                  "path": "$.policyDocument"
+                  "path": "$.newPolicyDocument"
+                },
+                {
+                  "path": "$.existingPolicyDocument"
                 },
                 {
                   "path": "$.policyType",
@@ -7922,8 +7895,8 @@
               ],
               "responseParameters": [
                 {
-                  "path": "$.findings[*].issueCode",
-                  "expectedValue": "RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL"
+                  "path": "$.result",
+                  "expectedValue": "PASS"
                 }
               ]
             }
@@ -7933,21 +7906,13 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This implementation validates `$.Replicas[*].ReplicaStreamSpecification.ResourcePolicy.PolicyDocument` before each replica stream is provisioned. Deployments whose stream policy would grant public access, grant untrusted principals stream actions such as `dynamodb:GetRecords`, or grant a service principal access without `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` do not succeed.",
+          "context": "This implementation guidance recommends validating `$.Replicas[*].ReplicaStreamSpecification.ResourcePolicy.PolicyDocument`, the resource-based policy on a replica's stream, before provisioning the DynamoDB stream for each global table replica. The hook helps prevent a policy that can grant public access, access beyond your reference policy, permissions you specify such as `dynamodb:GetRecords`, or access to an AWS service principal beyond a reference policy containing the source conditions you accept from being provisioned.",
           "mitigationId": "80e20281-6029-5a10-83ae-dbaa2f4cd4fa"
         },
         {
           "type": "REFERENCE",
-          "context": "This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.\n\nBasic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.\n\nCustom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.\n\nThe reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.",
+          "context": "This implementation recommends using IAM Access Analyzer custom policy checks.\n\nCustom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.\n\nThe first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.\n\nThe second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.",
           "links": [
-            {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html",
-              "title": "IAM policy grammar"
-            },
-            {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
-              "title": "AWS best practices"
-            },
             {
               "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html",
               "title": "IAM Access Analyzer custom policy checks"
@@ -7970,10 +7935,10 @@
         }
       ],
       "createTime": "2026-09-23T03:05:58Z",
-      "lastUpdateTime": "2026-10-02T00:41:05Z"
+      "lastUpdateTime": "2026-11-09T23:40:37Z"
     },
     {
-      "id": "0bf41bd9-51be-5168-9cc1-55f0358a4cef",
+      "id": "d656ac1d-4598-5e6f-be3e-f957c4602535",
       "alias": "Implementation.DYNAMODB.Stream.13",
       "behavior": "PROACTIVE",
       "implementationType": "AWS::CloudFormation::Type::HOOK",
@@ -8055,10 +8020,13 @@
             },
             {
               "service": "accessanalyzer",
-              "operation": "ValidatePolicy",
+              "operation": "CheckNoNewAccess",
               "requestParameters": [
                 {
-                  "path": "$.policyDocument"
+                  "path": "$.newPolicyDocument"
+                },
+                {
+                  "path": "$.existingPolicyDocument"
                 },
                 {
                   "path": "$.policyType",
@@ -8067,8 +8035,8 @@
               ],
               "responseParameters": [
                 {
-                  "path": "$.findings[*].issueCode",
-                  "expectedValue": "RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL"
+                  "path": "$.result",
+                  "expectedValue": "PASS"
                 }
               ]
             }
@@ -8078,21 +8046,13 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This implementation validates `$.StreamSpecification.ResourcePolicy.PolicyDocument`, the resource-based policy on your table's stream, at create and update time. The hook keeps policies that allow public access or omit service principal source conditions from being provisioned.",
+          "context": "This implementation guidance recommends validating `$.StreamSpecification.ResourcePolicy.PolicyDocument`, the resource-based policy on your table's stream, before provisioning your DynamoDB stream. The hook helps prevent a policy that can grant public access, access beyond your reference policy, permissions you specify, or access to an AWS service principal beyond a reference policy containing the source conditions you accept from being provisioned.",
           "mitigationId": "80e20281-6029-5a10-83ae-dbaa2f4cd4fa"
         },
         {
           "type": "REFERENCE",
-          "context": "This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.\n\nBasic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.\n\nCustom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.\n\nThe reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.",
+          "context": "This implementation recommends using IAM Access Analyzer custom policy checks.\n\nCustom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.\n\nThe first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.\n\nThe second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.",
           "links": [
-            {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html",
-              "title": "IAM policy grammar"
-            },
-            {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
-              "title": "AWS best practices"
-            },
             {
               "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html",
               "title": "IAM Access Analyzer custom policy checks"
@@ -8115,10 +8075,10 @@
         }
       ],
       "createTime": "2026-09-23T03:05:58Z",
-      "lastUpdateTime": "2026-10-02T02:16:33Z"
+      "lastUpdateTime": "2026-11-09T23:40:37Z"
     },
     {
-      "id": "c9d7fb55-ef61-578c-8bbf-7521f5c84432",
+      "id": "d498fe61-71b6-5c7b-b786-386298ce3450",
       "alias": "Implementation.DYNAMODB.Stream.14",
       "behavior": "DETECTIVE",
       "implementationType": "AWS::Config::ConfigRule",
@@ -8214,10 +8174,13 @@
             },
             {
               "service": "accessanalyzer",
-              "operation": "ValidatePolicy",
+              "operation": "CheckNoNewAccess",
               "requestParameters": [
                 {
-                  "path": "$.policyDocument"
+                  "path": "$.newPolicyDocument"
+                },
+                {
+                  "path": "$.existingPolicyDocument"
                 },
                 {
                   "path": "$.policyType",
@@ -8226,8 +8189,8 @@
               ],
               "responseParameters": [
                 {
-                  "path": "$.findings[*].issueCode",
-                  "expectedValue": "RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL"
+                  "path": "$.result",
+                  "expectedValue": "PASS"
                 }
               ]
             },
@@ -8254,21 +8217,13 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This implementation reads your stream's resource-based policy from `$.Policy` and evaluates it for public access and for specified untrusted access. Flagging such grants helps address the mitigation by surfacing stream access reachable by identities outside your zone of trust.",
+          "context": "This implementation guidance recommends reading `$.Policy`, your Amazon DynamoDB stream's resource-based policy, and evaluating it for public access, access beyond your reference policy, permissions you specify, AWS service grants beyond a reference policy containing the source conditions you accept, and access from outside your zone of trust. Flagging those grants helps you detect access to your Amazon DynamoDB stream that extends beyond trusted identities.",
           "mitigationId": "80e20281-6029-5a10-83ae-dbaa2f4cd4fa"
         },
         {
           "type": "REFERENCE",
-          "context": "This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.\n\nBasic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.\n\nCustom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.\n\nThe reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.\n\nExternal access findings, generated by an external access analyzer, use automated reasoning. They identify resource-based policies that allow access from outside your zone of trust.",
+          "context": "This implementation recommends using IAM Access Analyzer custom policy checks.\n\nCustom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.\n\nThe first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.\n\nThe second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.\n\nExternal access findings, generated by an external access analyzer, use automated reasoning. They identify resource-based policies that allow access from outside your zone of trust.",
           "links": [
-            {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html",
-              "title": "IAM policy grammar"
-            },
-            {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
-              "title": "AWS best practices"
-            },
             {
               "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html",
               "title": "IAM Access Analyzer custom policy checks"
@@ -8291,7 +8246,7 @@
         }
       ],
       "createTime": "2026-09-23T03:05:58Z",
-      "lastUpdateTime": "2026-10-02T00:41:05Z"
+      "lastUpdateTime": "2026-11-09T23:40:37Z"
     },
     {
       "id": "7d0c3b59-9926-5738-a3d8-9ae2a2043d73",
@@ -8363,7 +8318,7 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This implementation governs Amazon DynamoDB API calls against your streams with `aws:PrincipalOrgID` and `aws:SourceOrgID` condition keys, exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`). As a result, principals outside your organization are restricted from cross-account `dynamodb:GetRecords` reads that a resource-based policy on the stream could otherwise permit.",
+          "context": "This implementation guidance recommends governing Amazon DynamoDB API calls against your streams with the `aws:PrincipalOrgID` condition key in a resource control policy (RCP), while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent identities outside your organization from accessing your streams.",
           "mitigationId": "80e20281-6029-5a10-83ae-dbaa2f4cd4fa"
         },
         {
@@ -8392,7 +8347,7 @@
         }
       ],
       "createTime": "2026-09-23T03:05:58Z",
-      "lastUpdateTime": "2026-09-23T03:05:58Z"
+      "lastUpdateTime": "2026-11-08T21:54:21Z"
     },
     {
       "id": "8463876a-2b9b-5551-a87e-e1dd2eb5fe64",
@@ -10538,7 +10493,7 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This resource-based policy governs Amazon DynamoDB API calls against your table with the `aws:PrincipalOrgID` condition key, while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. As a result, table access is restricted to principals in your organization and to AWS services acting on behalf of your resources.",
+          "context": "This implementation guidance recommends governing Amazon DynamoDB API calls against your table with the `aws:PrincipalOrgID` condition key in its resource-based policy, while exempting AWS services that access it on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent identities outside your organization from accessing your table.",
           "mitigationId": "baee3b97-588c-53c7-ba27-94f5ee2974c8"
         },
         {
@@ -10563,10 +10518,10 @@
         }
       ],
       "createTime": "2026-09-23T03:05:53Z",
-      "lastUpdateTime": "2026-10-02T00:41:01Z"
+      "lastUpdateTime": "2026-11-08T21:54:16Z"
     },
     {
-      "id": "8f733d6e-f4f5-57e4-97bc-0da6229895ac",
+      "id": "c4236362-3bb3-54e0-857b-67da0517d07b",
       "alias": "Implementation.DYNAMODB.Table.25",
       "behavior": "PROACTIVE",
       "implementationType": "AWS::CloudFormation::Type::HOOK",
@@ -10648,6 +10603,28 @@
             },
             {
               "service": "accessanalyzer",
+              "operation": "CheckNoNewAccess",
+              "requestParameters": [
+                {
+                  "path": "$.newPolicyDocument"
+                },
+                {
+                  "path": "$.existingPolicyDocument"
+                },
+                {
+                  "path": "$.policyType",
+                  "expectedValue": "RESOURCE_POLICY"
+                }
+              ],
+              "responseParameters": [
+                {
+                  "path": "$.result",
+                  "expectedValue": "PASS"
+                }
+              ]
+            },
+            {
+              "service": "accessanalyzer",
               "operation": "ValidatePolicy",
               "requestParameters": [
                 {
@@ -10656,6 +10633,10 @@
                 {
                   "path": "$.policyType",
                   "expectedValue": "RESOURCE_POLICY"
+                },
+                {
+                  "path": "$.validatePolicyResourceType",
+                  "expectedValue": "AWS::DynamoDB::Table"
                 }
               ],
               "responseParameters": [
@@ -10671,21 +10652,13 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This implementation validates the resource-based policy in `$.Replicas[*].ResourcePolicy.PolicyDocument` before a global table replica is provisioned. Create and update operations are denied when that policy could grant public access, or access beyond the principals you designate as trusted.",
+          "context": "This implementation guidance recommends validating `$.Replicas[*].ResourcePolicy.PolicyDocument`, the resource-based policy on each replica table, before provisioning a global table replica. The hook helps prevent a policy that can grant public access, access beyond your reference policy, permissions you specify, or access to an AWS service principal beyond a reference policy containing the source conditions you accept from being provisioned.",
           "mitigationId": "baee3b97-588c-53c7-ba27-94f5ee2974c8"
         },
         {
           "type": "REFERENCE",
-          "context": "This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.\n\nBasic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.\n\nCustom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.\n\nThe reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.",
+          "context": "This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.\n\nCustom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.\n\nThe first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.\n\nThe second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.\n\nBasic policy checks (`ValidatePolicy`) validate the policy against IAM policy grammar and AWS best practices. With `validatePolicyResourceType` set to the S3 bucket or DynamoDB table resource type, the check also returns the `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL` finding for a grant to an AWS service principal that omits the source conditions.",
           "links": [
-            {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html",
-              "title": "IAM policy grammar"
-            },
-            {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
-              "title": "AWS best practices"
-            },
             {
               "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html",
               "title": "IAM Access Analyzer custom policy checks"
@@ -10693,6 +10666,14 @@
             {
               "href": "https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples",
               "title": "IAM Access Analyzer custom policy checks samples"
+            },
+            {
+              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html",
+              "title": "IAM policy grammar"
+            },
+            {
+              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
+              "title": "AWS best practices"
             }
           ]
         }
@@ -10708,10 +10689,10 @@
         }
       ],
       "createTime": "2026-09-23T03:05:53Z",
-      "lastUpdateTime": "2026-10-02T00:41:01Z"
+      "lastUpdateTime": "2026-11-09T23:40:32Z"
     },
     {
-      "id": "8d340263-da2a-57fc-adb8-810a5513a7ca",
+      "id": "7a4aa184-93ac-57b0-9d30-4703430d7400",
       "alias": "Implementation.DYNAMODB.Table.26",
       "behavior": "PROACTIVE",
       "implementationType": "AWS::CloudFormation::Type::HOOK",
@@ -10796,6 +10777,28 @@
             },
             {
               "service": "accessanalyzer",
+              "operation": "CheckNoNewAccess",
+              "requestParameters": [
+                {
+                  "path": "$.newPolicyDocument"
+                },
+                {
+                  "path": "$.existingPolicyDocument"
+                },
+                {
+                  "path": "$.policyType",
+                  "expectedValue": "RESOURCE_POLICY"
+                }
+              ],
+              "responseParameters": [
+                {
+                  "path": "$.result",
+                  "expectedValue": "PASS"
+                }
+              ]
+            },
+            {
+              "service": "accessanalyzer",
               "operation": "ValidatePolicy",
               "requestParameters": [
                 {
@@ -10804,6 +10807,10 @@
                 {
                   "path": "$.policyType",
                   "expectedValue": "RESOURCE_POLICY"
+                },
+                {
+                  "path": "$.validatePolicyResourceType",
+                  "expectedValue": "AWS::DynamoDB::Table"
                 }
               ],
               "responseParameters": [
@@ -10819,21 +10826,13 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This implementation validates the table's resource-based policy at `$.ResourcePolicy.PolicyDocument` and the stream's resource-based policy at `$.StreamSpecification.ResourcePolicy.PolicyDocument`. Provisioning fails when either policy allows public access, grants permissions you specify as untrusted, or grants a service principal access without a source condition.",
+          "context": "This implementation guidance recommends validating `$.ResourcePolicy.PolicyDocument`, the resource-based policy on the table, and `$.StreamSpecification.ResourcePolicy.PolicyDocument`, the resource-based policy on the table's stream, before provisioning your DynamoDB table. The hook helps prevent a policy that can grant public access, access beyond your reference policy, permissions you specify, or access to an AWS service principal beyond a reference policy containing the source conditions you accept from being provisioned.",
           "mitigationId": "baee3b97-588c-53c7-ba27-94f5ee2974c8"
         },
         {
           "type": "REFERENCE",
-          "context": "This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.\n\nBasic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.\n\nCustom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.\n\nThe reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.",
+          "context": "This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.\n\nCustom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.\n\nThe first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.\n\nThe second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.\n\nBasic policy checks (`ValidatePolicy`) validate the policy against IAM policy grammar and AWS best practices. With `validatePolicyResourceType` set to the S3 bucket or DynamoDB table resource type, the check also returns the `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL` finding for a grant to an AWS service principal that omits the source conditions.",
           "links": [
-            {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html",
-              "title": "IAM policy grammar"
-            },
-            {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
-              "title": "AWS best practices"
-            },
             {
               "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html",
               "title": "IAM Access Analyzer custom policy checks"
@@ -10841,6 +10840,14 @@
             {
               "href": "https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples",
               "title": "IAM Access Analyzer custom policy checks samples"
+            },
+            {
+              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html",
+              "title": "IAM policy grammar"
+            },
+            {
+              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
+              "title": "AWS best practices"
             }
           ]
         }
@@ -10856,10 +10863,10 @@
         }
       ],
       "createTime": "2026-09-23T03:05:53Z",
-      "lastUpdateTime": "2026-10-02T00:41:01Z"
+      "lastUpdateTime": "2026-11-09T23:40:32Z"
     },
     {
-      "id": "06526a79-1144-5a57-b0d0-d87cae7bc0ca",
+      "id": "1c86c96f-fbe6-5704-b265-c97acdf4ad8b",
       "alias": "Implementation.DYNAMODB.Table.27",
       "behavior": "DETECTIVE",
       "implementationType": "AWS::Config::ConfigRule",
@@ -10966,6 +10973,27 @@
             },
             {
               "service": "accessanalyzer",
+              "operation": "CheckNoNewAccess",
+              "requestParameters": [
+                {
+                  "path": "$.newPolicyDocument"
+                },
+                {
+                  "path": "$.existingPolicyDocument"
+                },
+                {
+                  "path": "$.policyType",
+                  "expectedValue": "RESOURCE_POLICY"
+                }
+              ],
+              "responseParameters": [
+                {
+                  "path": "$.result"
+                }
+              ]
+            },
+            {
+              "service": "accessanalyzer",
               "operation": "ValidatePolicy",
               "requestParameters": [
                 {
@@ -10974,6 +11002,10 @@
                 {
                   "path": "$.policyType",
                   "expectedValue": "RESOURCE_POLICY"
+                },
+                {
+                  "path": "$.validatePolicyResourceType",
+                  "expectedValue": "AWS::DynamoDB::Table"
                 }
               ],
               "responseParameters": [
@@ -11011,21 +11043,13 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This rule reads each table's resource-based policy as `$.Policy` and evaluates it with IAM Access Analyzer checks. Flagging policies that allow public access or access by identities outside your organization helps you detect table access beyond trusted identities.",
+          "context": "This implementation guidance recommends reading `$.Policy`, the resource-based policy attached to your table, and evaluating it for possible grants of public access, access beyond your reference policy, permissions you specify, and access by AWS services beyond a reference policy containing the source conditions you accept. Flagging those grants helps you detect access to your table that extends beyond trusted identities.",
           "mitigationId": "baee3b97-588c-53c7-ba27-94f5ee2974c8"
         },
         {
           "type": "REFERENCE",
-          "context": "This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.\n\nBasic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.\n\nCustom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.\n\nThe reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.\n\nExternal access findings, generated by an external access analyzer, use automated reasoning. They identify resource-based policies that allow access from outside your zone of trust.",
+          "context": "This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.\n\nCustom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.\n\nThe first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.\n\nThe second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.\n\nExternal access findings, generated by an external access analyzer, use automated reasoning. They identify resource-based policies that allow access from outside your zone of trust.\n\nBasic policy checks (`ValidatePolicy`) validate the policy against IAM policy grammar and AWS best practices. With `validatePolicyResourceType` set to the S3 bucket or DynamoDB table resource type, the check also returns the `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL` finding for a grant to an AWS service principal that omits the source conditions.",
           "links": [
-            {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html",
-              "title": "IAM policy grammar"
-            },
-            {
-              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
-              "title": "AWS best practices"
-            },
             {
               "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html",
               "title": "IAM Access Analyzer custom policy checks"
@@ -11033,6 +11057,14 @@
             {
               "href": "https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples",
               "title": "IAM Access Analyzer custom policy checks samples"
+            },
+            {
+              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html",
+              "title": "IAM policy grammar"
+            },
+            {
+              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
+              "title": "AWS best practices"
             }
           ]
         }
@@ -11048,7 +11080,7 @@
         }
       ],
       "createTime": "2026-09-23T03:05:53Z",
-      "lastUpdateTime": "2026-10-02T00:41:01Z"
+      "lastUpdateTime": "2026-11-09T23:40:32Z"
     },
     {
       "id": "12d16cae-5ae4-5f3c-a0c3-4290c34b8966",
@@ -11120,7 +11152,7 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This resource control policy (RCP) governs Amazon DynamoDB API calls against your resources with the `aws:PrincipalOrgID` condition key. As a result, identities outside your organization are restricted from accessing your resources. AWS services that access your resources on your behalf are exempt (`aws:PrincipalIsAWSService`), with those service requests scoped by the `aws:SourceOrgID` and `aws:SourceAccount` condition keys.",
+          "context": "This implementation guidance recommends governing Amazon DynamoDB API calls against your resources with the `aws:PrincipalOrgID` condition key in a resource control policy (RCP), while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent identities outside your organization from accessing your resources.",
           "mitigationId": "baee3b97-588c-53c7-ba27-94f5ee2974c8"
         },
         {
@@ -11149,7 +11181,7 @@
         }
       ],
       "createTime": "2026-09-23T03:05:53Z",
-      "lastUpdateTime": "2026-09-23T03:05:53Z"
+      "lastUpdateTime": "2026-11-08T21:54:16Z"
     },
     {
       "id": "af413476-7335-5f20-8742-0f3756b05f67",
@@ -11195,7 +11227,7 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This resource-based policy governs `dynamodb:ExportTableToPointInTime`, `dynamodb:DescribeTable`, and `dynamodb:DescribeExport` on your table with the `aws:SourceArn` and `aws:SourceAccount` condition keys. As a result, requests made on behalf of a resource or account you have not designated are restricted from exporting or inspecting your table data.",
+          "context": "This implementation guidance recommends governing `dynamodb:ExportTableToPointInTime`, `dynamodb:DescribeTable`, and `dynamodb:DescribeExport` on your table with the `aws:SourceArn` and `aws:SourceAccount` condition keys. Enforce these keys only in resource-based policy statements that grant access to an AWS service principal. As a result, requests made on behalf of a resource or account you have not designated are restricted from exporting or inspecting your table data.",
           "mitigationId": "f3d3b464-0ec2-5143-ae8b-49d3013ec28b"
         },
         {
@@ -11220,10 +11252,10 @@
         }
       ],
       "createTime": "2026-09-02T23:38:21Z",
-      "lastUpdateTime": "2026-09-23T03:05:53Z"
+      "lastUpdateTime": "2026-11-08T21:54:16Z"
     },
     {
-      "id": "607223b3-19ed-5c0c-9e0b-a59d014fe3a5",
+      "id": "f6e406a1-153a-5fac-9580-d498e9901a84",
       "alias": "Implementation.DYNAMODB.Table.30",
       "behavior": "PROACTIVE",
       "implementationType": "AWS::CloudFormation::Type::HOOK",
@@ -11242,6 +11274,27 @@
           "governedApiOperations": [
             {
               "service": "accessanalyzer",
+              "operation": "CheckNoNewAccess",
+              "requestParameters": [
+                {
+                  "path": "$.newPolicyDocument"
+                },
+                {
+                  "path": "$.existingPolicyDocument"
+                },
+                {
+                  "path": "$.policyType",
+                  "expectedValue": "RESOURCE_POLICY"
+                }
+              ],
+              "responseParameters": [
+                {
+                  "path": "$.result"
+                }
+              ]
+            },
+            {
+              "service": "accessanalyzer",
               "operation": "ValidatePolicy",
               "requestParameters": [
                 {
@@ -11250,6 +11303,10 @@
                 {
                   "path": "$.policyType",
                   "expectedValue": "RESOURCE_POLICY"
+                },
+                {
+                  "path": "$.validatePolicyResourceType",
+                  "expectedValue": "AWS::DynamoDB::Table"
                 }
               ],
               "responseParameters": [
@@ -11265,13 +11322,21 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This implementation validates your replica's resource-based policy in `$.Replicas[*].ResourcePolicy.PolicyDocument` at create time, failing the stack operation on a `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL` warning. The hook therefore requires `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths`, restricting an AWS service to requests made on behalf of resources in your organization.",
+          "context": "This implementation guidance recommends validating `$.Replicas[*].ResourcePolicy.PolicyDocument`, each replica's resource-based policy, before provisioning. When a grant to an AWS service principal extends beyond a reference policy containing the source conditions you accept, the hook fails the stack operation, which helps prevent such a grant from being provisioned.",
           "mitigationId": "f3d3b464-0ec2-5143-ae8b-49d3013ec28b"
         },
         {
           "type": "REFERENCE",
-          "context": "This implementation recommends using IAM Access Analyzer basic policy checks.\n\nBasic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.",
+          "context": "This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.\n\nCustom policy checks (`CheckNoNewAccess`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain.\n\nThe reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`. The IAM Access Analyzer custom policy checks samples repository shows the reference policy format; compose the policy from the key combinations you accept.\n\nBasic policy checks (`ValidatePolicy`) validate the policy against IAM policy grammar and AWS best practices. With `validatePolicyResourceType` set to the S3 bucket or DynamoDB table resource type, the check also returns the `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL` finding for a grant to an AWS service principal that omits the source conditions.",
           "links": [
+            {
+              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html",
+              "title": "IAM Access Analyzer custom policy checks"
+            },
+            {
+              "href": "https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples",
+              "title": "IAM Access Analyzer custom policy checks samples"
+            },
             {
               "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html",
               "title": "IAM policy grammar"
@@ -11294,10 +11359,10 @@
         }
       ],
       "createTime": "2026-09-23T03:05:53Z",
-      "lastUpdateTime": "2026-10-02T00:41:01Z"
+      "lastUpdateTime": "2026-11-09T23:40:32Z"
     },
     {
-      "id": "d210d9ce-571e-55f9-9379-af1e3e86079d",
+      "id": "c893846c-e1b4-51b1-a6c0-ee325133effe",
       "alias": "Implementation.DYNAMODB.Table.31",
       "behavior": "PROACTIVE",
       "implementationType": "AWS::CloudFormation::Type::HOOK",
@@ -11316,6 +11381,27 @@
           "governedApiOperations": [
             {
               "service": "accessanalyzer",
+              "operation": "CheckNoNewAccess",
+              "requestParameters": [
+                {
+                  "path": "$.newPolicyDocument"
+                },
+                {
+                  "path": "$.existingPolicyDocument"
+                },
+                {
+                  "path": "$.policyType",
+                  "expectedValue": "RESOURCE_POLICY"
+                }
+              ],
+              "responseParameters": [
+                {
+                  "path": "$.result"
+                }
+              ]
+            },
+            {
+              "service": "accessanalyzer",
               "operation": "ValidatePolicy",
               "requestParameters": [
                 {
@@ -11324,6 +11410,10 @@
                 {
                   "path": "$.policyType",
                   "expectedValue": "RESOURCE_POLICY"
+                },
+                {
+                  "path": "$.validatePolicyResourceType",
+                  "expectedValue": "AWS::DynamoDB::Table"
                 }
               ],
               "responseParameters": [
@@ -11339,13 +11429,21 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "At create time, this implementation validates `$.ResourcePolicy.PolicyDocument`, the table's resource-based policy, for the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, and `aws:SourceOrgPaths` condition keys. Rejecting a grant that omits them helps prevent an AWS service from being called to access your table on behalf of resources outside your organization.",
+          "context": "This implementation guidance recommends validating `$.ResourcePolicy.PolicyDocument`, the table's resource-based policy, before provisioning. When a grant to an AWS service principal extends beyond a reference policy containing the source conditions you accept, the hook fails the stack operation, which helps prevent such a grant from being provisioned.",
           "mitigationId": "f3d3b464-0ec2-5143-ae8b-49d3013ec28b"
         },
         {
           "type": "REFERENCE",
-          "context": "This implementation recommends using IAM Access Analyzer basic policy checks.\n\nBasic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.",
+          "context": "This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.\n\nCustom policy checks (`CheckNoNewAccess`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain.\n\nThe reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`. The IAM Access Analyzer custom policy checks samples repository shows the reference policy format; compose the policy from the key combinations you accept.\n\nBasic policy checks (`ValidatePolicy`) validate the policy against IAM policy grammar and AWS best practices. With `validatePolicyResourceType` set to the S3 bucket or DynamoDB table resource type, the check also returns the `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL` finding for a grant to an AWS service principal that omits the source conditions.",
           "links": [
+            {
+              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html",
+              "title": "IAM Access Analyzer custom policy checks"
+            },
+            {
+              "href": "https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples",
+              "title": "IAM Access Analyzer custom policy checks samples"
+            },
             {
               "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html",
               "title": "IAM policy grammar"
@@ -11368,10 +11466,10 @@
         }
       ],
       "createTime": "2026-09-23T03:05:53Z",
-      "lastUpdateTime": "2026-10-02T00:41:01Z"
+      "lastUpdateTime": "2026-11-09T23:40:32Z"
     },
     {
-      "id": "d7565264-aa10-5f35-92db-6d263773a426",
+      "id": "a6bdfc74-1401-547b-8a67-345de6210384",
       "alias": "Implementation.DYNAMODB.Table.32",
       "behavior": "DETECTIVE",
       "implementationType": "AWS::Config::ConfigRule",
@@ -11426,12 +11524,37 @@
                 {
                   "path": "$.policyType",
                   "expectedValue": "RESOURCE_POLICY"
+                },
+                {
+                  "path": "$.validatePolicyResourceType",
+                  "expectedValue": "AWS::DynamoDB::Table"
                 }
               ],
               "responseParameters": [
                 {
                   "path": "$.findings[*].issueCode",
                   "expectedValue": "RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL"
+                }
+              ]
+            },
+            {
+              "service": "accessanalyzer",
+              "operation": "CheckNoNewAccess",
+              "requestParameters": [
+                {
+                  "path": "$.newPolicyDocument"
+                },
+                {
+                  "path": "$.existingPolicyDocument"
+                },
+                {
+                  "path": "$.policyType",
+                  "expectedValue": "RESOURCE_POLICY"
+                }
+              ],
+              "responseParameters": [
+                {
+                  "path": "$.result"
                 }
               ]
             }
@@ -11441,13 +11564,21 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This rule validates a table's resource-based policy at `$.Policy` and flags a `$.findings[*].issueCode` of `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL` when `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, and `aws:SourceOrgPaths` are absent. That finding helps you detect access that is not restricted to requests made on behalf of resources in your organization.",
+          "context": "This implementation guidance recommends reading `$.Policy`, your table's resource-based policy, and flagging grants to an AWS service principal that extend beyond a reference policy containing the source conditions you accept. Flagging those grants helps you detect access by AWS services acting on your behalf that lacks a source restriction you accept.",
           "mitigationId": "f3d3b464-0ec2-5143-ae8b-49d3013ec28b"
         },
         {
           "type": "REFERENCE",
-          "context": "This implementation recommends using IAM Access Analyzer basic policy checks.\n\nBasic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.",
+          "context": "This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.\n\nCustom policy checks (`CheckNoNewAccess`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain.\n\nThe reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`. The IAM Access Analyzer custom policy checks samples repository shows the reference policy format; compose the policy from the key combinations you accept.\n\nBasic policy checks (`ValidatePolicy`) validate the policy against IAM policy grammar and AWS best practices. With `validatePolicyResourceType` set to the S3 bucket or DynamoDB table resource type, the check also returns the `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL` finding for a grant to an AWS service principal that omits the source conditions.",
           "links": [
+            {
+              "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html",
+              "title": "IAM Access Analyzer custom policy checks"
+            },
+            {
+              "href": "https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples",
+              "title": "IAM Access Analyzer custom policy checks samples"
+            },
             {
               "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html",
               "title": "IAM policy grammar"
@@ -11470,7 +11601,7 @@
         }
       ],
       "createTime": "2026-09-02T23:38:21Z",
-      "lastUpdateTime": "2026-10-02T00:41:01Z"
+      "lastUpdateTime": "2026-11-09T23:40:32Z"
     },
     {
       "id": "9122e3ee-a142-5513-9a06-60fef45524aa",
@@ -11514,7 +11645,7 @@
       "implementationContext": [
         {
           "type": "SCOPING",
-          "context": "This implementation restricts Amazon DynamoDB API calls AWS services make against your tables on your behalf (`aws:PrincipalIsAWSService`) with the `aws:SourceOrgID` and `aws:SourceAccount` condition keys. Service requests on behalf of a resource or account outside your organization are denied, regardless of what your table's resource-based policy grants.",
+          "context": "This implementation guidance recommends restricting DynamoDB API calls AWS services make against your tables on your behalf (`aws:PrincipalIsAWSService`) with the `aws:SourceOrgID` and `aws:SourceAccount` condition keys in a resource control policy (RCP). These conditions help prevent AWS services from accessing your tables on behalf of resources outside your organization, regardless of what each table's resource-based policy grants.",
           "mitigationId": "f3d3b464-0ec2-5143-ae8b-49d3013ec28b"
         },
         {
@@ -11543,7 +11674,7 @@
         }
       ],
       "createTime": "2026-09-23T03:05:53Z",
-      "lastUpdateTime": "2026-09-23T03:05:53Z"
+      "lastUpdateTime": "2026-11-08T21:54:16Z"
     },
     {
       "id": "787cf191-51ea-5de7-bfd2-da377297731c",

@@ -8,7 +8,7 @@ Amazon DynamoDB is a serverless, fully managed NoSQL database service. It suppor
 
 28 threats and 24 mitigations across 4 resource types and 58 API operations. 16 of 38 mitigation goals are covered, implemented by 90 implementations.
 
-Source service model: [dynamodb](https://github.com/aws/api-models-aws/blob/a0767ac42e279dfc8b311564c33436f8abfd3031/models/dynamodb/service/2012-08-10/dynamodb-2012-08-10.json)
+Source service model: [dynamodb](https://github.com/aws/api-models-aws/blob/3d89dd029ebd13b775ab5d22e5075399f20b35e4/models/dynamodb/service/2012-08-10/dynamodb-2012-08-10.json)
 
 ---
 
@@ -344,16 +344,16 @@ Untrusted IAM principal, that has been granted access to my Amazon DynamoDB stre
 
 **Frameworks:** MITRE ATT&CK [T1078.004](https://attack.mitre.org/techniques/T1078/004/), [T1199](https://attack.mitre.org/techniques/T1199/), [T1213.006](https://attack.mitre.org/techniques/T1213/006/), [T1537](https://attack.mitre.org/techniques/T1537/)
 
-**Scoping** (for [Identity Perimeter - Untrusted principal access to my resources](../potential-threats.md#identity-perimeter---untrusted-principal-access-to-my-resources)): A resource-based policy on your stream can grant read access to identities outside your organization. Those identities can then call `GetShardIterator` and `GetRecords` to read the item-level change records the stream retains for 24 hours.
+**Scoping** (for [Identity Perimeter - Untrusted principal access to my resources](../potential-threats.md#identity-perimeter---untrusted-principal-access-to-my-resources)): A resource-based policy on your Amazon DynamoDB stream can grant read access to principals outside your organization. Those principals can then call `GetShardIterator` and `GetRecords` to read the item-level change records the stream retains for 24 hours.
 
 **Request parameters**
 
 | Operation | Parameters |
 |---|---|
-| `dynamodb:TagResource` | `$.ResourceArn`, `$.Tags[*].Key`, `$.Tags[*].Value` |
-| `dynamodb:UntagResource` | `$.ResourceArn`, `$.TagKeys[*]` |
+| `dynamodb:TagResource` | `$.Tags[*].Key`, `$.Tags[*].Value` |
+| `dynamodb:UntagResource` | `$.TagKeys[*]` |
 | `dynamodb-streams:GetRecords` | `$.Limit`, `$.ShardIterator` |
-| `dynamodb-streams:GetShardIterator` | `$.ShardId`, `$.ShardIteratorType`, `$.StreamArn` |
+| `dynamodb-streams:GetShardIterator` | `$.ShardId`, `$.ShardIteratorType` |
 
 ### Threat.DYNAMODB.Stream.7
 
@@ -661,7 +661,7 @@ Untrusted IAM principal, that has been granted access to my Amazon DynamoDB tabl
 
 **Frameworks:** MITRE ATT&CK [T1078.004](https://attack.mitre.org/techniques/T1078/004/), [T1199](https://attack.mitre.org/techniques/T1199/), [T1213.006](https://attack.mitre.org/techniques/T1213/006/), [T1485](https://attack.mitre.org/techniques/T1485/), [T1537](https://attack.mitre.org/techniques/T1537/)
 
-**Scoping** (for [Identity Perimeter - Untrusted principal access to my resources](../potential-threats.md#identity-perimeter---untrusted-principal-access-to-my-resources)): A resource-based policy on your Amazon DynamoDB table can grant DynamoDB actions on the table and its items to identities outside your organization. DynamoDB enforces such cross-account grants, allowing those identities to read, change, or delete your table data.
+**Scoping** (for [Identity Perimeter - Untrusted principal access to my resources](../potential-threats.md#identity-perimeter---untrusted-principal-access-to-my-resources)): A resource-based policy on your Amazon DynamoDB table can grant DynamoDB actions on the table and its items to principals outside your organization. DynamoDB enforces such cross-account grants, allowing those principals to read, change, or delete your table data.
 
 **Request parameters**
 
@@ -671,7 +671,6 @@ Untrusted IAM principal, that has been granted access to my Amazon DynamoDB tabl
 | `dynamodb:DeleteTable` | `$.TableName` |
 | `dynamodb:GetItem` | `$.ProjectionExpression`, `$.TableName` |
 | `dynamodb:PutItem` | `$.Item{key}.S`, `$.TableName` |
-| `dynamodb:PutResourcePolicy` | `$.Policy`, `$.ResourceArn` |
 | `dynamodb:Query` | `$.KeyConditionExpression`, `$.TableName` |
 | `dynamodb:Scan` | `$.Select`, `$.TableName` |
 | `dynamodb:UpdateItem` | `$.TableName`, `$.UpdateExpression` |
@@ -761,7 +760,7 @@ Untrusted IAM principal, with access to configure an AWS service that has been g
 
 **Frameworks:** MITRE ATT&CK [T1537](https://attack.mitre.org/techniques/T1537/), [T1548.005](https://attack.mitre.org/techniques/T1548/005/)
 
-**Scoping** (for [Cross-service confused deputy problem through resource-based policies](../potential-threats.md#cross-service-confused-deputy-problem-through-resource-based-policies)): Your table's resource-based policy can grant an AWS service such as `redshift.amazonaws.com` or `glue.amazonaws.com` access to the table. An untrusted principal who can configure that service may cause it to interact with your table using the principal's own data or context.
+**Scoping** (for [Cross-service confused deputy problem through resource-based policies](../potential-threats.md#cross-service-confused-deputy-problem-through-resource-based-policies)): Your table's resource-based policy can grant the `dynamodb:ExportTableToPointInTime`, `dynamodb:DescribeTable`, and `dynamodb:DescribeExport` permissions to an AWS service such as `redshift.amazonaws.com` or `glue.amazonaws.com`. An untrusted IAM principal who can configure that service may cause it to export your table's data to a target they control.
 
 **Request parameters**
 
@@ -956,14 +955,14 @@ An Amazon DynamoDB stream should be accessed only by trusted identities or AWS s
 
 **Implemented by:** [Implementation.DYNAMODB.Stream.11](#implementationdynamodbstream11), [Implementation.DYNAMODB.Stream.12](#implementationdynamodbstream12), [Implementation.DYNAMODB.Stream.13](#implementationdynamodbstream13), [Implementation.DYNAMODB.Stream.14](#implementationdynamodbstream14), [Implementation.DYNAMODB.Stream.15](#implementationdynamodbstream15)
 
-**Scoping** (for [Identity Perimeter - Only trusted identities can access my resources](../mitigation-goals.md#identity-perimeter---only-trusted-identities-can-access-my-resources)): A DynamoDB stream supports its own resource-based policy, attached directly to the stream. The policy can extend access to accounts outside your organization.
+**Scoping** (for [Identity Perimeter - Only trusted identities can access my resources](../mitigation-goals.md#identity-perimeter---only-trusted-identities-can-access-my-resources)): A DynamoDB stream supports its own resource-based policy that specifies who can access it and what actions they can perform. The identity perimeter helps restrict access to your streams to trusted identities and AWS services acting on your behalf.
 
 **Configure via**
 
 | Operation | Parameters |
 |---|---|
 | `dynamodb:DeleteResourcePolicy` | `$.ResourceArn` |
-| `dynamodb:PutResourcePolicy` | `$.Policy`, `$.ResourceArn` |
+| `dynamodb:PutResourcePolicy` | `$.Policy` |
 
 **Verify via**
 
@@ -1241,15 +1240,15 @@ An Amazon DynamoDB table should be accessed only by trusted identities or AWS se
 
 **Implemented by:** [Implementation.DYNAMODB.Table.24](#implementationdynamodbtable24), [Implementation.DYNAMODB.Table.25](#implementationdynamodbtable25), [Implementation.DYNAMODB.Table.26](#implementationdynamodbtable26), [Implementation.DYNAMODB.Table.27](#implementationdynamodbtable27), [Implementation.DYNAMODB.Table.28](#implementationdynamodbtable28)
 
-**Scoping** (for [Identity Perimeter - Only trusted identities can access my resources](../mitigation-goals.md#identity-perimeter---only-trusted-identities-can-access-my-resources)): A DynamoDB table supports a resource-based policy that grants permissions to perform actions on the table. That policy can grant those permissions to principals outside your organization, making the identity perimeter applicable to this table.
+**Scoping** (for [Identity Perimeter - Only trusted identities can access my resources](../mitigation-goals.md#identity-perimeter---only-trusted-identities-can-access-my-resources)): A DynamoDB table supports a resource-based policy that specifies who can access it and what actions they can perform. The identity perimeter helps restrict access to your DynamoDB tables to trusted identities and AWS services acting on your behalf.
 
 **Configure via**
 
 | Operation | Parameters |
 |---|---|
-| `dynamodb:CreateTable` | `$.ResourcePolicy`, `$.TableName` |
+| `dynamodb:CreateTable` | `$.ResourcePolicy` |
 | `dynamodb:DeleteResourcePolicy` | `$.ResourceArn` |
-| `dynamodb:PutResourcePolicy` | `$.Policy`, `$.ResourceArn` |
+| `dynamodb:PutResourcePolicy` | `$.Policy` |
 
 **Verify via**
 
@@ -1267,7 +1266,7 @@ An Amazon DynamoDB table should be accessed by an AWS service principal, such as
 
 **Implemented by:** [Implementation.DYNAMODB.Table.29](#implementationdynamodbtable29), [Implementation.DYNAMODB.Table.30](#implementationdynamodbtable30), [Implementation.DYNAMODB.Table.31](#implementationdynamodbtable31), [Implementation.DYNAMODB.Table.32](#implementationdynamodbtable32), [Implementation.DYNAMODB.Table.33](#implementationdynamodbtable33)
 
-**Scoping** (for [Cross-Service Confused Deputy Prevention - Resource-based policies](../mitigation-goals.md#cross-service-confused-deputy-prevention---resource-based-policies)): A resource-based policy on your DynamoDB table can grant an AWS service principal, such as `redshift.amazonaws.com`, access to the table. Such a grant may raise the cross-service confused deputy problem, where that principal may be able to act on behalf of resources outside your organization.
+**Scoping** (for [Cross-Service Confused Deputy Prevention - Resource-based policies](../mitigation-goals.md#cross-service-confused-deputy-prevention---resource-based-policies)): A resource-based policy on your Amazon DynamoDB table can grant an AWS service principal, such as the Amazon Redshift service principal (`redshift.amazonaws.com`), the `dynamodb:ExportTableToPointInTime` action. That policy should restrict which accounts or resources the service may act on behalf of.
 
 **Configure via**
 
@@ -1651,7 +1650,7 @@ Attaches to `AWS::DynamoDB::Stream` and governs the IAM permissions below.
 
 **Implements:** [Mitigation.DYNAMODB.Stream.4](#mitigationdynamodbstream4)
 
-**Scoping** (for [Mitigation.DYNAMODB.Stream.4](#mitigationdynamodbstream4)): This resource-based policy governs all Amazon DynamoDB API calls against your stream with the `aws:PrincipalOrgID` condition key, while exempting AWS services that access the stream on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. As a result, reads of the stream's item-level change records are restricted to principals in your organization and services acting on your behalf.
+**Scoping** (for [Mitigation.DYNAMODB.Stream.4](#mitigationdynamodbstream4)): This implementation guidance recommends governing Amazon DynamoDB API calls against your stream with the `aws:PrincipalOrgID` condition key in its resource-based policy, while exempting AWS services that access it on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent identities outside your organization from accessing your stream.
 
 **Reference:** Confirm that resource-based policies grant access only to trusted identities and to services acting on your behalf.
 
@@ -1672,17 +1671,15 @@ Validates template properties before provisioning.
 
 **Implements:** [Mitigation.DYNAMODB.Stream.4](#mitigationdynamodbstream4)
 
-**Scoping** (for [Mitigation.DYNAMODB.Stream.4](#mitigationdynamodbstream4)): This implementation validates `$.Replicas[*].ReplicaStreamSpecification.ResourcePolicy.PolicyDocument` before each replica stream is provisioned. Deployments whose stream policy would grant public access, grant untrusted principals stream actions such as `dynamodb:GetRecords`, or grant a service principal access without `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` do not succeed.
+**Scoping** (for [Mitigation.DYNAMODB.Stream.4](#mitigationdynamodbstream4)): This implementation guidance recommends validating `$.Replicas[*].ReplicaStreamSpecification.ResourcePolicy.PolicyDocument`, the resource-based policy on a replica's stream, before provisioning the DynamoDB stream for each global table replica. The hook helps prevent a policy that can grant public access, access beyond your reference policy, permissions you specify such as `dynamodb:GetRecords`, or access to an AWS service principal beyond a reference policy containing the source conditions you accept from being provisioned.
 
-**Reference:** This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.
-
-Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
 Custom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.
 
-The reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+The first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
+
+The second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.
 - [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
 - [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
@@ -1696,17 +1693,15 @@ Validates template properties before provisioning.
 
 **Implements:** [Mitigation.DYNAMODB.Stream.4](#mitigationdynamodbstream4)
 
-**Scoping** (for [Mitigation.DYNAMODB.Stream.4](#mitigationdynamodbstream4)): This implementation validates `$.StreamSpecification.ResourcePolicy.PolicyDocument`, the resource-based policy on your table's stream, at create and update time. The hook keeps policies that allow public access or omit service principal source conditions from being provisioned.
+**Scoping** (for [Mitigation.DYNAMODB.Stream.4](#mitigationdynamodbstream4)): This implementation guidance recommends validating `$.StreamSpecification.ResourcePolicy.PolicyDocument`, the resource-based policy on your table's stream, before provisioning your DynamoDB stream. The hook helps prevent a policy that can grant public access, access beyond your reference policy, permissions you specify, or access to an AWS service principal beyond a reference policy containing the source conditions you accept from being provisioned.
 
-**Reference:** This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.
-
-Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
 Custom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.
 
-The reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+The first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
+
+The second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.
 - [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
 - [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
@@ -1721,24 +1716,22 @@ A periodic rule that evaluates via the API operation chain below.
 3. Call `accessanalyzer:CheckNoPublicAccess` with `$.policyDocument`, `$.resourceType` = `AWS::DynamoDB::Stream`; check `$.result` = `PASS`
 4. Call `accessanalyzer:CheckNoNewAccess` with `$.newPolicyDocument`, `$.existingPolicyDocument`, `$.policyType` = `RESOURCE_POLICY`; check `$.result` = `PASS`
 5. Call `accessanalyzer:CheckAccessNotGranted` with `$.policyDocument`, `$.policyType` = `RESOURCE_POLICY`, `$.access[*].actions[*]`; check `$.result` = `PASS`
-6. Call `accessanalyzer:ValidatePolicy` with `$.policyDocument`, `$.policyType` = `RESOURCE_POLICY`; check `$.findings[*].issueCode` = `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL`
+6. Call `accessanalyzer:CheckNoNewAccess` with `$.newPolicyDocument`, `$.existingPolicyDocument`, `$.policyType` = `RESOURCE_POLICY`; check `$.result` = `PASS`
 7. Call `accessanalyzer:ListFindingsV2` with `$.analyzerArn`, `$.filter`; check `$.findings`
 
 **Implements:** [Mitigation.DYNAMODB.Stream.4](#mitigationdynamodbstream4)
 
-**Scoping** (for [Mitigation.DYNAMODB.Stream.4](#mitigationdynamodbstream4)): This implementation reads your stream's resource-based policy from `$.Policy` and evaluates it for public access and for specified untrusted access. Flagging such grants helps address the mitigation by surfacing stream access reachable by identities outside your zone of trust.
+**Scoping** (for [Mitigation.DYNAMODB.Stream.4](#mitigationdynamodbstream4)): This implementation guidance recommends reading `$.Policy`, your Amazon DynamoDB stream's resource-based policy, and evaluating it for public access, access beyond your reference policy, permissions you specify, AWS service grants beyond a reference policy containing the source conditions you accept, and access from outside your zone of trust. Flagging those grants helps you detect access to your Amazon DynamoDB stream that extends beyond trusted identities.
 
-**Reference:** This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.
-
-Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
 Custom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.
 
-The reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
+The first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
+
+The second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.
 
 External access findings, generated by an external access analyzer, use automated reasoning. They identify resource-based policies that allow access from outside your zone of trust.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
 - [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
 - [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
@@ -1755,7 +1748,7 @@ Governs the IAM permissions below.
 
 **Implements:** [Mitigation.DYNAMODB.Stream.4](#mitigationdynamodbstream4)
 
-**Scoping** (for [Mitigation.DYNAMODB.Stream.4](#mitigationdynamodbstream4)): This implementation governs Amazon DynamoDB API calls against your streams with `aws:PrincipalOrgID` and `aws:SourceOrgID` condition keys, exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`). As a result, principals outside your organization are restricted from cross-account `dynamodb:GetRecords` reads that a resource-based policy on the stream could otherwise permit.
+**Scoping** (for [Mitigation.DYNAMODB.Stream.4](#mitigationdynamodbstream4)): This implementation guidance recommends governing Amazon DynamoDB API calls against your streams with the `aws:PrincipalOrgID` condition key in a resource control policy (RCP), while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent identities outside your organization from accessing your streams.
 
 **Reference:** To restrict access to trusted identities, use the `aws:PrincipalOrgID`, `aws:PrincipalOrgPaths`, or `aws:PrincipalAccount` condition keys. These scope access to IAM principals within a particular organization, specific organizational units, or a specific AWS account, respectively. These keys do not contain your organization or account values for requests by AWS service principals, so apply them only when `aws:PrincipalIsAWSService` is `false`. To restrict service access to your resources, use the `aws:SourceOrgID`, `aws:SourceOrgPaths`, `aws:SourceAccount`, or `aws:SourceArn` condition keys. These scope access performed on behalf of resources within a particular organization, specific organizational units, a specific AWS account, or a particular resource, respectively. Apply them only when `aws:PrincipalIsAWSService` is `true`. Also require that `aws:SourceAccount` is present in the request context, because not every service integration populates these keys. Choose the condition key that matches the granularity of the restriction you want to enforce.
 - [Establishing an identity perimeter](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_data-perimeters.html#access_policies_data-perimeters-identity)
@@ -2246,7 +2239,7 @@ Attaches to `AWS::DynamoDB::Table` and governs the IAM permissions below.
 
 **Implements:** [Mitigation.DYNAMODB.Table.8](#mitigationdynamodbtable8)
 
-**Scoping** (for [Mitigation.DYNAMODB.Table.8](#mitigationdynamodbtable8)): This resource-based policy governs Amazon DynamoDB API calls against your table with the `aws:PrincipalOrgID` condition key, while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. As a result, table access is restricted to principals in your organization and to AWS services acting on behalf of your resources.
+**Scoping** (for [Mitigation.DYNAMODB.Table.8](#mitigationdynamodbtable8)): This implementation guidance recommends governing Amazon DynamoDB API calls against your table with the `aws:PrincipalOrgID` condition key in its resource-based policy, while exempting AWS services that access it on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent identities outside your organization from accessing your table.
 
 **Reference:** Confirm that resource-based policies grant access only to trusted identities and to services acting on your behalf.
 
@@ -2267,19 +2260,21 @@ Validates template properties before provisioning.
 
 **Implements:** [Mitigation.DYNAMODB.Table.8](#mitigationdynamodbtable8)
 
-**Scoping** (for [Mitigation.DYNAMODB.Table.8](#mitigationdynamodbtable8)): This implementation validates the resource-based policy in `$.Replicas[*].ResourcePolicy.PolicyDocument` before a global table replica is provisioned. Create and update operations are denied when that policy could grant public access, or access beyond the principals you designate as trusted.
+**Scoping** (for [Mitigation.DYNAMODB.Table.8](#mitigationdynamodbtable8)): This implementation guidance recommends validating `$.Replicas[*].ResourcePolicy.PolicyDocument`, the resource-based policy on each replica table, before provisioning a global table replica. The hook helps prevent a policy that can grant public access, access beyond your reference policy, permissions you specify, or access to an AWS service principal beyond a reference policy containing the source conditions you accept from being provisioned.
 
 **Reference:** This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.
 
-Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.
-
 Custom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.
 
-The reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+The first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
+
+The second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.
+
+Basic policy checks (`ValidatePolicy`) validate the policy against IAM policy grammar and AWS best practices. With `validatePolicyResourceType` set to the S3 bucket or DynamoDB table resource type, the check also returns the `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL` finding for a grant to an AWS service principal that omits the source conditions.
 - [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
 - [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
+- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
+- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
 
 ### Implementation.DYNAMODB.Table.26
 
@@ -2291,19 +2286,21 @@ Validates template properties before provisioning.
 
 **Implements:** [Mitigation.DYNAMODB.Table.8](#mitigationdynamodbtable8)
 
-**Scoping** (for [Mitigation.DYNAMODB.Table.8](#mitigationdynamodbtable8)): This implementation validates the table's resource-based policy at `$.ResourcePolicy.PolicyDocument` and the stream's resource-based policy at `$.StreamSpecification.ResourcePolicy.PolicyDocument`. Provisioning fails when either policy allows public access, grants permissions you specify as untrusted, or grants a service principal access without a source condition.
+**Scoping** (for [Mitigation.DYNAMODB.Table.8](#mitigationdynamodbtable8)): This implementation guidance recommends validating `$.ResourcePolicy.PolicyDocument`, the resource-based policy on the table, and `$.StreamSpecification.ResourcePolicy.PolicyDocument`, the resource-based policy on the table's stream, before provisioning your DynamoDB table. The hook helps prevent a policy that can grant public access, access beyond your reference policy, permissions you specify, or access to an AWS service principal beyond a reference policy containing the source conditions you accept from being provisioned.
 
 **Reference:** This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.
 
-Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.
-
 Custom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.
 
-The reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+The first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
+
+The second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.
+
+Basic policy checks (`ValidatePolicy`) validate the policy against IAM policy grammar and AWS best practices. With `validatePolicyResourceType` set to the S3 bucket or DynamoDB table resource type, the check also returns the `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL` finding for a grant to an AWS service principal that omits the source conditions.
 - [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
 - [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
+- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
+- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
 
 ### Implementation.DYNAMODB.Table.27
 
@@ -2317,26 +2314,29 @@ A periodic rule that evaluates via the API operation chain below.
 4. Call `accessanalyzer:CheckNoPublicAccess` with `$.policyDocument`, `$.resourceType` = `AWS::DynamoDB::Table`; check `$.result`
 5. Call `accessanalyzer:CheckNoNewAccess` with `$.newPolicyDocument`, `$.existingPolicyDocument`, `$.policyType` = `RESOURCE_POLICY`; check `$.result`
 6. Call `accessanalyzer:CheckAccessNotGranted` with `$.policyDocument`, `$.policyType` = `RESOURCE_POLICY`, `$.access[*].actions[*]`; check `$.result`
-7. Call `accessanalyzer:ValidatePolicy` with `$.policyDocument`, `$.policyType` = `RESOURCE_POLICY`; check `$.findings[*].issueCode` = `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL`
-8. Call `accessanalyzer:ListFindingsV2` with `$.analyzerArn`, `$.filter{key}.eq[*]`; check `$.findings[*].findingType` = `ExternalAccess`, `$.findings[*].status` = `ACTIVE`
+7. Call `accessanalyzer:CheckNoNewAccess` with `$.newPolicyDocument`, `$.existingPolicyDocument`, `$.policyType` = `RESOURCE_POLICY`; check `$.result`
+8. Call `accessanalyzer:ValidatePolicy` with `$.policyDocument`, `$.policyType` = `RESOURCE_POLICY`, `$.validatePolicyResourceType` = `AWS::DynamoDB::Table`; check `$.findings[*].issueCode` = `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL`
+9. Call `accessanalyzer:ListFindingsV2` with `$.analyzerArn`, `$.filter{key}.eq[*]`; check `$.findings[*].findingType` = `ExternalAccess`, `$.findings[*].status` = `ACTIVE`
 
 **Implements:** [Mitigation.DYNAMODB.Table.8](#mitigationdynamodbtable8)
 
-**Scoping** (for [Mitigation.DYNAMODB.Table.8](#mitigationdynamodbtable8)): This rule reads each table's resource-based policy as `$.Policy` and evaluates it with IAM Access Analyzer checks. Flagging policies that allow public access or access by identities outside your organization helps you detect table access beyond trusted identities.
+**Scoping** (for [Mitigation.DYNAMODB.Table.8](#mitigationdynamodbtable8)): This implementation guidance recommends reading `$.Policy`, the resource-based policy attached to your table, and evaluating it for possible grants of public access, access beyond your reference policy, permissions you specify, and access by AWS services beyond a reference policy containing the source conditions you accept. Flagging those grants helps you detect access to your table that extends beyond trusted identities.
 
 **Reference:** This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.
 
-Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.
-
 Custom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.
 
-The reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
+The first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
+
+The second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.
 
 External access findings, generated by an external access analyzer, use automated reasoning. They identify resource-based policies that allow access from outside your zone of trust.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+
+Basic policy checks (`ValidatePolicy`) validate the policy against IAM policy grammar and AWS best practices. With `validatePolicyResourceType` set to the S3 bucket or DynamoDB table resource type, the check also returns the `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL` finding for a grant to an AWS service principal that omits the source conditions.
 - [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
 - [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
+- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
+- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
 
 ### Implementation.DYNAMODB.Table.28
 
@@ -2351,7 +2351,7 @@ Governs the IAM permissions below.
 
 **Implements:** [Mitigation.DYNAMODB.Table.8](#mitigationdynamodbtable8)
 
-**Scoping** (for [Mitigation.DYNAMODB.Table.8](#mitigationdynamodbtable8)): This resource control policy (RCP) governs Amazon DynamoDB API calls against your resources with the `aws:PrincipalOrgID` condition key. As a result, identities outside your organization are restricted from accessing your resources. AWS services that access your resources on your behalf are exempt (`aws:PrincipalIsAWSService`), with those service requests scoped by the `aws:SourceOrgID` and `aws:SourceAccount` condition keys.
+**Scoping** (for [Mitigation.DYNAMODB.Table.8](#mitigationdynamodbtable8)): This implementation guidance recommends governing Amazon DynamoDB API calls against your resources with the `aws:PrincipalOrgID` condition key in a resource control policy (RCP), while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent identities outside your organization from accessing your resources.
 
 **Reference:** To restrict access to trusted identities, use the `aws:PrincipalOrgID`, `aws:PrincipalOrgPaths`, or `aws:PrincipalAccount` condition keys. These scope access to IAM principals within a particular organization, specific organizational units, or a specific AWS account, respectively. These keys do not contain your organization or account values for requests by AWS service principals, so apply them only when `aws:PrincipalIsAWSService` is `false`. To restrict service access to your resources, use the `aws:SourceOrgID`, `aws:SourceOrgPaths`, `aws:SourceAccount`, or `aws:SourceArn` condition keys. These scope access performed on behalf of resources within a particular organization, specific organizational units, a specific AWS account, or a particular resource, respectively. Apply them only when `aws:PrincipalIsAWSService` is `true`. Also require that `aws:SourceAccount` is present in the request context, because not every service integration populates these keys. Choose the condition key that matches the granularity of the restriction you want to enforce.
 - [Establishing an identity perimeter](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_data-perimeters.html#access_policies_data-perimeters-identity)
@@ -2369,7 +2369,7 @@ Attaches to `AWS::DynamoDB::Table` and governs the IAM permissions below.
 
 **Implements:** [Mitigation.DYNAMODB.Table.9](#mitigationdynamodbtable9)
 
-**Scoping** (for [Mitigation.DYNAMODB.Table.9](#mitigationdynamodbtable9)): This resource-based policy governs `dynamodb:ExportTableToPointInTime`, `dynamodb:DescribeTable`, and `dynamodb:DescribeExport` on your table with the `aws:SourceArn` and `aws:SourceAccount` condition keys. As a result, requests made on behalf of a resource or account you have not designated are restricted from exporting or inspecting your table data.
+**Scoping** (for [Mitigation.DYNAMODB.Table.9](#mitigationdynamodbtable9)): This implementation guidance recommends governing `dynamodb:ExportTableToPointInTime`, `dynamodb:DescribeTable`, and `dynamodb:DescribeExport` on your table with the `aws:SourceArn` and `aws:SourceAccount` condition keys. Enforce these keys only in resource-based policy statements that grant access to an AWS service principal. As a result, requests made on behalf of a resource or account you have not designated are restricted from exporting or inspecting your table data.
 
 **Reference:** To restrict service access to your resources, use the `aws:SourceOrgID`, `aws:SourceOrgPaths`, `aws:SourceAccount`, or `aws:SourceArn` condition keys. These scope access performed on behalf of resources within a particular organization, specific organizational units, a specific AWS account, or a particular resource, respectively. Choose the condition key that matches the granularity of the restriction you want to enforce.
 - [Establishing an identity perimeter](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_data-perimeters.html#access_policies_data-perimeters-identity)
@@ -2384,11 +2384,17 @@ Validates template properties before provisioning.
 
 **Implements:** [Mitigation.DYNAMODB.Table.9](#mitigationdynamodbtable9)
 
-**Scoping** (for [Mitigation.DYNAMODB.Table.9](#mitigationdynamodbtable9)): This implementation validates your replica's resource-based policy in `$.Replicas[*].ResourcePolicy.PolicyDocument` at create time, failing the stack operation on a `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL` warning. The hook therefore requires `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths`, restricting an AWS service to requests made on behalf of resources in your organization.
+**Scoping** (for [Mitigation.DYNAMODB.Table.9](#mitigationdynamodbtable9)): This implementation guidance recommends validating `$.Replicas[*].ResourcePolicy.PolicyDocument`, each replica's resource-based policy, before provisioning. When a grant to an AWS service principal extends beyond a reference policy containing the source conditions you accept, the hook fails the stack operation, which helps prevent such a grant from being provisioned.
 
-**Reference:** This implementation recommends using IAM Access Analyzer basic policy checks.
+**Reference:** This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.
 
-Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.
+Custom policy checks (`CheckNoNewAccess`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain.
+
+The reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`. The IAM Access Analyzer custom policy checks samples repository shows the reference policy format; compose the policy from the key combinations you accept.
+
+Basic policy checks (`ValidatePolicy`) validate the policy against IAM policy grammar and AWS best practices. With `validatePolicyResourceType` set to the S3 bucket or DynamoDB table resource type, the check also returns the `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL` finding for a grant to an AWS service principal that omits the source conditions.
+- [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
+- [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 - [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
 - [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
 
@@ -2402,11 +2408,17 @@ Validates template properties before provisioning.
 
 **Implements:** [Mitigation.DYNAMODB.Table.9](#mitigationdynamodbtable9)
 
-**Scoping** (for [Mitigation.DYNAMODB.Table.9](#mitigationdynamodbtable9)): At create time, this implementation validates `$.ResourcePolicy.PolicyDocument`, the table's resource-based policy, for the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, and `aws:SourceOrgPaths` condition keys. Rejecting a grant that omits them helps prevent an AWS service from being called to access your table on behalf of resources outside your organization.
+**Scoping** (for [Mitigation.DYNAMODB.Table.9](#mitigationdynamodbtable9)): This implementation guidance recommends validating `$.ResourcePolicy.PolicyDocument`, the table's resource-based policy, before provisioning. When a grant to an AWS service principal extends beyond a reference policy containing the source conditions you accept, the hook fails the stack operation, which helps prevent such a grant from being provisioned.
 
-**Reference:** This implementation recommends using IAM Access Analyzer basic policy checks.
+**Reference:** This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.
 
-Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.
+Custom policy checks (`CheckNoNewAccess`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain.
+
+The reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`. The IAM Access Analyzer custom policy checks samples repository shows the reference policy format; compose the policy from the key combinations you accept.
+
+Basic policy checks (`ValidatePolicy`) validate the policy against IAM policy grammar and AWS best practices. With `validatePolicyResourceType` set to the S3 bucket or DynamoDB table resource type, the check also returns the `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL` finding for a grant to an AWS service principal that omits the source conditions.
+- [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
+- [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 - [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
 - [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
 
@@ -2419,15 +2431,22 @@ A periodic rule that evaluates via the API operation chain below.
 1. Call `dynamodb:ListTables`; check `$.TableNames[*]`
 2. Call `dynamodb:DescribeTable` with `$.TableName`; check `$.Table.TableArn`
 3. Call `dynamodb:GetResourcePolicy` with `$.ResourceArn`; check `$.Policy`
-4. Call `accessanalyzer:ValidatePolicy` with `$.policyDocument`, `$.policyType` = `RESOURCE_POLICY`; check `$.findings[*].issueCode` = `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL`
+4. Call `accessanalyzer:ValidatePolicy` with `$.policyDocument`, `$.policyType` = `RESOURCE_POLICY`, `$.validatePolicyResourceType` = `AWS::DynamoDB::Table`; check `$.findings[*].issueCode` = `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL`
+5. Call `accessanalyzer:CheckNoNewAccess` with `$.newPolicyDocument`, `$.existingPolicyDocument`, `$.policyType` = `RESOURCE_POLICY`; check `$.result`
 
 **Implements:** [Mitigation.DYNAMODB.Table.9](#mitigationdynamodbtable9)
 
-**Scoping** (for [Mitigation.DYNAMODB.Table.9](#mitigationdynamodbtable9)): This rule validates a table's resource-based policy at `$.Policy` and flags a `$.findings[*].issueCode` of `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL` when `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, and `aws:SourceOrgPaths` are absent. That finding helps you detect access that is not restricted to requests made on behalf of resources in your organization.
+**Scoping** (for [Mitigation.DYNAMODB.Table.9](#mitigationdynamodbtable9)): This implementation guidance recommends reading `$.Policy`, your table's resource-based policy, and flagging grants to an AWS service principal that extend beyond a reference policy containing the source conditions you accept. Flagging those grants helps you detect access by AWS services acting on your behalf that lacks a source restriction you accept.
 
-**Reference:** This implementation recommends using IAM Access Analyzer basic policy checks.
+**Reference:** This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.
 
-Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.
+Custom policy checks (`CheckNoNewAccess`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain.
+
+The reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`. The IAM Access Analyzer custom policy checks samples repository shows the reference policy format; compose the policy from the key combinations you accept.
+
+Basic policy checks (`ValidatePolicy`) validate the policy against IAM policy grammar and AWS best practices. With `validatePolicyResourceType` set to the S3 bucket or DynamoDB table resource type, the check also returns the `RESTRICT_ACCESS_TO_SERVICE_PRINCIPAL` finding for a grant to an AWS service principal that omits the source conditions.
+- [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
+- [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 - [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
 - [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
 
@@ -2443,7 +2462,7 @@ Governs the IAM permissions below.
 
 **Implements:** [Mitigation.DYNAMODB.Table.9](#mitigationdynamodbtable9)
 
-**Scoping** (for [Mitigation.DYNAMODB.Table.9](#mitigationdynamodbtable9)): This implementation restricts Amazon DynamoDB API calls AWS services make against your tables on your behalf (`aws:PrincipalIsAWSService`) with the `aws:SourceOrgID` and `aws:SourceAccount` condition keys. Service requests on behalf of a resource or account outside your organization are denied, regardless of what your table's resource-based policy grants.
+**Scoping** (for [Mitigation.DYNAMODB.Table.9](#mitigationdynamodbtable9)): This implementation guidance recommends restricting DynamoDB API calls AWS services make against your tables on your behalf (`aws:PrincipalIsAWSService`) with the `aws:SourceOrgID` and `aws:SourceAccount` condition keys in a resource control policy (RCP). These conditions help prevent AWS services from accessing your tables on behalf of resources outside your organization, regardless of what each table's resource-based policy grants.
 
 **Reference:** To restrict service access to your resources at scale, use the `aws:SourceOrgID`, `aws:SourceOrgPaths`, `aws:SourceAccount`, or `aws:SourceArn` condition keys. These scope access performed on behalf of resources within a particular organization, specific organizational units, a specific AWS account, or a particular resource, respectively. These keys are included in the request context only for requests by AWS service principals, so apply them when `aws:PrincipalIsAWSService` is `true`. Also require that `aws:SourceAccount` is present in the request context, because not every service integration populates these keys. Choose the condition key that matches the granularity of the restriction you want to enforce.
 - [Establishing an identity perimeter](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_data-perimeters.html#access_policies_data-perimeters-identity)

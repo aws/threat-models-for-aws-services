@@ -8,7 +8,7 @@ AWS Lambda is a serverless compute service that runs code without requiring you 
 
 52 threats and 39 mitigations across 6 resource types and 88 API operations. 21 of 38 mitigation goals are covered, implemented by 116 implementations.
 
-Source service model: [lambda](https://github.com/aws/api-models-aws/blob/a0767ac42e279dfc8b311564c33436f8abfd3031/models/lambda/service/2015-03-31/lambda-2015-03-31.json)
+Source service model: [lambda](https://github.com/aws/api-models-aws/blob/3d89dd029ebd13b775ab5d22e5075399f20b35e4/models/lambda/service/2015-03-31/lambda-2015-03-31.json)
 
 ---
 
@@ -66,7 +66,7 @@ Source service model: [lambda](https://github.com/aws/api-models-aws/blob/a0767a
 
 | Threat | Summary | Impacts | Mitigated by |
 |---|---|---|---|
-| [Threat.LAMBDA.CapacityProvider.9](#threatlambdacapacityprovider9) | Untrusted IAM principal, that has been granted access to my AWS Lambda capacity provider's operator IAM role through its trust policy, can assume my operator role and act with its permissions. | [Account and Resource Discovery](../threat-impacts.md#account-and-resource-discovery), [Initial Access](../threat-impacts.md#initial-access), [Privilege Escalation](../threat-impacts.md#privilege-escalation) | [Mitigation.LAMBDA.CapacityProvider.2](#mitigationlambdacapacityprovider2) |
+| [Threat.LAMBDA.CapacityProvider.9](#threatlambdacapacityprovider9) | Untrusted IAM principal, that has been granted access to my AWS Lambda capacity provider's IAM operator role through its trust policy, can assume my operator role and act with its permissions. | [Account and Resource Discovery](../threat-impacts.md#account-and-resource-discovery), [Initial Access](../threat-impacts.md#initial-access), [Privilege Escalation](../threat-impacts.md#privilege-escalation) | [Mitigation.LAMBDA.CapacityProvider.2](#mitigationlambdacapacityprovider2) |
 | [Threat.LAMBDA.Function.13](#threatlambdafunction13) | Untrusted IAM principal, that has been granted access to my AWS Lambda function's IAM execution role through its trust policy, can assume my execution role and act with its permissions. | [Data Collection](../threat-impacts.md#data-collection), [Data Exfiltration](../threat-impacts.md#data-exfiltration), [Initial Access](../threat-impacts.md#initial-access) | [Mitigation.LAMBDA.Function.3](#mitigationlambdafunction3) |
 
 ### [Lateral movement through permissive network rules](../potential-threats.md#lateral-movement-through-permissive-network-rules)
@@ -407,7 +407,7 @@ IAM principal, with IAM permissions to create or update an AWS Lambda capacity p
 
 ### Threat.LAMBDA.CapacityProvider.9
 
-Untrusted IAM principal, that has been granted access to my AWS Lambda capacity provider's operator IAM role through its trust policy, can assume my operator role and act with its permissions.
+Untrusted IAM principal, that has been granted access to my AWS Lambda capacity provider's IAM operator role through its trust policy, can assume my operator role and act with its permissions.
 
 **Impacts:** [Account and Resource Discovery](../threat-impacts.md#account-and-resource-discovery), [Initial Access](../threat-impacts.md#initial-access), [Privilege Escalation](../threat-impacts.md#privilege-escalation)
 
@@ -415,7 +415,7 @@ Untrusted IAM principal, that has been granted access to my AWS Lambda capacity 
 
 **Frameworks:** MITRE ATT&CK [T1078.004](https://attack.mitre.org/techniques/T1078/004/), [T1199](https://attack.mitre.org/techniques/T1199/), [T1580](https://attack.mitre.org/techniques/T1580/)
 
-**Scoping** (for [Identity Perimeter - Untrusted principal assumption of my IAM roles](../potential-threats.md#identity-perimeter---untrusted-principal-assumption-of-my-iam-roles)): Every AWS Lambda capacity provider designates an operator role whose trust policy you author yourself. That trust policy can allow an untrusted principal to assume the role and act with its permissions.
+**Scoping** (for [Identity Perimeter - Untrusted principal assumption of my IAM roles](../potential-threats.md#identity-perimeter---untrusted-principal-assumption-of-my-iam-roles)): Your AWS Lambda capacity provider designates an operator role through `$.PermissionsConfig.CapacityProviderOperatorRoleArn`, and you author its trust policy. That trust policy can allow identities outside your organization to assume the role and act with its permissions.
 
 **Request parameters**
 
@@ -993,7 +993,7 @@ Untrusted IAM principal, that has been granted access to my AWS Lambda function 
 
 **Frameworks:** MITRE ATT&CK [T1078.004](https://attack.mitre.org/techniques/T1078/004/), [T1199](https://attack.mitre.org/techniques/T1199/), [T1530](https://attack.mitre.org/techniques/T1530/), [T1537](https://attack.mitre.org/techniques/T1537/)
 
-**Scoping** (for [Identity Perimeter - Untrusted principal access to my resources](../potential-threats.md#identity-perimeter---untrusted-principal-access-to-my-resources)): A resource-based policy on a Lambda function can grant actions such as `lambda:InvokeFunction`, `lambda:GetFunction`, and `lambda:UpdateFunctionCode` to an IAM principal outside your organization. That principal can then run your code under the execution role, read the environment variables and deployment package, or replace that code.
+**Scoping** (for [Identity Perimeter - Untrusted principal access to my resources](../potential-threats.md#identity-perimeter---untrusted-principal-access-to-my-resources)): A resource-based policy on your AWS Lambda function can grant actions such as `lambda:InvokeFunction`, `lambda:GetFunction`, and `lambda:UpdateFunctionCode` to principals outside your organization. Such a principal can then run your code under the IAM execution role, read the environment variables and deployment package, or replace that code.
 
 **Data perimeter:** `AddPermission` allows you to apply a resource-based policy to grant access to a function. The service currently does not support resource control policies.
 
@@ -1017,7 +1017,7 @@ Untrusted IAM principal, that has been granted access to my AWS Lambda function'
 
 **Frameworks:** MITRE ATT&CK [T1078.004](https://attack.mitre.org/techniques/T1078/004/), [T1199](https://attack.mitre.org/techniques/T1199/), [T1530](https://attack.mitre.org/techniques/T1530/), [T1537](https://attack.mitre.org/techniques/T1537/)
 
-**Scoping** (for [Identity Perimeter - Untrusted principal assumption of my IAM roles](../potential-threats.md#identity-perimeter---untrusted-principal-assumption-of-my-iam-roles)): You author the trust policy of the IAM execution role that Lambda assumes for your function. Principals outside your organization that the trust policy names may be able to assume the execution role and act with its permissions.
+**Scoping** (for [Identity Perimeter - Untrusted principal assumption of my IAM roles](../potential-threats.md#identity-perimeter---untrusted-principal-assumption-of-my-iam-roles)): Your AWS Lambda function designates an IAM execution role through `$.Role`, and you author its trust policy. That trust policy can allow identities outside your organization to assume the role and act with its permissions.
 
 **Request parameters**
 
@@ -1105,7 +1105,7 @@ Untrusted IAM principal, with access to configure an AWS service that has been g
 
 **Frameworks:** MITRE ATT&CK [T1078.004](https://attack.mitre.org/techniques/T1078/004/), [T1548.005](https://attack.mitre.org/techniques/T1548/005/)
 
-**Scoping** (for [Cross-service confused deputy problem through resource-based policies](../potential-threats.md#cross-service-confused-deputy-problem-through-resource-based-policies)): Your function's resource-based policy may grant `lambda:InvokeFunction` to AWS service principals such as `s3.amazonaws.com` or `sns.amazonaws.com`. A principal in another account can configure that service to invoke your function with event payloads they control.
+**Scoping** (for [Cross-service confused deputy problem through resource-based policies](../potential-threats.md#cross-service-confused-deputy-problem-through-resource-based-policies)): Your function's resource-based policy can grant `lambda:InvokeFunction` to an AWS service such as `s3.amazonaws.com` or `sns.amazonaws.com`. An untrusted IAM principal who can configure that service may cause it to invoke your function with event payloads they control.
 
 **Request parameters**
 
@@ -1249,7 +1249,7 @@ Untrusted IAM principal, that has been granted access to my AWS Lambda layer thr
 
 **Frameworks:** MITRE ATT&CK [T1078.004](https://attack.mitre.org/techniques/T1078/004/), [T1199](https://attack.mitre.org/techniques/T1199/), [T1530](https://attack.mitre.org/techniques/T1530/), [T1537](https://attack.mitre.org/techniques/T1537/)
 
-**Scoping** (for [Identity Perimeter - Untrusted principal access to my resources](../potential-threats.md#identity-perimeter---untrusted-principal-access-to-my-resources)): The resource-based policy on your Lambda layer version can name another account, the account root user, or a wildcard principal. An identity outside your organization with that grant can call `GetLayerVersion` to download the archive, or add the version to a function it controls.
+**Scoping** (for [Identity Perimeter - Untrusted principal access to my resources](../potential-threats.md#identity-perimeter---untrusted-principal-access-to-my-resources)): The resource-based policy on your AWS Lambda layer version can grant `lambda:GetLayerVersion` access to principals outside your organization. An identity outside your organization with that grant can call `GetLayerVersion` to download the archive, or add the version to a function it controls.
 
 **Data perimeter:** `AddLayerVersionPermission` allows you to apply a resource-based policy to grant access to a layer version. The service currently does not support resource control policies.
 
@@ -1353,13 +1353,13 @@ An AWS Lambda capacity provider's operator role should be assumed only by AWS La
 
 **Implemented by:** [Implementation.LAMBDA.CapacityProvider.4](#implementationlambdacapacityprovider4), [Implementation.LAMBDA.CapacityProvider.5](#implementationlambdacapacityprovider5), [Implementation.LAMBDA.CapacityProvider.6](#implementationlambdacapacityprovider6), [Implementation.LAMBDA.CapacityProvider.7](#implementationlambdacapacityprovider7)
 
-**Scoping** (for [Restrict IAM Role Assumption - Service or Execution Role](../mitigation-goals.md#restrict-iam-role-assumption---service-or-execution-role)): Your capacity provider's operator role, set through the `$.PermissionsConfig.CapacityProviderOperatorRoleArn` request parameter, has a trust policy that specifies which principals can assume it. Allowing only AWS Lambda, acting on behalf of trusted resources, to assume this role helps prevent an unintended principal from assuming it.
+**Scoping** (for [Restrict IAM Role Assumption - Service or Execution Role](../mitigation-goals.md#restrict-iam-role-assumption---service-or-execution-role)): Your capacity provider's operator role, set through the `$.PermissionsConfig.CapacityProviderOperatorRoleArn` request parameter, has a trust policy that specifies which principals can assume it. Allowing only AWS Lambda, acting on behalf of trusted resources, to assume the role helps prevent an unintended principal from assuming it.
 
 **Configure via**
 
 | Operation | Parameters |
 |---|---|
-| `lambda:CreateCapacityProvider` | `$.CapacityProviderName`, `$.PermissionsConfig.CapacityProviderOperatorRoleArn` |
+| `lambda:CreateCapacityProvider` | `$.PermissionsConfig.CapacityProviderOperatorRoleArn` |
 
 **Verify via**
 
@@ -1822,8 +1822,8 @@ An AWS Lambda function's IAM execution role should be assumed only by AWS Lambda
 
 | Operation | Parameters |
 |---|---|
-| `lambda:CreateFunction` | `$.FunctionName`, `$.Role` |
-| `lambda:UpdateFunctionConfiguration` | `$.FunctionName`, `$.Role` |
+| `lambda:CreateFunction` | `$.Role` |
+| `lambda:UpdateFunctionConfiguration` | `$.Role` |
 
 **Verify via**
 
@@ -2063,16 +2063,16 @@ An AWS Lambda function should be accessed only by trusted identities or AWS serv
 
 **Implemented by:** [Implementation.LAMBDA.Function.13](#implementationlambdafunction13), [Implementation.LAMBDA.Function.33](#implementationlambdafunction33), [Implementation.LAMBDA.Function.34](#implementationlambdafunction34), [Implementation.LAMBDA.Function.35](#implementationlambdafunction35), [Implementation.LAMBDA.Function.36](#implementationlambdafunction36), [Implementation.LAMBDA.Function.37](#implementationlambdafunction37), [Implementation.LAMBDA.Function.38](#implementationlambdafunction38), [ManagedControl.LAMBDA.Function.4](#managedcontrollambdafunction4), [ManagedControl.LAMBDA.Function.6](#managedcontrollambdafunction6), [ManagedControl.LAMBDA.Function.7](#managedcontrollambdafunction7)
 
-**Scoping** (for [Identity Perimeter - Only trusted identities can access my resources](../mitigation-goals.md#identity-perimeter---only-trusted-identities-can-access-my-resources)): Your Lambda function supports a resource-based policy that defines which identities and AWS services can invoke or manage it. Because access to the function is authorized through IAM, you can restrict it to trusted identities.
+**Scoping** (for [Identity Perimeter - Only trusted identities can access my resources](../mitigation-goals.md#identity-perimeter---only-trusted-identities-can-access-my-resources)): Your Lambda function supports a resource-based policy that specifies who can access it and what actions they can perform. The identity perimeter helps restrict access to your Lambda functions to trusted identities and AWS services acting on your behalf.
 
 **Configure via**
 
 | Operation | Parameters |
 |---|---|
-| `lambda:AddPermission` | `$.FunctionName`, `$.Principal`, `$.PrincipalOrgID`, `$.SourceAccount`, `$.SourceArn` |
+| `lambda:AddPermission` | `$.Principal`, `$.PrincipalOrgID`, `$.SourceAccount`, `$.SourceArn` |
 | `lambda:DeleteResourcePolicy` | `$.ResourceArn` |
-| `lambda:PutResourcePolicy` | `$.Policy`, `$.ResourceArn` |
-| `lambda:RemovePermission` | `$.FunctionName`, `$.StatementId` |
+| `lambda:PutResourcePolicy` | `$.Policy` |
+| `lambda:RemovePermission` | `$.StatementId` |
 
 **Verify via**
 
@@ -2091,7 +2091,7 @@ An AWS Lambda function should be accessed by an AWS service principal, such as t
 
 **Implemented by:** [Implementation.LAMBDA.Function.39](#implementationlambdafunction39), [Implementation.LAMBDA.Function.40](#implementationlambdafunction40), [Implementation.LAMBDA.Function.41](#implementationlambdafunction41), [Implementation.LAMBDA.Function.42](#implementationlambdafunction42), [ManagedControl.LAMBDA.Function.6](#managedcontrollambdafunction6), [ManagedControl.LAMBDA.Function.7](#managedcontrollambdafunction7)
 
-**Scoping** (for [Cross-Service Confused Deputy Prevention - Resource-based policies](../mitigation-goals.md#cross-service-confused-deputy-prevention---resource-based-policies)): You can attach a resource-based policy to an AWS Lambda function that grants an AWS service principal permission to invoke it. A grant to a service principal alone does not identify the resource or account the service is acting on behalf of.
+**Scoping** (for [Cross-Service Confused Deputy Prevention - Resource-based policies](../mitigation-goals.md#cross-service-confused-deputy-prevention---resource-based-policies)): A resource-based policy on your function can grant an AWS service principal, such as the Amazon S3 service principal (`s3.amazonaws.com`), the `lambda:InvokeFunction` action. That policy should restrict which accounts or resources the service may act on behalf of.
 
 **Configure via**
 
@@ -2282,14 +2282,14 @@ An AWS Lambda layer should be accessed only by trusted identities or AWS service
 
 **Implemented by:** [Implementation.LAMBDA.Layer.2](#implementationlambdalayer2), [Implementation.LAMBDA.Layer.4](#implementationlambdalayer4), [Implementation.LAMBDA.Layer.5](#implementationlambdalayer5), [Implementation.LAMBDA.Layer.6](#implementationlambdalayer6), [Implementation.LAMBDA.Layer.7](#implementationlambdalayer7), [ManagedControl.LAMBDA.Layer.1](#managedcontrollambdalayer1)
 
-**Scoping** (for [Identity Perimeter - Only trusted identities can access my resources](../mitigation-goals.md#identity-perimeter---only-trusted-identities-can-access-my-resources)): Each version of your layer carries its own resource-based policy that can grant other accounts permission to retrieve the layer archive. Sharing can also extend to every account in an organization, or to all AWS accounts.
+**Scoping** (for [Identity Perimeter - Only trusted identities can access my resources](../mitigation-goals.md#identity-perimeter---only-trusted-identities-can-access-my-resources)): Each version of your layer supports its own resource-based policy that specifies who can access it and what actions they can perform. The identity perimeter helps restrict access to your layers to trusted identities and AWS services acting on your behalf.
 
 **Configure via**
 
 | Operation | Parameters |
 |---|---|
-| `lambda:AddLayerVersionPermission` | `$.LayerName`, `$.OrganizationId`, `$.Principal`, `$.VersionNumber` |
-| `lambda:RemoveLayerVersionPermission` | `$.LayerName`, `$.StatementId`, `$.VersionNumber` |
+| `lambda:AddLayerVersionPermission` | `$.OrganizationId`, `$.Principal` |
+| `lambda:RemoveLayerVersionPermission` | `$.StatementId` |
 
 **Verify via**
 
@@ -2395,7 +2395,7 @@ Validates template properties before provisioning.
 
 **Implements:** [Mitigation.LAMBDA.CapacityProvider.2](#mitigationlambdacapacityprovider2)
 
-**Scoping** (for [Mitigation.LAMBDA.CapacityProvider.2](#mitigationlambdacapacityprovider2)): This implementation reads `$.Role.AssumeRolePolicyDocument`, the trust policy of the operator role named in `$.PermissionsConfig.CapacityProviderOperatorRoleArn`. Creation of the capacity provider fails when that trust policy grants public access, or grants role assumption beyond the reference policy you maintain.
+**Scoping** (for [Mitigation.LAMBDA.CapacityProvider.2](#mitigationlambdacapacityprovider2)): This implementation guidance recommends validating the trust policy of `$.PermissionsConfig.CapacityProviderOperatorRoleArn`, your capacity provider's operator role, before provisioning. This helps prevent the capacity provider from being provisioned when that trust policy can grant public access, or role assumption beyond the reference policy you maintain.
 
 **Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
@@ -2418,7 +2418,7 @@ A periodic rule that evaluates via the API operation chain below.
 
 **Implements:** [Mitigation.LAMBDA.CapacityProvider.2](#mitigationlambdacapacityprovider2)
 
-**Scoping** (for [Mitigation.LAMBDA.CapacityProvider.2](#mitigationlambdacapacityprovider2)): This periodic check runs IAM Access Analyzer checks over the trust policy at `$.Role.AssumeRolePolicyDocument` for the operator role recorded at `$.CapacityProviders[*].PermissionsConfig.CapacityProviderOperatorRoleArn`. Flagging a trust policy that can grant public role assumption, or assumption beyond your reference policy, helps you detect over-permissive grants.
+**Scoping** (for [Mitigation.LAMBDA.CapacityProvider.2](#mitigationlambdacapacityprovider2)): This implementation guidance recommends reading `$.CapacityProviders[*].PermissionsConfig.CapacityProviderOperatorRoleArn`, your capacity provider's operator role, then evaluating `$.Role.AssumeRolePolicyDocument`, that role's trust policy, with IAM Access Analyzer. Flagging trust policies that allow public role assumption, or assumption beyond your reference policy, helps you detect overly permissive role assumption.
 
 **Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
@@ -2440,7 +2440,7 @@ Governs the IAM role trust policy statements below (the role is the resource).
 
 **Implements:** [Mitigation.LAMBDA.CapacityProvider.2](#mitigationlambdacapacityprovider2)
 
-**Scoping** (for [Mitigation.LAMBDA.CapacityProvider.2](#mitigationlambdacapacityprovider2)): This implementation guidance recommends a trust policy on `$.PermissionsConfig.CapacityProviderOperatorRoleArn`, your capacity provider operator role, that restricts assumption to the AWS Lambda service principal `lambda.amazonaws.com`.
+**Scoping** (for [Mitigation.LAMBDA.CapacityProvider.2](#mitigationlambdacapacityprovider2)): This implementation guidance recommends a trust policy that restricts assumption of your AWS Lambda capacity provider's operator role, `$.PermissionsConfig.CapacityProviderOperatorRoleArn`, to the `lambda.amazonaws.com` service principal.
 
 **Reference:** Confirm that IAM role trust policies grant access only to the AWS service principals you intend. Review the `Principal` element of each policy and verify it names only the service principals your workload requires.
 
@@ -2457,7 +2457,7 @@ Governs the IAM permissions below.
 
 **Implements:** [Mitigation.LAMBDA.CapacityProvider.2](#mitigationlambdacapacityprovider2)
 
-**Scoping** (for [Mitigation.LAMBDA.CapacityProvider.2](#mitigationlambdacapacityprovider2)): This implementation governs `sts:AssumeRole` through the `aws:PrincipalOrgID` condition key, while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those requests with `aws:SourceOrgID`. As a result, principals outside your organization are restricted from assuming the capacity provider operator role at `$.PermissionsConfig.CapacityProviderOperatorRoleArn`.
+**Scoping** (for [Mitigation.LAMBDA.CapacityProvider.2](#mitigationlambdacapacityprovider2)): This implementation guidance recommends restricting `sts:AssumeRole` with the `aws:PrincipalOrgID` condition key in a resource control policy (RCP), while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent principals outside your organization from assuming your capacity provider's operator role, `$.PermissionsConfig.CapacityProviderOperatorRoleArn`.
 
 **Reference:** To restrict access to trusted identities, use the `aws:PrincipalOrgID`, `aws:PrincipalOrgPaths`, or `aws:PrincipalAccount` condition keys. These scope access to IAM principals within a particular organization, specific organizational units, or a specific AWS account, respectively. These keys do not contain your organization or account values for requests by AWS service principals, so apply them only when `aws:PrincipalIsAWSService` is `false`. As a defense-in-depth measure, use the `aws:SourceOrgID`, `aws:SourceOrgPaths`, `aws:SourceAccount`, or `aws:SourceArn` condition keys to restrict service access to your roles. These scope access performed on behalf of resources within a particular organization, specific organizational units, a specific AWS account, or a particular resource, respectively. Apply them only when `aws:PrincipalIsAWSService` is `true`. Also require that `aws:SourceAccount` is present in the request context, because not every service integration populates these keys. Choose the condition key that matches the granularity of the restriction you want to enforce.
 - [Establishing an identity perimeter](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_data-perimeters.html#access_policies_data-perimeters-identity)
@@ -3105,7 +3105,7 @@ Validates template properties before provisioning.
 
 **Implements:** [Mitigation.LAMBDA.Function.3](#mitigationlambdafunction3)
 
-**Scoping** (for [Mitigation.LAMBDA.Function.3](#mitigationlambdafunction3)): This implementation restricts role assumption through the trust policy at `$.Role.AssumeRolePolicyDocument` for the IAM execution role that `$.Role` names. Create requests are denied when that document grants role assumption to untrusted principals, so such a role is not deployed with your function.
+**Scoping** (for [Mitigation.LAMBDA.Function.3](#mitigationlambdafunction3)): This implementation guidance recommends validating the trust policy of `$.Role`, your function's IAM execution role, before provisioning. This helps prevent the function from being provisioned when that trust policy can grant public access, or role assumption beyond the reference policy you maintain.
 
 **Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
@@ -3128,7 +3128,7 @@ A periodic rule that evaluates via the API operation chain below.
 
 **Implements:** [Mitigation.LAMBDA.Function.3](#mitigationlambdafunction3)
 
-**Scoping** (for [Mitigation.LAMBDA.Function.3](#mitigationlambdafunction3)): This implementation reads each function's execution role from `$.Functions[*].Role`, then evaluates that role's trust policy at `$.Role.AssumeRolePolicyDocument` with IAM Access Analyzer custom policy checks. It flags trust policies that allow public role assumption, or that grant role assumption to principals you designate as untrusted.
+**Scoping** (for [Mitigation.LAMBDA.Function.3](#mitigationlambdafunction3)): This implementation guidance recommends reading `$.Functions[*].Role`, your function's IAM execution role, then evaluating `$.Role.AssumeRolePolicyDocument`, that role's trust policy, with IAM Access Analyzer. Flagging trust policies that allow public role assumption, or assumption beyond your reference policy, helps you detect overly permissive role assumption.
 
 **Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
@@ -3150,7 +3150,7 @@ Governs the IAM role trust policy statements below (the role is the resource).
 
 **Implements:** [Mitigation.LAMBDA.Function.3](#mitigationlambdafunction3)
 
-**Scoping** (for [Mitigation.LAMBDA.Function.3](#mitigationlambdafunction3)): This implementation guidance recommends a trust policy that restricts assumption of `$.Role`, your function's IAM execution role, to the AWS Lambda service principal `lambda.amazonaws.com`.
+**Scoping** (for [Mitigation.LAMBDA.Function.3](#mitigationlambdafunction3)): This implementation guidance recommends a trust policy that restricts assumption of your AWS Lambda function's IAM execution role, `$.Role`, to the `lambda.amazonaws.com` service principal.
 
 **Reference:** Confirm that IAM role trust policies grant access only to the AWS service principals you intend. Review the `Principal` element of each policy and verify it names only the service principals your workload requires.
 
@@ -3167,7 +3167,7 @@ Governs the IAM permissions below.
 
 **Implements:** [Mitigation.LAMBDA.Function.3](#mitigationlambdafunction3)
 
-**Scoping** (for [Mitigation.LAMBDA.Function.3](#mitigationlambdafunction3)): This resource control policy (RCP) restricts `sts:AssumeRole` against the execution role named in the `$.Role` request parameter with the `aws:PrincipalOrgID` condition key. Requests that do not satisfy that condition are denied, so identities outside your organization cannot assume the role and obtain its permissions. The policy exempts AWS services that access the role on your behalf (`aws:PrincipalIsAWSService`), scoping those service requests with the `aws:SourceOrgID` condition key.
+**Scoping** (for [Mitigation.LAMBDA.Function.3](#mitigationlambdafunction3)): This implementation guidance recommends restricting `sts:AssumeRole` with the `aws:PrincipalOrgID` condition key in a resource control policy (RCP), while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent principals outside your organization from assuming your AWS Lambda function's IAM execution role, `$.Role`.
 
 **Reference:** To restrict access to trusted identities, use the `aws:PrincipalOrgID`, `aws:PrincipalOrgPaths`, or `aws:PrincipalAccount` condition keys. These scope access to IAM principals within a particular organization, specific organizational units, or a specific AWS account, respectively. These keys do not contain your organization or account values for requests by AWS service principals, so apply them only when `aws:PrincipalIsAWSService` is `false`. As a defense-in-depth measure, use the `aws:SourceOrgID`, `aws:SourceOrgPaths`, `aws:SourceAccount`, or `aws:SourceArn` condition keys to restrict service access to your roles. These scope access performed on behalf of resources within a particular organization, specific organizational units, a specific AWS account, or a particular resource, respectively. Apply them only when `aws:PrincipalIsAWSService` is `true`. Also require that `aws:SourceAccount` is present in the request context, because not every service integration populates these keys. Choose the condition key that matches the granularity of the restriction you want to enforce.
 - [Establishing an identity perimeter](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_data-perimeters.html#access_policies_data-perimeters-identity)
@@ -3239,7 +3239,7 @@ Governs the IAM permissions below.
 
 **Implements:** [Mitigation.LAMBDA.Function.5](#mitigationlambdafunction5), [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)
 
-**Scoping** (for [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)): This implementation governs `lambda:AddPermission` and `lambda:AddLayerVersionPermission` with the `aws:PrincipalTag/dp:exclude:identity` condition key. As a result, principals without that tag are restricted from adding resource-based policy statements that grant access to your functions and layer versions.
+**Scoping** (for [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)): This implementation guidance recommends applying the `aws:PrincipalTag/dp:exclude:identity` condition key in a service control policy (SCP) to govern `lambda:AddPermission` and `lambda:AddLayerVersionPermission`. As a result, principals without that tag are restricted from adding resource-based policy statements that grant access to your functions and layer versions.
 
 **Scoping** (for [Mitigation.LAMBDA.Function.5](#mitigationlambdafunction5)): This implementation restricts `lambda:AddPermission` and `lambda:AddLayerVersionPermission` on your functions and layer versions, while exempting principals you tag for exclusion (`aws:PrincipalTag/dp:exclude:identity`). Requests from other principals are denied, so those resources are less likely to be accessed from unexpected networks.
 
@@ -3551,7 +3551,7 @@ Consider using AWS Identity and Access Management Access Analyzer external acces
 
 **Implements:** [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)
 
-**Scoping** (for [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)): This recommendation directs you to review the resource-based policies on your functions for access granted to identities outside your organization. Remediating any unintended grants helps you keep access to your functions limited to trusted identities.
+**Scoping** (for [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)): This implementation guidance recommends reviewing the resource-based policies on your functions for access granted to identities outside your organization. Remediating any unintended grants helps you keep access to your functions limited to trusted identities.
 
 ### Implementation.LAMBDA.Function.34
 
@@ -3566,7 +3566,7 @@ Attaches to `AWS::Lambda::Function` and governs the IAM permissions below.
 
 **Implements:** [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)
 
-**Scoping** (for [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)): This implementation restricts AWS Lambda API calls against your function with the `aws:PrincipalOrgID` and `aws:SourceOrgID` condition keys, while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`). Requests that do not satisfy those conditions are denied, so identities outside your organization cannot invoke or modify the function.
+**Scoping** (for [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)): This implementation guidance recommends governing AWS Lambda API calls against your function with the `aws:PrincipalOrgID` condition key in its resource-based policy, while exempting AWS services that access it on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent identities outside your organization from accessing your function.
 
 **Reference:** Confirm that resource-based policies grant access only to trusted identities and to services acting on your behalf.
 
@@ -3583,21 +3583,19 @@ Choose the condition key that matches the granularity of the restriction you wan
 
 Validates template properties before provisioning.
 
-- `AWS::Lambda::Permission`: `$.FunctionName`, `$.Principal`, `$.PrincipalOrgID`, `$.SourceAccount`, `$.SourceArn`
+- `AWS::Lambda::Permission`: `$.Principal`, `$.PrincipalOrgID`, `$.SourceAccount`, `$.SourceArn`
 
 **Implements:** [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)
 
-**Scoping** (for [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)): This implementation checks `$.Principal`, `$.PrincipalOrgID`, `$.SourceAccount`, and `$.SourceArn` on the function resource-based policy statement a template declares. A statement naming an account, organization, or source that you do not permit is rejected before the permission is created.
+**Scoping** (for [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)): This implementation guidance recommends validating `$.Principal`, `$.PrincipalOrgID`, `$.SourceAccount`, and `$.SourceArn`, the permission's principal and source settings, before provisioning a permission on your Lambda function. The hook helps prevent a permission that grants a principal outside your zone of trust access to your function from being provisioned.
 
 **Data perimeter** (for [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)): A hook on this resource type can reject a permission statement before it is added to your function's policy. Validate `$.Principal` so that a template cannot grant access to identities outside your organization. Validate `$.PrincipalOrgID` so that an organization-wide grant names only your own organization.
-- [AWS::Lambda::Permission resource type reference](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-permission.html)
+- [AWS::Lambda::Permission resource reference](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-permission.html)
 - [AWS::Lambda::Permission Principal property](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-permission.html#cfn-lambda-permission-principal)
 - [AWS::Lambda::Permission PrincipalOrgID property](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-permission.html#cfn-lambda-permission-principalorgid)
 
-**Reference:** This implementation recommends using both Access Analyzer basic policy checks and custom policy checks. Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning, but do provide actionable recommendations that help you author policies that are functional and conform to security best practices. Custom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance, provably verifying that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions. The reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource; the check fails when the resource policy grants access beyond that allowlist. Example reference policies for resource policies are available in the IAM Access Analyzer custom policy checks samples repository.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
-- [Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks. Custom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions. The first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository. The second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.
+- [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
 - [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
 ### Implementation.LAMBDA.Function.36
@@ -3606,29 +3604,27 @@ Validates template properties before provisioning.
 
 Validates template properties before provisioning.
 
-- `AWS::Lambda::ResourcePolicy`: `$.PolicyDocument`, `$.ResourceArn`
+- `AWS::Lambda::ResourcePolicy`: `$.PolicyDocument`
 
 **Implements:** [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)
 
-**Scoping** (for [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)): This implementation validates `$.PolicyDocument`, the resource-based policy on your function, before CloudFormation attaches it. Rejecting grants that reach beyond the principals you allowlist helps limit function access to trusted identities.
+**Scoping** (for [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)): This implementation guidance recommends validating `$.PolicyDocument`, the resource-based policy on your function, before provisioning the function policy. The hook helps prevent a policy that can grant public access, access beyond your reference policy, permissions you specify, or access to an AWS service principal beyond a reference policy containing the source conditions you accept from being provisioned.
 
 **Data perimeter** (for [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)): A CloudFormation template can grant access to your function through principal and organization-identifier properties on Lambda permission resources. Values naming identities outside your organization may grant unintended cross-account access. Validating `$.PolicyDocument` at deployment time helps you review those grants before the policy is attached.
-- [AWS::Lambda::Permission resource type reference](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-permission.html)
-- [Principal property of AWS::Lambda::Permission](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-permission.html#cfn-lambda-permission-principal)
-- [PrincipalOrgID property of AWS::Lambda::Permission](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-permission.html#cfn-lambda-permission-principalorgid)
-- [AWS::Lambda::LayerVersionPermission resource type reference](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-layerversionpermission.html)
-- [Principal property of AWS::Lambda::LayerVersionPermission](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-layerversionpermission.html#cfn-lambda-layerversionpermission-principal)
-- [OrganizationId property of AWS::Lambda::LayerVersionPermission](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-layerversionpermission.html#cfn-lambda-layerversionpermission-organizationid)
+- [AWS::Lambda::Permission resource](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-permission.html)
+- [AWS::Lambda::Permission Principal property](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-permission.html#cfn-lambda-permission-principal)
+- [AWS::Lambda::Permission PrincipalOrgID property](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-permission.html#cfn-lambda-permission-principalorgid)
+- [AWS::Lambda::LayerVersionPermission resource](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-layerversionpermission.html)
+- [AWS::Lambda::LayerVersionPermission Principal property](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-layerversionpermission.html#cfn-lambda-layerversionpermission-principal)
+- [AWS::Lambda::LayerVersionPermission OrganizationId property](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-layerversionpermission.html#cfn-lambda-layerversionpermission-organizationid)
 
-**Reference:** This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
-Basic policy checks validate your policy against IAM policy grammar and AWS best practices by calling `ValidatePolicy`. These checks do not use automated reasoning. They do provide actionable recommendations that help you author functional policies that conform to security best practices.
+Custom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.
 
-Custom policy checks use automated reasoning to provide a higher level of assurance. Calling `CheckNoPublicAccess` verifies that a policy does not grant public access. Calling `CheckNoNewAccess` verifies that it does not grant access beyond a reference policy you maintain. Calling `CheckAccessNotGranted` verifies that it does not grant permissions you specify.
+The first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
 
-The reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to your function. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies are available in the IAM Access Analyzer custom policy checks samples repository.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [Security best practices in IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+The second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.
 - [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
 - [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
@@ -3643,17 +3639,17 @@ Monitors the API calls below in CloudTrail.
 
 **Implements:** [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)
 
-**Scoping** (for [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)): This implementation captures each `AddPermission` and `AddLayerVersionPermission` call in CloudTrail along with the requested `$.Principal`, `$.PrincipalOrgID`, `$.SourceArn`, `$.SourceAccount`, and `$.OrganizationId` values. Reviewing those grants helps you detect resource-based policy statements that extend function or layer access beyond trusted principals.
+**Scoping** (for [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)): This implementation guidance recommends monitoring `AddPermission` calls in CloudTrail for `$.Principal`, `$.PrincipalOrgID`, `$.SourceArn`, and `$.SourceAccount`, the grantee and the organization or source scoping it. It also recommends monitoring `AddLayerVersionPermission` calls for `$.Principal` and `$.OrganizationId`, the account or organization granted use of a layer version. Reviewing those grants helps you detect resource-based policy statements that extend function or layer access beyond trusted identities.
 
 **Data perimeter:** Both `AddPermission` and `AddLayerVersionPermission` write statements into a resource-based policy that grants other identities access to your function or layer version. Monitoring these calls surfaces the principal and organization scoping that each request carries. Each event also records the identity that made the call. If necessary, remediate with the responsive controls of your choice.
-- [AWS Lambda AddPermission API reference](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html)
-- [AddPermission: Principal request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html#lambda-AddPermission-request-Principal)
-- [AddPermission: PrincipalOrgID request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html#lambda-AddPermission-request-PrincipalOrgID)
-- [AddPermission: SourceArn request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html#lambda-AddPermission-request-SourceArn)
-- [AddPermission: SourceAccount request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html#lambda-AddPermission-request-SourceAccount)
-- [AWS Lambda AddLayerVersionPermission API reference](https://docs.aws.amazon.com/lambda/latest/api/API_AddLayerVersionPermission.html)
-- [AddLayerVersionPermission: Principal request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddLayerVersionPermission.html#lambda-AddLayerVersionPermission-request-Principal)
-- [AddLayerVersionPermission: OrganizationId request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddLayerVersionPermission.html#lambda-AddLayerVersionPermission-request-OrganizationId)
+- [AddPermission API reference](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html)
+- [AddPermission Principal request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html#lambda-AddPermission-request-Principal)
+- [AddPermission PrincipalOrgID request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html#lambda-AddPermission-request-PrincipalOrgID)
+- [AddPermission SourceArn request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html#lambda-AddPermission-request-SourceArn)
+- [AddPermission SourceAccount request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html#lambda-AddPermission-request-SourceAccount)
+- [AddLayerVersionPermission API reference](https://docs.aws.amazon.com/lambda/latest/api/API_AddLayerVersionPermission.html)
+- [AddLayerVersionPermission Principal request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddLayerVersionPermission.html#lambda-AddLayerVersionPermission-request-Principal)
+- [AddLayerVersionPermission OrganizationId request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddLayerVersionPermission.html#lambda-AddLayerVersionPermission-request-OrganizationId)
 
 ### Implementation.LAMBDA.Function.38
 
@@ -3665,20 +3661,18 @@ A change-triggered rule that evaluates configuration item properties on change.
 
 **Implements:** [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)
 
-**Scoping** (for [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)): This implementation inspects the function's resource-based policy recorded at `$.supplementaryConfiguration.Policy` for public access grants and for statements missing the `aws:SourceArn` or `aws:SourceAccount` condition keys. Flagging those policies helps you detect invoke access that is not limited to trusted identities.
+**Scoping** (for [Mitigation.LAMBDA.Function.12](#mitigationlambdafunction12)): This implementation guidance recommends reading `$.supplementaryConfiguration.Policy`, the function's resource-based policy, and evaluating it for public access, access beyond your reference policy, actions you specify such as `lambda:UpdateFunctionCode`, and AWS service grants beyond a second reference policy containing the source conditions you accept. Flagging those grants helps you detect access to your AWS Lambda function that extends beyond trusted identities.
 
-**Reference:** This implementation recommends using both Access Analyzer basic policy checks and custom policy checks.
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
-Basic policy checks (ValidatePolicy) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning, but do provide actionable recommendations that help you author policies that are functional and conform to security best practices.
+Custom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.
 
-Custom policy checks (CheckNoPublicAccess, CheckNoNewAccess, CheckAccessNotGranted) use automated reasoning to provide a higher level of assurance, provably verifying that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.
+The first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
 
-The reference policy for CheckNoNewAccess allowlists the principals that may be granted access to the resource; the check fails when the resource policy grants access beyond that allowlist. Example reference policies for resource policies are available in the IAM Access Analyzer custom policy checks samples repository.
+The second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.
 
-External access findings, generated by an external access analyzer, also use automated reasoning to identify resource policies that allow access from outside your zone of trust.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
-- [Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
+External access findings, generated by an external access analyzer, use automated reasoning. They identify resource-based policies that allow access from outside your zone of trust.
+- [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
 - [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
 ### Implementation.LAMBDA.Function.39
@@ -3693,7 +3687,7 @@ Attaches to `AWS::Lambda::Function` and governs the IAM permissions below.
 
 **Implements:** [Mitigation.LAMBDA.Function.13](#mitigationlambdafunction13)
 
-**Scoping** (for [Mitigation.LAMBDA.Function.13](#mitigationlambdafunction13)): This implementation governs `lambda:InvokeFunction` and `lambda:InvokeFunctionUrl` on your function with the `aws:SourceArn`, `aws:SourceAccount`, or `aws:SourceOrgID` condition keys. As a result, AWS services acting on your behalf are restricted from invoking your function on behalf of resources outside your organization.
+**Scoping** (for [Mitigation.LAMBDA.Function.13](#mitigationlambdafunction13)): This implementation guidance recommends governing `lambda:InvokeFunction` and `lambda:InvokeFunctionUrl` on your function with the `aws:SourceArn` and `aws:SourceAccount` condition keys. Enforce these keys only in resource-based policy statements that grant access to an AWS service principal. As a result, requests made on behalf of a resource or account you have not designated are restricted from invoking your function.
 
 **Reference:** To restrict service access to your resources, use the `aws:SourceOrgID`, `aws:SourceOrgPaths`, `aws:SourceAccount`, or `aws:SourceArn` condition keys. These scope access performed on behalf of resources within a particular organization, specific organizational units, a specific AWS account, or a particular resource, respectively. Choose the condition key that matches the granularity of the restriction you want to enforce.
 - [Establishing an identity perimeter](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_data-perimeters.html#access_policies_data-perimeters-identity)
@@ -3704,11 +3698,11 @@ Attaches to `AWS::Lambda::Function` and governs the IAM permissions below.
 
 Validates template properties before provisioning.
 
-- `AWS::Lambda::Permission`: `$.Principal`, `$.SourceArn`, `$.SourceAccount`, `$.FunctionName`
+- `AWS::Lambda::Permission`: `$.Principal`, `$.SourceArn`, `$.SourceAccount`
 
 **Implements:** [Mitigation.LAMBDA.Function.13](#mitigationlambdafunction13)
 
-**Scoping** (for [Mitigation.LAMBDA.Function.13](#mitigationlambdafunction13)): This implementation checks a function permission at create time, requiring `$.SourceArn` or `$.SourceAccount` when `$.Principal` names an AWS service. Without one of those source values, other accounts could configure their own resources to invoke your function.
+**Scoping** (for [Mitigation.LAMBDA.Function.13](#mitigationlambdafunction13)): This implementation guidance recommends validating `$.SourceArn` and `$.SourceAccount`, your Lambda function's permission, before provisioning. When a grant to an AWS service principal names no source ARN or source account, the hook fails the stack operation, which helps prevent such a grant from being provisioned.
 
 ### Implementation.LAMBDA.Function.41
 
@@ -3716,15 +3710,15 @@ Validates template properties before provisioning.
 
 Validates template properties before provisioning.
 
-- `AWS::Lambda::ResourcePolicy`: `$.PolicyDocument`, `$.ResourceArn`
+- `AWS::Lambda::ResourcePolicy`: `$.PolicyDocument`
 
 **Implements:** [Mitigation.LAMBDA.Function.13](#mitigationlambdafunction13)
 
-**Scoping** (for [Mitigation.LAMBDA.Function.13](#mitigationlambdafunction13)): This implementation validates `$.PolicyDocument`, the resource-based policy on your Lambda resource, at create time. It prevents grants to an AWS service principal that omit `aws:SourceArn` or `aws:SourceAccount`, scoping cross-service access to the resources and accounts you name.
+**Scoping** (for [Mitigation.LAMBDA.Function.13](#mitigationlambdafunction13)): This implementation guidance recommends validating `$.PolicyDocument`, your AWS Lambda function's resource-based policy, before provisioning. When a grant to an AWS service principal extends beyond a reference policy containing the source conditions you accept, the hook fails the stack operation, which helps prevent such a grant from being provisioned.
 
-**Reference:** This implementation uses IAM Access Analyzer basic policy checks. These checks validate a policy against IAM policy grammar and AWS best practices. They do not use automated reasoning. The hook calls `ValidatePolicy` with the policy document from your template. It then inspects the findings for a security warning that a statement grants an AWS service principal access without a source condition. Adding `aws:SourceArn` or `aws:SourceAccount` resolves that warning.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks. Custom policy checks (`CheckNoNewAccess`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain. The reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`. The IAM Access Analyzer custom policy checks samples repository shows the reference policy format; compose the policy from the key combinations you accept.
+- [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
+- [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
 ### Implementation.LAMBDA.Function.42
 
@@ -3736,13 +3730,15 @@ A change-triggered rule that evaluates configuration item properties on change.
 
 **Implements:** [Mitigation.LAMBDA.Function.13](#mitigationlambdafunction13)
 
-**Scoping** (for [Mitigation.LAMBDA.Function.13](#mitigationlambdafunction13)): This rule submits the function's recorded resource policy at `$.supplementaryConfiguration.Policy` to a policy validation check for missing source conditions. Flagging grants that omit `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` helps you find functions a service could be induced to invoke for an untrusted resource.
+**Scoping** (for [Mitigation.LAMBDA.Function.13](#mitigationlambdafunction13)): This implementation guidance recommends reading `$.supplementaryConfiguration.Policy`, your AWS Lambda function's resource-based policy, and flagging grants to an AWS service principal that extend beyond a reference policy containing the source conditions you accept. Flagging those grants helps you detect access by AWS services acting on your behalf that lacks a source restriction you accept.
 
-**Reference:** This implementation recommends using Access Analyzer basic policy checks.
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
-Basic policy checks (ValidatePolicy) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning, but do provide actionable recommendations that help you author policies that are functional and conform to security best practices.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+Custom policy checks (`CheckNoNewAccess`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain.
+
+The reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`. The IAM Access Analyzer custom policy checks samples repository shows the reference policy format; compose the policy from the key combinations you accept.
+- [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
+- [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
 ### Implementation.LAMBDA.Function.43
 
@@ -3941,14 +3937,14 @@ Validates template properties before provisioning.
 
 **Implements:** [Mitigation.LAMBDA.Layer.2](#mitigationlambdalayer2), [Mitigation.LAMBDA.Layer.3](#mitigationlambdalayer3)
 
-**Scoping** (for [Mitigation.LAMBDA.Layer.3](#mitigationlambdalayer3)): At create time, this implementation validates `$.Principal`, the account granted layer usage permission, and `$.OrganizationId`, the organization that scopes a wildcard principal. Stack operations granting `lambda:GetLayerVersion` to accounts outside your organization are blocked, which helps limit who can download your layer archives.
+**Scoping** (for [Mitigation.LAMBDA.Layer.3](#mitigationlambdalayer3)): This implementation guidance recommends validating `$.Principal`, the account granted layer usage permission, and `$.OrganizationId`, the organization that scopes a wildcard principal, before provisioning a layer version permission. The hook helps prevent a layer version permission that grants a principal outside your zone of trust access to your layer version from being provisioned.
 
 **Scoping** (for [Mitigation.LAMBDA.Layer.2](#mitigationlambdalayer2)): This implementation validates `$.Principal` and `$.OrganizationId` at create time, rejecting a layer version permission that grants `lambda:GetLayerVersion` to all AWS accounts. Requiring a named account or an organization scope helps limit which principals can read your layer archive.
 
-**Data perimeter** (for [Mitigation.LAMBDA.Layer.3](#mitigationlambdalayer3)): Layer version permissions are declared in CloudFormation as `AWS::Lambda::LayerVersionPermission` resources. A hook on this resource type can reject a template whose `$.Principal` names an account outside your organization. It can also require `$.OrganizationId` to name your own organization whenever `$.Principal` is set to the wildcard value. This helps keep an unscoped wildcard grant from reaching your layer versions through a stack deployment.
-- [AWS::Lambda::LayerVersionPermission resource type reference](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-layerversionpermission.html)
-- [Principal property of AWS::Lambda::LayerVersionPermission](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-layerversionpermission.html#cfn-lambda-layerversionpermission-principal)
-- [OrganizationId property of AWS::Lambda::LayerVersionPermission](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-layerversionpermission.html#cfn-lambda-layerversionpermission-organizationid)
+**Data perimeter** (for [Mitigation.LAMBDA.Layer.3](#mitigationlambdalayer3)): Layer version permissions are declared in CloudFormation as `AWS::Lambda::LayerVersionPermission` resources. A hook on this resource type can fail the provisioning operation when `$.Principal` names an account outside your organization. It can also require `$.OrganizationId` to name your own organization whenever `$.Principal` is set to the wildcard value. This helps keep an unscoped wildcard grant from reaching your layer versions through a stack deployment.
+- [AWS::Lambda::LayerVersionPermission resource reference](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-layerversionpermission.html)
+- [LayerVersionPermission Principal property](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-layerversionpermission.html#cfn-lambda-layerversionpermission-principal)
+- [LayerVersionPermission OrganizationId property](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-layerversionpermission.html#cfn-lambda-layerversionpermission-organizationid)
 
 ### Implementation.LAMBDA.Layer.3
 
@@ -3974,7 +3970,7 @@ Consider using AWS Identity and Access Management Access Analyzer external acces
 
 **Implements:** [Mitigation.LAMBDA.Layer.3](#mitigationlambdalayer3)
 
-**Scoping** (for [Mitigation.LAMBDA.Layer.3](#mitigationlambdalayer3)): This recommendation directs you to identify layer versions whose resource-based policy shares `lambda:GetLayerVersion` with identities outside your organization. Remediating unintended sharing helps keep your layer content accessible only to trusted identities, including AWS services acting on your behalf.
+**Scoping** (for [Mitigation.LAMBDA.Layer.3](#mitigationlambdalayer3)): This implementation guidance recommends identifying layer versions whose resource-based policy shares `lambda:GetLayerVersion` with identities outside your organization. Remediating unintended sharing helps keep your layer content accessible only to trusted identities, including AWS services acting on your behalf.
 
 ### Implementation.LAMBDA.Layer.5
 
@@ -3987,16 +3983,16 @@ Monitors the API calls below in CloudTrail.
 
 **Implements:** [Mitigation.LAMBDA.Layer.3](#mitigationlambdalayer3)
 
-**Scoping** (for [Mitigation.LAMBDA.Layer.3](#mitigationlambdalayer3)): This implementation records `AddLayerVersionPermission` calls, capturing the grant recipient in the `$.Principal` request parameter and the organization scope in `$.OrganizationId`. Reviewing these events helps you detect a layer version policy change that shares your layer with identities outside your organization.
+**Scoping** (for [Mitigation.LAMBDA.Layer.3](#mitigationlambdalayer3)): This implementation guidance recommends monitoring `AddLayerVersionPermission` calls, capturing `$.Principal`, the grant recipient, and `$.OrganizationId`, the organization scope. Reviewing these events helps you detect a layer version policy change that shares your layer with identities outside your organization.
 
 **Data perimeter:** A layer version policy can grant layer usage to a single account, to all accounts in an organization, or to all AWS accounts. The `$.Principal` request parameter records the recipient of that grant. The `$.OrganizationId` request parameter records the organization it is scoped to. Reviewing both parameters helps you identify a layer version shared with identities outside your organization. You can then remediate with the responsive controls of your choice.
-- [AddLayerVersionPermission: Principal request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddLayerVersionPermission.html#lambda-AddLayerVersionPermission-request-Principal)
-- [AddLayerVersionPermission: OrganizationId request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddLayerVersionPermission.html#lambda-AddLayerVersionPermission-request-OrganizationId)
+- [AddLayerVersionPermission Principal request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddLayerVersionPermission.html#lambda-AddLayerVersionPermission-request-Principal)
+- [AddLayerVersionPermission OrganizationId request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddLayerVersionPermission.html#lambda-AddLayerVersionPermission-request-OrganizationId)
 - [AWS Lambda API Reference: AddLayerVersionPermission](https://docs.aws.amazon.com/lambda/latest/api/API_AddLayerVersionPermission.html)
-- [AddPermission: Principal request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html#lambda-AddPermission-request-Principal)
-- [AddPermission: PrincipalOrgID request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html#lambda-AddPermission-request-PrincipalOrgID)
-- [AddPermission: SourceArn request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html#lambda-AddPermission-request-SourceArn)
-- [AddPermission: SourceAccount request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html#lambda-AddPermission-request-SourceAccount)
+- [AddPermission Principal request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html#lambda-AddPermission-request-Principal)
+- [AddPermission PrincipalOrgID request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html#lambda-AddPermission-request-PrincipalOrgID)
+- [AddPermission SourceArn request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html#lambda-AddPermission-request-SourceArn)
+- [AddPermission SourceAccount request parameter](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html#lambda-AddPermission-request-SourceAccount)
 - [AWS Lambda API Reference: AddPermission](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html)
 
 ### Implementation.LAMBDA.Layer.6
@@ -4014,15 +4010,15 @@ A periodic rule that evaluates via the API operation chain below.
 
 **Implements:** [Mitigation.LAMBDA.Layer.3](#mitigationlambdalayer3)
 
-**Scoping** (for [Mitigation.LAMBDA.Layer.3](#mitigationlambdalayer3)): This rule reads each layer version's resource-based policy at `$.Policy` and identifies grants of `lambda:GetLayerVersion` to other accounts or to all accounts. Reporting those grants helps you keep layer content readable only by trusted identities.
+**Scoping** (for [Mitigation.LAMBDA.Layer.3](#mitigationlambdalayer3)): This implementation guidance recommends reading `$.Policy`, the resource-based policy on each layer version, and evaluating it for access beyond your reference policy, for permissions you specify such as `lambda:GetLayerVersion`, and for access from outside your zone of trust. Flagging those grants helps you detect access to your Lambda layers that extends beyond trusted identities.
 
-**Reference:** Your AWS Config rule evaluates each layer version's resource-based policy with IAM Access Analyzer custom policy checks. Custom policy checks use automated reasoning to analyze the policy document.
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
-`CheckNoNewAccess` compares that policy against a reference policy you maintain. Your reference policy allowlists the principals that may be granted access. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
+Custom policy checks (`CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain or grant specified permissions.
 
-`CheckAccessNotGranted` checks whether that policy grants the actions you list.
+The reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
 
-An external access analyzer reports resource-based policies that allow access from outside your organization. Your rule reads those findings with `ListFindingsV2`.
+External access findings, generated by an external access analyzer, use automated reasoning. They identify resource-based policies that allow access from outside your zone of trust.
 - [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
 - [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
@@ -4038,12 +4034,12 @@ Governs the IAM permissions below.
 
 **Implements:** [Mitigation.LAMBDA.Layer.3](#mitigationlambdalayer3)
 
-**Scoping** (for [Mitigation.LAMBDA.Layer.3](#mitigationlambdalayer3)): This implementation restricts `lambda:AddLayerVersionPermission` and `lambda:AddPermission`, while exempting principals tagged for exclusion from the identity perimeter with the `aws:PrincipalTag/dp:exclude:identity` condition key. Requests from other principals are denied, so they cannot grant other accounts access to your layer versions.
+**Scoping** (for [Mitigation.LAMBDA.Layer.3](#mitigationlambdalayer3)): This implementation guidance recommends restricting `lambda:AddLayerVersionPermission` and `lambda:AddPermission` in a service control policy (SCP), while exempting principals tagged for exclusion from the identity perimeter (`aws:PrincipalTag/dp:exclude:identity`). As a result, other principals in your organization are restricted from granting other accounts access to your layer versions.
 
 **Data perimeter:** AWS Lambda is not among the services that support resource control policies (RCPs). A service control policy (SCP) is therefore the preventive guardrail available for its resource-based policies. `lambda:AddLayerVersionPermission` and `lambda:AddPermission` can grant other accounts or AWS services access to a layer version or a function. Restricting these actions to select principals helps prevent grants to identities outside your organization.
-- [AWS Lambda API Reference: AddLayerVersionPermission](https://docs.aws.amazon.com/lambda/latest/api/API_AddLayerVersionPermission.html)
-- [AWS Lambda API Reference: AddPermission](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html)
-- [Data perimeter policy example: restrict resource policy configurations (SCP)](https://github.com/aws-samples/data-perimeter-policy-examples/blob/main/service_control_policies/service_specific_controls/restrict_resource_policy_configurations_scp.json)
+- [AddLayerVersionPermission API reference](https://docs.aws.amazon.com/lambda/latest/api/API_AddLayerVersionPermission.html)
+- [AddPermission API reference](https://docs.aws.amazon.com/lambda/latest/api/API_AddPermission.html)
+- [Example SCP that restricts resource-based policy configurations](https://github.com/aws-samples/data-perimeter-policy-examples/blob/main/service_control_policies/service_specific_controls/restrict_resource_policy_configurations_scp.json)
 
 ### ManagedControl.LAMBDA.Function.1
 

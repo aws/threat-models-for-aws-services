@@ -1,10 +1,6 @@
 # Potential Threats
 
-The threat scenarios assessed for every service in this release. 47 entries.
-
-### CloudWatch log tampering
-
-CloudWatch log entries can be deleted or made inaccessible by modifying log group retention policies, deleting log groups, or deleting log streams.
+The threat scenarios assessed for every service in this release. 46 entries.
 
 ### Cross-service confused deputy problem through resource-based policies
 

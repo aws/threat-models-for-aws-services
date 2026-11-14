@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "schema": {
     "path": "schema/manifest.schema.json",
     "sha256": "ebc5b475550674973fd0fc6973b67708a588341f305d68a7c3d8906974f1c83c"
@@ -22,7 +22,7 @@
     "potentialThreats": {
       "data": {
         "path": "data/potential-threats.json",
-        "sha256": "5565a81e9e90aa3aa3ea7926cfeefe21fba79332dee032906c889e2020014f00"
+        "sha256": "0e3aa0fb6f885ba43496df45954f42a9de3e02fe66529a8667d343ed554023f3"
       },
       "schema": {
         "path": "schema/potential-threats.schema.json",
@@ -30,7 +30,7 @@
       },
       "report": {
         "path": "reports/potential-threats.md",
-        "sha256": "cd2a1902b508150d622269ebc5b6b68a73b28047ef6e2340d5ed645fac14de08"
+        "sha256": "58a3b63bcfe4b4ed55e7030ad783cf8d14a4d1d2b151d37d42d543411809675e"
       }
     },
     "threatImpacts": {
@@ -50,29 +50,62 @@
   },
   "serviceSchema": {
     "path": "schema/threat-model.schema.json",
-    "sha256": "9668d0b48bbb807a98910674221ad19739559b25a3c9df00887a46cc8b8b873a"
+    "sha256": "acce873f8edc7a535bc20ad550557dbdc4484cffae3d68f2f4eea2ccf3f7b4b8"
   },
   "services": [
+    {
+      "namespace": "bedrock-agentcore",
+      "data": {
+        "path": "data/services/bedrock-agentcore.json",
+        "sha256": "3b0f6288b93930bdf41b05c8099c49c9116fe763f5241977cfe844fb8b025d0f"
+      },
+      "report": {
+        "path": "reports/services/bedrock-agentcore.md",
+        "sha256": "c5f6d3bf44a66e84597edc905bf717dfab7cea68b5c1801b1c556b5ce94078d7"
+      }
+    },
+    {
+      "namespace": "bedrock-agentcore-control",
+      "data": {
+        "path": "data/services/bedrock-agentcore-control.json",
+        "sha256": "c34f478150a9a017b6b1e7844f06d337f61b917412c5e85d12f63281c46c89bd"
+      },
+      "report": {
+        "path": "reports/services/bedrock-agentcore-control.md",
+        "sha256": "182f6f77bfa1671a11ff762470914648f199a2cafefaf88f3dd50aa589268731"
+      }
+    },
     {
       "namespace": "dsql",
       "data": {
         "path": "data/services/dsql.json",
-        "sha256": "9d117d552ff115c0dce365f285a282c9d012df43dddda3def1744eb80d11c4ae"
+        "sha256": "602de7b182ef7d4e37c4236b97ac7336631e0b9853beb97fcc47a42cfd8b2fbd"
       },
       "report": {
         "path": "reports/services/dsql.md",
-        "sha256": "37dd70c5ccf8cc126557a5dd39c6d10318fe4372cba502bae0d9dabd5672605b"
+        "sha256": "9c395d7b6d8def1def033f79fc86cbbd192c94ebb6c14d80ee382ea8cd757b04"
       }
     },
     {
       "namespace": "dynamodb",
       "data": {
         "path": "data/services/dynamodb.json",
-        "sha256": "723d35a470e591a31991152f84f5c375be22ddab86897bf0e453d1fcfa748cd1"
+        "sha256": "c2091a52b5e5b9e04f36df97a117c08fad0acc8d50e2bc7e1465b28195342e32"
       },
       "report": {
         "path": "reports/services/dynamodb.md",
-        "sha256": "c84f368579dfc5f670031e2b05e4f75f874ca314101c7deee8088b3c41bbec01"
+        "sha256": "d4a1f5fddf3dd9f087e9e00392cea707d4be163e431dfbbc2b8c2280554815af"
+      }
+    },
+    {
+      "namespace": "ecs",
+      "data": {
+        "path": "data/services/ecs.json",
+        "sha256": "ce60adf74a9072ebe08f0fb68ecfda1173208338d06155c2d2a3b8a00a506a4e"
+      },
+      "report": {
+        "path": "reports/services/ecs.md",
+        "sha256": "d56cb849b244e80cfaf20db3fe1095f28ef1250b287ca40e9199f3b3736d9fb5"
       }
     },
     {
@@ -87,25 +120,47 @@
       }
     },
     {
+      "namespace": "eks",
+      "data": {
+        "path": "data/services/eks.json",
+        "sha256": "8e7d95601a746076f3dc2abe564ce71d4c215deaf59fa03b71ab4385bd23829c"
+      },
+      "report": {
+        "path": "reports/services/eks.md",
+        "sha256": "40b5dde57eb3886b49bbf1f3ff672a695ac53ad30b01769c4677e7dbfc9011f7"
+      }
+    },
+    {
       "namespace": "lambda",
       "data": {
         "path": "data/services/lambda.json",
-        "sha256": "3ea0aa40827592219e467902bede34c7109bdf5f8d79b3c23e4140ad5ab4527b"
+        "sha256": "b7482d96bfa1e48be1f6dd8c4c853166739f9193bdf47a12a9775bf57a3516a2"
       },
       "report": {
         "path": "reports/services/lambda.md",
-        "sha256": "3eb29142a06d06a79b6859ddabc0fe7a70bc1aac4ec427f80d0acc61c8f8b69d"
+        "sha256": "a9fcb103c381f05ebd98dcc767d006fb00f367c546e98341a764cfea3c6df32b"
+      }
+    },
+    {
+      "namespace": "s3",
+      "data": {
+        "path": "data/services/s3.json",
+        "sha256": "efbf7f5c8357db3b54ba7123c78d1c2b72dd73e299db18560b127c83ed0e63d1"
+      },
+      "report": {
+        "path": "reports/services/s3.md",
+        "sha256": "62e3143ed75813b816ecb67be1595d4b121043a2893ed52bd2d48c03f6c6f3f4"
       }
     },
     {
       "namespace": "sns",
       "data": {
         "path": "data/services/sns.json",
-        "sha256": "fc4e3d9b034d10a1dc5c05716987ba3838f5b10959a17aab2c6bc341a76e9ea9"
+        "sha256": "c5e404018a255f22cd6a38671ee0e3d0b8b6d45ebf0dc04af1663a34c32ae446"
       },
       "report": {
         "path": "reports/services/sns.md",
-        "sha256": "22cf0aacb506f9a79ccb337233126b0964f22220f21319184a20afa57ada6ae6"
+        "sha256": "11a1e770f889afeb6a5311ceaf2a35ba379421db7e18c8efcfcd91f7a9a5c686"
       }
     }
   ]

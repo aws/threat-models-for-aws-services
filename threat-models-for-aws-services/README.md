@@ -1,6 +1,6 @@
 # Threat Models for AWS Services
 
-Release version 1.1.0, 5 services.
+Release version 1.2.0, 10 services.
 
 ## Layout
 
@@ -26,10 +26,15 @@ Release version 1.1.0, 5 services.
 
 ## Services
 
-| Service | Threats | Mitigations | Implementations | Goals covered |
+| Service | Threats | Mitigations | Implementations | Applicable mitigation goals |
 |---|---|---|---|---|
-| [dsql](reports/services/dsql.md) | 17 | 14 | 38 | 13 of 38 |
+| [bedrock-agentcore](reports/services/bedrock-agentcore.md) | 24 | 15 | 24 | 7 of 38 |
+| [bedrock-agentcore-control](reports/services/bedrock-agentcore-control.md) | 148 | 117 | 300 | 24 of 38 |
+| [dsql](reports/services/dsql.md) | 17 | 14 | 37 | 13 of 38 |
 | [dynamodb](reports/services/dynamodb.md) | 28 | 24 | 90 | 16 of 38 |
+| [ecs](reports/services/ecs.md) | 93 | 59 | 160 | 17 of 38 |
 | [efs](reports/services/efs.md) | 27 | 22 | 65 | 21 of 38 |
+| [eks](reports/services/eks.md) | 64 | 45 | 122 | 20 of 38 |
 | [lambda](reports/services/lambda.md) | 52 | 39 | 116 | 21 of 38 |
+| [s3](reports/services/s3.md) | 41 | 32 | 124 | 20 of 38 |
 | [sns](reports/services/sns.md) | 26 | 21 | 65 | 16 of 38 |

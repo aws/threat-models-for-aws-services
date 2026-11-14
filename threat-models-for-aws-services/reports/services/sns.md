@@ -8,7 +8,7 @@ Amazon Simple Notification Service is a fully managed messaging service that del
 
 26 threats and 21 mitigations across 8 resource types and 42 API operations. 16 of 38 mitigation goals are covered, implemented by 65 implementations.
 
-Source service model: [sns](https://github.com/aws/api-models-aws/blob/a0767ac42e279dfc8b311564c33436f8abfd3031/models/sns/service/2010-03-31/sns-2010-03-31.json)
+Source service model: [sns](https://github.com/aws/api-models-aws/blob/3d89dd029ebd13b775ab5d22e5075399f20b35e4/models/sns/service/2010-03-31/sns-2010-03-31.json)
 
 ---
 
@@ -188,7 +188,7 @@ Untrusted IAM principal, that has been granted access to my Amazon SNS platform 
 
 **Frameworks:** MITRE ATT&CK [T1078.004](https://attack.mitre.org/techniques/T1078/004/), [T1199](https://attack.mitre.org/techniques/T1199/), [T1548.005](https://attack.mitre.org/techniques/T1548/005/)
 
-**Scoping** (for [Identity Perimeter - Untrusted principal assumption of my IAM roles](../potential-threats.md#identity-perimeter---untrusted-principal-assumption-of-my-iam-roles)): Your Amazon SNS platform application designates a success feedback role and a failure feedback role for push delivery status logging through `SuccessFeedbackRoleArn` and `FailureFeedbackRoleArn`. The roles' trust policies can allow principals outside your organization to assume the roles and act with their CloudWatch Logs permissions.
+**Scoping** (for [Identity Perimeter - Untrusted principal assumption of my IAM roles](../potential-threats.md#identity-perimeter---untrusted-principal-assumption-of-my-iam-roles)): Your Amazon SNS platform application designates a success feedback role and a failure feedback role for push delivery status logging through `SuccessFeedbackRoleArn`, `FailureFeedbackRoleArn`, and you author their trust policies. Those trust policies can allow identities outside your organization to assume the roles and act with their permissions.
 
 **Request parameters**
 
@@ -242,7 +242,7 @@ Untrusted IAM principal, that has been granted access to my Amazon SNS SMS attri
 
 **Frameworks:** MITRE ATT&CK [T1078.004](https://attack.mitre.org/techniques/T1078/004/), [T1199](https://attack.mitre.org/techniques/T1199/), [T1548.005](https://attack.mitre.org/techniques/T1548/005/), [T1562.008](https://attack.mitre.org/techniques/T1562/008/)
 
-**Scoping** (for [Identity Perimeter - Untrusted principal assumption of my IAM roles](../potential-threats.md#identity-perimeter---untrusted-principal-assumption-of-my-iam-roles)): Your Amazon SNS SMS attribute designates an IAM service role through the `DeliveryStatusIAMRole` key of `$.attributes{key}`. You author that role's trust policy, so it can authorize principals outside your organization to assume the role and act with its permissions.
+**Scoping** (for [Identity Perimeter - Untrusted principal assumption of my IAM roles](../potential-threats.md#identity-perimeter---untrusted-principal-assumption-of-my-iam-roles)): Your Amazon SNS SMS attribute designates an optional delivery status IAM role through the `DeliveryStatusIAMRole` key of `$.attributes{key}`, and you author its trust policy. That trust policy can allow identities outside your organization to assume the role and act with its permissions.
 
 **Request parameters**
 
@@ -338,7 +338,7 @@ Untrusted IAM principal, that has been granted access to my Amazon SNS subscript
 
 **Frameworks:** MITRE ATT&CK [T1078.004](https://attack.mitre.org/techniques/T1078/004/), [T1119](https://attack.mitre.org/techniques/T1119/), [T1537](https://attack.mitre.org/techniques/T1537/)
 
-**Scoping** (for [Identity Perimeter - Untrusted principal assumption of my IAM roles](../potential-threats.md#identity-perimeter---untrusted-principal-assumption-of-my-iam-roles)): Your Amazon SNS subscription using the `firehose` protocol names a subscription role in its `SubscriptionRoleArn` attribute. The trust policy you author for that role can allow principals outside your organization to assume the role and act with its permissions.
+**Scoping** (for [Identity Perimeter - Untrusted principal assumption of my IAM roles](../potential-threats.md#identity-perimeter---untrusted-principal-assumption-of-my-iam-roles)): Your Amazon SNS subscription designates a subscription role, used only with the `firehose` protocol, through the `SubscriptionRoleArn` attribute, and you author its trust policy. That trust policy can allow identities outside your organization to assume the role and act with its permissions.
 
 **Request parameters**
 
@@ -552,7 +552,7 @@ Untrusted IAM principal, that has been granted access to my Amazon SNS topic thr
 
 **Frameworks:** MITRE ATT&CK [T1078.004](https://attack.mitre.org/techniques/T1078/004/), [T1119](https://attack.mitre.org/techniques/T1119/), [T1199](https://attack.mitre.org/techniques/T1199/), [T1485](https://attack.mitre.org/techniques/T1485/), [T1537](https://attack.mitre.org/techniques/T1537/)
 
-**Scoping** (for [Identity Perimeter - Untrusted principal access to my resources](../potential-threats.md#identity-perimeter---untrusted-principal-access-to-my-resources)): An Amazon SNS topic has a resource-based policy that can name principals in other AWS accounts. Depending on the actions granted, an identity outside your organization may subscribe its own endpoint, publish to your subscribers, or delete the topic.
+**Scoping** (for [Identity Perimeter - Untrusted principal access to my resources](../potential-threats.md#identity-perimeter---untrusted-principal-access-to-my-resources)): The access policy on your Amazon SNS topic can grant access to principals outside your organization. Depending on the actions granted, an identity outside your organization may subscribe its own endpoint, publish to your subscribers, or delete the topic.
 
 **Data perimeter:** `AddPermission` allows you to apply a resource-based policy to grant access to a topic. The service currently does not support resource control policies.
 
@@ -564,13 +564,13 @@ Untrusted IAM principal, that has been granted access to my Amazon SNS topic thr
 
 | Operation | Parameters |
 |---|---|
-| `sns:AddPermission` | `$.AWSAccountId[*]`, `$.ActionName[*]`, `$.TopicArn` |
-| `sns:DeleteTopic` | `$.TopicArn` |
-| `sns:Publish` | `$.Message`, `$.TopicArn` |
-| `sns:PublishBatch` | `$.PublishBatchRequestEntries[*].Message`, `$.TopicArn` |
-| `sns:RemovePermission` | `$.Label`, `$.TopicArn` |
-| `sns:SetTopicAttributes` | `$.AttributeName`, `$.AttributeValue`, `$.TopicArn` |
-| `sns:Subscribe` | `$.Endpoint`, `$.Protocol`, `$.TopicArn` |
+| `sns:AddPermission` | `$.AWSAccountId[*]`, `$.ActionName[*]` |
+| `sns:DeleteTopic` | *(any parameter)* |
+| `sns:Publish` | `$.Message` |
+| `sns:PublishBatch` | `$.PublishBatchRequestEntries[*].Message` |
+| `sns:RemovePermission` | `$.Label` |
+| `sns:SetTopicAttributes` | `$.AttributeName`, `$.AttributeValue` |
+| `sns:Subscribe` | `$.Endpoint`, `$.Protocol` |
 
 ### Threat.SNS.Topic.10
 
@@ -582,7 +582,7 @@ Untrusted IAM principal, that has been granted access to my Amazon SNS topic's I
 
 **Frameworks:** MITRE ATT&CK [T1078.004](https://attack.mitre.org/techniques/T1078/004/), [T1562.008](https://attack.mitre.org/techniques/T1562/008/)
 
-**Scoping** (for [Identity Perimeter - Untrusted principal assumption of my IAM roles](../potential-threats.md#identity-perimeter---untrusted-principal-assumption-of-my-iam-roles)): You author the trust policies of the success feedback role and failure feedback role that Amazon SNS assumes to write your topic's delivery status logs. An identity outside your organization that either role's trust policy allows to assume the role can act with its CloudWatch Logs permissions.
+**Scoping** (for [Identity Perimeter - Untrusted principal assumption of my IAM roles](../potential-threats.md#identity-perimeter---untrusted-principal-assumption-of-my-iam-roles)): Your Amazon SNS topic designates a success feedback role and a failure feedback role for delivery status logging through `<ENDPOINT>SuccessFeedbackRoleArn`, `<ENDPOINT>FailureFeedbackRoleArn`, and you author their trust policies. Those trust policies can allow identities outside your organization to assume the roles and act with their permissions, such as writing to CloudWatch Logs.
 
 **Request parameters**
 
@@ -619,7 +619,7 @@ Untrusted IAM principal, with access to configure an AWS service that has been g
 
 **Frameworks:** MITRE ATT&CK [T1548.005](https://attack.mitre.org/techniques/T1548/005/)
 
-**Scoping** (for [Cross-service confused deputy problem through resource-based policies](../potential-threats.md#cross-service-confused-deputy-problem-through-resource-based-policies)): Your topic's resource-based policy can grant an AWS service permission to publish regardless of which account's resources the service acts on behalf of. An untrusted IAM principal who can configure that service may be able to cause it to publish their content to your topic.
+**Scoping** (for [Cross-service confused deputy problem through resource-based policies](../potential-threats.md#cross-service-confused-deputy-problem-through-resource-based-policies)): Your topic's resource-based policy can grant the `sns:Publish` permission to an AWS service such as `s3.amazonaws.com` or `cloudwatch.amazonaws.com`. An untrusted IAM principal who can configure that service may cause it to publish messages to your topic on their behalf.
 
 **Request parameters**
 
@@ -756,14 +756,14 @@ An Amazon SNS platform application's success feedback role and failure feedback 
 
 **Implemented by:** [Implementation.SNS.PlatformApplication.3](#implementationsnsplatformapplication3), [Implementation.SNS.PlatformApplication.4](#implementationsnsplatformapplication4), [Implementation.SNS.PlatformApplication.5](#implementationsnsplatformapplication5)
 
-**Scoping** (for [Restrict IAM Role Assumption - Service or Execution Role](../mitigation-goals.md#restrict-iam-role-assumption---service-or-execution-role)): An Amazon SNS platform application can reference a customer-managed IAM service role that Amazon SNS assumes to write push delivery status logs. Because you create and maintain that role, its trust policy determines who can assume it.
+**Scoping** (for [Restrict IAM Role Assumption - Service or Execution Role](../mitigation-goals.md#restrict-iam-role-assumption---service-or-execution-role)): For push delivery status logging, you can pass a success feedback role and a failure feedback role to an Amazon SNS platform application through the `$.Attributes{key}` map's `SuccessFeedbackRoleArn` and `FailureFeedbackRoleArn` keys, and each role's trust policy specifies which principals can assume it. Allowing only Amazon SNS, acting on behalf of trusted resources, to assume those roles helps prevent an unintended principal from assuming them.
 
 **Configure via**
 
 | Operation | Parameters |
 |---|---|
-| `sns:CreatePlatformApplication` | `$.Attributes{key}`, `$.Name` |
-| `sns:SetPlatformApplicationAttributes` | `$.Attributes{key}`, `$.PlatformApplicationArn` |
+| `sns:CreatePlatformApplication` | `$.Attributes{key}` |
+| `sns:SetPlatformApplicationAttributes` | `$.Attributes{key}` |
 
 **Verify via**
 
@@ -805,7 +805,7 @@ An Amazon SNS SMS attribute delivery status IAM service role should be assumed o
 
 **Implemented by:** [Implementation.SNS.SmsAttribute.3](#implementationsnssmsattribute3), [Implementation.SNS.SmsAttribute.4](#implementationsnssmsattribute4), [Implementation.SNS.SmsAttribute.5](#implementationsnssmsattribute5)
 
-**Scoping** (for [Restrict IAM Role Assumption - Service or Execution Role](../mitigation-goals.md#restrict-iam-role-assumption---service-or-execution-role)): Your Amazon SNS SMS attribute settings designate an IAM service role through the `$.attributes{key}` request parameter. Amazon SNS assumes that role to write SMS delivery status logs.
+**Scoping** (for [Restrict IAM Role Assumption - Service or Execution Role](../mitigation-goals.md#restrict-iam-role-assumption---service-or-execution-role)): You can pass an SMS attribute delivery status IAM service role through the `DeliveryStatusIAMRole` key of the `$.attributes{key}` request parameter, and the role's trust policy specifies which principals can assume it. Allowing only Amazon SNS, acting on behalf of trusted resources, to assume the role helps prevent an unintended principal from assuming it.
 
 **Configure via**
 
@@ -821,7 +821,7 @@ An Amazon SNS SMS attribute delivery status IAM service role should be assumed o
 
 ### Mitigation.SNS.Subscription.1
 
-An Amazon SNS subscription IAM service role should be assumed only by Amazon SNS acting on behalf of trusted resources
+An Amazon SNS subscription's subscription role should be assumed only by Amazon SNS acting on behalf of trusted resources
 
 **Goal:** [Restrict IAM Role Assumption - Service or Execution Role](../mitigation-goals.md#restrict-iam-role-assumption---service-or-execution-role)
 
@@ -829,14 +829,14 @@ An Amazon SNS subscription IAM service role should be assumed only by Amazon SNS
 
 **Implemented by:** [Implementation.SNS.Subscription.1](#implementationsnssubscription1), [Implementation.SNS.Subscription.2](#implementationsnssubscription2), [Implementation.SNS.Subscription.3](#implementationsnssubscription3), [Implementation.SNS.Subscription.4](#implementationsnssubscription4)
 
-**Scoping** (for [Restrict IAM Role Assumption - Service or Execution Role](../mitigation-goals.md#restrict-iam-role-assumption---service-or-execution-role)): An Amazon SNS subscription for an Amazon Data Firehose delivery stream names a customer-managed IAM service role through `$.Attributes{key}` for Amazon SNS to assume. Because you create and modify that role's trust policy, restricting who can assume it helps limit the role's use to its intended delivery purpose.
+**Scoping** (for [Restrict IAM Role Assumption - Service or Execution Role](../mitigation-goals.md#restrict-iam-role-assumption---service-or-execution-role)): An Amazon SNS subscription for an Amazon Data Firehose delivery stream names its customer-managed subscription role through `$.Attributes{key}` (the `SubscriptionRoleArn` attribute), and the role's trust policy specifies which principals can assume it. Allowing only Amazon SNS, acting on behalf of trusted resources, to assume the role helps prevent an unintended principal from assuming it.
 
 **Configure via**
 
 | Operation | Parameters |
 |---|---|
-| `sns:SetSubscriptionAttributes` | `$.AttributeName`, `$.AttributeValue`, `$.SubscriptionArn` |
-| `sns:Subscribe` | `$.Attributes{key}`, `$.TopicArn` |
+| `sns:SetSubscriptionAttributes` | `$.AttributeName`, `$.AttributeValue` |
+| `sns:Subscribe` | `$.Attributes{key}` |
 
 **Verify via**
 
@@ -956,14 +956,14 @@ An Amazon SNS topic's success feedback role and failure feedback role should be 
 
 **Implemented by:** [Implementation.SNS.Topic.4](#implementationsnstopic4), [Implementation.SNS.Topic.5](#implementationsnstopic5), [Implementation.SNS.Topic.6](#implementationsnstopic6), [Implementation.SNS.Topic.7](#implementationsnstopic7)
 
-**Scoping** (for [Restrict IAM Role Assumption - Service or Execution Role](../mitigation-goals.md#restrict-iam-role-assumption---service-or-execution-role)): Your topic can be configured with a customer-managed IAM service role that Amazon SNS assumes to write delivery status logs to Amazon CloudWatch Logs. Because you create and maintain this role, its trust policy determines which identities and AWS services can assume it.
+**Scoping** (for [Restrict IAM Role Assumption - Service or Execution Role](../mitigation-goals.md#restrict-iam-role-assumption---service-or-execution-role)): For delivery status logging, you can pass a success feedback role and a failure feedback role in your topic's per-protocol `<ENDPOINT>SuccessFeedbackRoleArn` and `<ENDPOINT>FailureFeedbackRoleArn` attributes, set through `$.Attributes{key}` on `CreateTopic` or `$.AttributeName` and `$.AttributeValue` on `SetTopicAttributes`, and each role's trust policy specifies which principals can assume it. Allowing only Amazon SNS, acting on behalf of trusted resources, to assume those roles helps prevent an unintended principal from assuming them.
 
 **Configure via**
 
 | Operation | Parameters |
 |---|---|
-| `sns:CreateTopic` | `$.Attributes{key}`, `$.Name` |
-| `sns:SetTopicAttributes` | `$.AttributeName`, `$.AttributeValue`, `$.TopicArn` |
+| `sns:CreateTopic` | `$.Attributes{key}` |
+| `sns:SetTopicAttributes` | `$.AttributeName`, `$.AttributeValue` |
 
 **Verify via**
 
@@ -1112,16 +1112,16 @@ An Amazon SNS topic should be accessed only by trusted identities or AWS service
 
 **Implemented by:** [Implementation.SNS.Topic.22](#implementationsnstopic22), [Implementation.SNS.Topic.23](#implementationsnstopic23), [Implementation.SNS.Topic.24](#implementationsnstopic24), [Implementation.SNS.Topic.25](#implementationsnstopic25), [Implementation.SNS.Topic.26](#implementationsnstopic26), [Implementation.SNS.Topic.27](#implementationsnstopic27), [Implementation.SNS.Topic.28](#implementationsnstopic28), [ManagedControl.SNS.Topic.3](#managedcontrolsnstopic3)
 
-**Scoping** (for [Identity Perimeter - Only trusted identities can access my resources](../mitigation-goals.md#identity-perimeter---only-trusted-identities-can-access-my-resources)): An Amazon SNS topic supports a resource-based policy that can grant principals outside your organization permission to perform `sns:Publish` and `sns:Subscribe`. Restricting those grants to principals in your organization helps keep access to your topic within your identity perimeter.
+**Scoping** (for [Identity Perimeter - Only trusted identities can access my resources](../mitigation-goals.md#identity-perimeter---only-trusted-identities-can-access-my-resources)): An Amazon SNS topic supports a resource-based policy that specifies who can access it and what actions they can perform. The identity perimeter helps restrict access to your topics to trusted identities and AWS services acting on your behalf.
 
 **Configure via**
 
 | Operation | Parameters |
 |---|---|
-| `sns:AddPermission` | `$.AWSAccountId[*]`, `$.TopicArn` |
-| `sns:CreateTopic` | `$.Attributes{key}`, `$.Name` |
-| `sns:RemovePermission` | `$.Label`, `$.TopicArn` |
-| `sns:SetTopicAttributes` | `$.AttributeName`, `$.AttributeValue`, `$.TopicArn` |
+| `sns:AddPermission` | `$.AWSAccountId[*]` |
+| `sns:CreateTopic` | `$.Attributes{key}` |
+| `sns:RemovePermission` | `$.Label` |
+| `sns:SetTopicAttributes` | `$.AttributeName`, `$.AttributeValue` |
 
 **Verify via**
 
@@ -1140,14 +1140,14 @@ An Amazon SNS topic should be accessed by an AWS service principal, such as the 
 
 **Implemented by:** [Implementation.SNS.Topic.29](#implementationsnstopic29), [Implementation.SNS.Topic.30](#implementationsnstopic30), [Implementation.SNS.Topic.31](#implementationsnstopic31), [Implementation.SNS.Topic.32](#implementationsnstopic32)
 
-**Scoping** (for [Cross-Service Confused Deputy Prevention - Resource-based policies](../mitigation-goals.md#cross-service-confused-deputy-prevention---resource-based-policies)): An Amazon SNS topic has a resource-based policy that can grant the `sns:Publish` action to AWS services acting on your behalf. You can scope those grants so they apply only to requests made on behalf of resources and accounts you trust.
+**Scoping** (for [Cross-Service Confused Deputy Prevention - Resource-based policies](../mitigation-goals.md#cross-service-confused-deputy-prevention---resource-based-policies)): A resource-based policy on your Amazon SNS topic can grant an AWS service principal, such as the Amazon S3 service principal (`s3.amazonaws.com`), the `sns:Publish` action. That policy should restrict which accounts or resources the service may act on behalf of.
 
 **Configure via**
 
 | Operation | Parameters |
 |---|---|
-| `sns:CreateTopic` | `$.Attributes{key}`, `$.Name` |
-| `sns:SetTopicAttributes` | `$.AttributeName`, `$.AttributeValue`, `$.TopicArn` |
+| `sns:CreateTopic` | `$.Attributes{key}` |
+| `sns:SetTopicAttributes` | `$.AttributeName`, `$.AttributeValue` |
 
 **Verify via**
 
@@ -1288,16 +1288,19 @@ A periodic rule that evaluates via the API operation chain below.
 3. Call `iam:GetRole` with `$.RoleName`; check `$.Role.AssumeRolePolicyDocument`
 4. Call `accessanalyzer:CheckNoPublicAccess` with `$.policyDocument`, `$.resourceType` = `AWS::IAM::AssumeRolePolicyDocument`; check `$.result`
 5. Call `accessanalyzer:CheckNoNewAccess` with `$.newPolicyDocument`, `$.existingPolicyDocument`, `$.policyType` = `RESOURCE_POLICY`; check `$.result`
+6. Call `accessanalyzer:CheckNoNewAccess` with `$.newPolicyDocument`, `$.existingPolicyDocument`, `$.policyType` = `RESOURCE_POLICY`; check `$.result`
 
 **Implements:** [Mitigation.SNS.PlatformApplication.2](#mitigationsnsplatformapplication2)
 
-**Scoping** (for [Mitigation.SNS.PlatformApplication.2](#mitigationsnsplatformapplication2)): This implementation reads the delivery status logging role recorded in your platform application's `$.Attributes{key}` values and evaluates that role's trust policy in `$.Role.AssumeRolePolicyDocument`. Flagging a trust policy that allows public access, or grants assumption beyond your reference policy, helps you review who can assume the role.
+**Scoping** (for [Mitigation.SNS.PlatformApplication.2](#mitigationsnsplatformapplication2)): This implementation guidance recommends reading `$.Attributes{key}`, your platform application's `SuccessFeedbackRoleArn` success feedback role and `FailureFeedbackRoleArn` failure feedback role, then evaluating `$.Role.AssumeRolePolicyDocument`, each role's trust policy, with IAM Access Analyzer. Flagging trust policies that allow public role assumption, or assumption beyond your reference policy, or that omit the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, helps you detect overly permissive role assumption.
 
 **Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
 Custom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access or grant new access beyond a reference policy you maintain.
 
-The reference policy for `CheckNoNewAccess` allowlists the principals this role's trust policy may grant assumption to. The check fails when the trust policy grants role assumption beyond that allowlist. Example reference policies for role trust policies are available in the IAM Access Analyzer custom policy checks samples repository.
+The first reference policy for `CheckNoNewAccess` allowlists the principals this role's trust policy may grant assumption to. The check fails when the trust policy grants role assumption beyond that allowlist. Example reference policies for role trust policies are available in the IAM Access Analyzer custom policy checks samples repository.
+
+The second reference policy for `CheckNoNewAccess` encodes the source conditions you accept when the service principal assumes the role: one role-assumption statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the trust policy grants role assumption that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.
 - [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
 - [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
@@ -1309,13 +1312,18 @@ Governs the IAM role trust policy statements below (the role is the resource).
 
 | Principal | Actions | Condition keys |
 |---|---|---|
-| `sns.amazonaws.com` | `sts:AssumeRole` |  |
+| `sns.amazonaws.com` | `sts:AssumeRole` | `aws:SourceAccount` (alternatives: `aws:SourceOrgID`, `aws:SourceOrgPaths`), `aws:SourceArn` |
 
 **Implements:** [Mitigation.SNS.PlatformApplication.2](#mitigationsnsplatformapplication2)
 
-**Scoping** (for [Mitigation.SNS.PlatformApplication.2](#mitigationsnsplatformapplication2)): This implementation guidance recommends a trust policy that restricts assumption of your platform application's delivery status logging role to the `sns.amazonaws.com` service principal.
+**Scoping** (for [Mitigation.SNS.PlatformApplication.2](#mitigationsnsplatformapplication2)): This implementation guidance recommends a trust policy that restricts assumption of your Amazon SNS platform application's failure feedback role to the `sns.amazonaws.com` service principal with the `aws:SourceArn` and `aws:SourceAccount` condition keys. These conditions help prevent Amazon SNS from assuming the role on behalf of platform applications outside the sources you specify.
+
+**Scoping** (for [Mitigation.SNS.PlatformApplication.2](#mitigationsnsplatformapplication2)): This implementation guidance recommends a trust policy that restricts assumption of your Amazon SNS platform application's success feedback role to the `sns.amazonaws.com` service principal with the `aws:SourceArn` and `aws:SourceAccount` condition keys. These conditions help prevent Amazon SNS from assuming the role on behalf of platform applications outside the sources you specify.
 
 **Reference:** Confirm that IAM role trust policies grant access only to the AWS service principals you intend. Review the `Principal` element of each policy and verify it names only the service principals your workload requires.
+
+As a defense-in-depth measure, use the `aws:SourceOrgID`, `aws:SourceOrgPaths`, `aws:SourceAccount`, or `aws:SourceArn` condition keys. These scope access performed on behalf of resources within a particular organization, specific organizational units, a specific AWS account, or a particular resource, respectively. Choose the condition key that matches the granularity of the restriction you want to enforce.
+- [Establishing an identity perimeter](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_data-perimeters.html#access_policies_data-perimeters-identity)
 
 ### Implementation.SNS.PlatformApplication.5
 
@@ -1330,7 +1338,7 @@ Governs the IAM permissions below.
 
 **Implements:** [Mitigation.SNS.PlatformApplication.2](#mitigationsnsplatformapplication2)
 
-**Scoping** (for [Mitigation.SNS.PlatformApplication.2](#mitigationsnsplatformapplication2)): This implementation guidance recommends applying the `aws:PrincipalOrgID` condition key in a resource control policy (RCP) to restrict `sts:AssumeRole`, while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. As a result, principals outside your organization are restricted from assuming your delivery status logging roles.
+**Scoping** (for [Mitigation.SNS.PlatformApplication.2](#mitigationsnsplatformapplication2)): This implementation guidance recommends restricting `sts:AssumeRole` with the `aws:PrincipalOrgID` condition key in a resource control policy (RCP), while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent principals outside your organization from assuming your Amazon SNS platform application's success feedback role and failure feedback role.
 
 **Reference:** To restrict access to trusted identities, use the `aws:PrincipalOrgID`, `aws:PrincipalOrgPaths`, or `aws:PrincipalAccount` condition keys. These scope access to IAM principals within a particular organization, specific organizational units, or a specific AWS account, respectively. These keys do not contain your organization or account values for requests by AWS service principals, so apply them only when `aws:PrincipalIsAWSService` is `false`. As a defense-in-depth measure, use the `aws:SourceOrgID`, `aws:SourceOrgPaths`, `aws:SourceAccount`, or `aws:SourceArn` condition keys to restrict service access to your roles. These scope access performed on behalf of resources within a particular organization, specific organizational units, a specific AWS account, or a particular resource, respectively. Apply them only when `aws:PrincipalIsAWSService` is `true`. Also require that `aws:SourceAccount` is present in the request context, because not every service integration populates these keys. Choose the condition key that matches the granularity of the restriction you want to enforce.
 - [Establishing an identity perimeter](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_data-perimeters.html#access_policies_data-perimeters-identity)
@@ -1375,7 +1383,7 @@ A periodic rule that evaluates via the API operation chain below.
 
 **Implements:** [Mitigation.SNS.SmsAttribute.2](#mitigationsnssmsattribute2)
 
-**Scoping** (for [Mitigation.SNS.SmsAttribute.2](#mitigationsnssmsattribute2)): This implementation guidance recommends a periodic AWS Config rule that reads the `DeliveryStatusIAMRole` setting from your account's text messaging preferences in `$.attributes{key}`. Flagging that role's trust policy, `$.Role.AssumeRolePolicyDocument`, helps you detect grants that can allow public role assumption or exceed your reference policy.
+**Scoping** (for [Mitigation.SNS.SmsAttribute.2](#mitigationsnssmsattribute2)): This implementation guidance recommends reading `$.attributes{key}`, your SMS attribute's `DeliveryStatusIAMRole` delivery status IAM service role, then evaluating `$.Role.AssumeRolePolicyDocument`, that role's trust policy, with IAM Access Analyzer. Flagging trust policies that allow public role assumption, or assumption beyond your reference policy, helps you detect overly permissive role assumption.
 
 **Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
@@ -1397,7 +1405,7 @@ Governs the IAM role trust policy statements below (the role is the resource).
 
 **Implements:** [Mitigation.SNS.SmsAttribute.2](#mitigationsnssmsattribute2)
 
-**Scoping** (for [Mitigation.SNS.SmsAttribute.2](#mitigationsnssmsattribute2)): This implementation guidance recommends a trust policy that restricts assumption of your SMS delivery status role to the `sns.amazonaws.com` service principal.
+**Scoping** (for [Mitigation.SNS.SmsAttribute.2](#mitigationsnssmsattribute2)): This implementation guidance recommends a trust policy that restricts assumption of your Amazon SNS SMS attribute's delivery status IAM role to the `sns.amazonaws.com` service principal.
 
 **Reference:** Confirm that IAM role trust policies grant access only to the AWS service principals you intend. Review the `Principal` element of each policy and verify it names only the service principals your workload requires.
 
@@ -1414,7 +1422,7 @@ Governs the IAM permissions below.
 
 **Implements:** [Mitigation.SNS.SmsAttribute.2](#mitigationsnssmsattribute2)
 
-**Scoping** (for [Mitigation.SNS.SmsAttribute.2](#mitigationsnssmsattribute2)): This implementation guidance recommends restricting `sts:AssumeRole` with the `aws:PrincipalOrgID` condition key in a resource control policy (RCP), while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent identities outside your organization from assuming your `DeliveryStatusIAMRole` delivery status logging role.
+**Scoping** (for [Mitigation.SNS.SmsAttribute.2](#mitigationsnssmsattribute2)): This implementation guidance recommends restricting `sts:AssumeRole` with the `aws:PrincipalOrgID` condition key in a resource control policy (RCP), while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent principals outside your organization from assuming your Amazon SNS SMS attribute's delivery status IAM service role.
 
 **Reference:** To restrict access to trusted identities, use the `aws:PrincipalOrgID`, `aws:PrincipalOrgPaths`, or `aws:PrincipalAccount` condition keys. These scope access to IAM principals within a particular organization, specific organizational units, or a specific AWS account, respectively. These keys do not contain your organization or account values for requests by AWS service principals, so apply them only when `aws:PrincipalIsAWSService` is `false`. As a defense-in-depth measure, use the `aws:SourceOrgID`, `aws:SourceOrgPaths`, `aws:SourceAccount`, or `aws:SourceArn` condition keys to restrict service access to your roles. These scope access performed on behalf of resources within a particular organization, specific organizational units, a specific AWS account, or a particular resource, respectively. Apply them only when `aws:PrincipalIsAWSService` is `true`. Also require that `aws:SourceAccount` is present in the request context, because not every service integration populates these keys. Choose the condition key that matches the granularity of the restriction you want to enforce.
 - [Establishing an identity perimeter](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_data-perimeters.html#access_policies_data-perimeters-identity)
@@ -1430,7 +1438,7 @@ Validates template properties before provisioning.
 
 **Implements:** [Mitigation.SNS.Subscription.1](#mitigationsnssubscription1)
 
-**Scoping** (for [Mitigation.SNS.Subscription.1](#mitigationsnssubscription1)): This implementation guidance recommends validating the trust policy of `$.SubscriptionRoleArn`, the subscription role that Amazon SNS assumes, before your subscription is created. This helps prevent the subscription from being provisioned when that trust policy can grant public access, or role assumption beyond the reference policy you maintain.
+**Scoping** (for [Mitigation.SNS.Subscription.1](#mitigationsnssubscription1)): This implementation guidance recommends validating the trust policy of `$.SubscriptionRoleArn`, your subscription's subscription role, before provisioning. This helps prevent the subscription from being provisioned when that trust policy can grant public access, or role assumption beyond the reference policy you maintain.
 
 **Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
@@ -1454,7 +1462,7 @@ A periodic rule that evaluates via the API operation chain below.
 
 **Implements:** [Mitigation.SNS.Subscription.1](#mitigationsnssubscription1)
 
-**Scoping** (for [Mitigation.SNS.Subscription.1](#mitigationsnssubscription1)): This implementation guidance recommends reading the subscription role ARN at `$.Attributes.SubscriptionRoleArn`, then submitting that role's trust policy at `$.Role.AssumeRolePolicyDocument` to IAM Access Analyzer. Flagging trust policies that may allow public role assumption, or assumption by principals other than Amazon SNS (`sns.amazonaws.com`), helps you detect unintended access.
+**Scoping** (for [Mitigation.SNS.Subscription.1](#mitigationsnssubscription1)): This implementation guidance recommends reading `$.Attributes.SubscriptionRoleArn`, your subscription's subscription role, then evaluating `$.Role.AssumeRolePolicyDocument`, that role's trust policy, with IAM Access Analyzer. Flagging trust policies that allow public role assumption, or assumption beyond your reference policy, helps you detect overly permissive role assumption.
 
 **Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
@@ -1476,7 +1484,7 @@ Governs the IAM role trust policy statements below (the role is the resource).
 
 **Implements:** [Mitigation.SNS.Subscription.1](#mitigationsnssubscription1)
 
-**Scoping** (for [Mitigation.SNS.Subscription.1](#mitigationsnssubscription1)): This implementation guidance recommends a trust policy that restricts `sts:AssumeRole` on your Amazon SNS subscription role to the `sns.amazonaws.com` service principal.
+**Scoping** (for [Mitigation.SNS.Subscription.1](#mitigationsnssubscription1)): This implementation guidance recommends a trust policy that restricts assumption of your Amazon SNS subscription's subscription role to the `sns.amazonaws.com` service principal.
 
 **Reference:** Confirm that IAM role trust policies grant access only to the AWS service principals you intend. Review the `Principal` element of each policy and verify it names only the service principals your workload requires.
 
@@ -1493,7 +1501,7 @@ Governs the IAM permissions below.
 
 **Implements:** [Mitigation.SNS.Subscription.1](#mitigationsnssubscription1)
 
-**Scoping** (for [Mitigation.SNS.Subscription.1](#mitigationsnssubscription1)): This implementation guidance recommends applying the `aws:PrincipalOrgID` condition key in a resource control policy (RCP) to govern `sts:AssumeRole`, while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. As a result, identities outside your organization are restricted from assuming your Amazon SNS subscription IAM service role.
+**Scoping** (for [Mitigation.SNS.Subscription.1](#mitigationsnssubscription1)): This implementation guidance recommends restricting `sts:AssumeRole` with the `aws:PrincipalOrgID` condition key in a resource control policy (RCP), while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent principals outside your organization from assuming your Amazon SNS subscription's subscription role.
 
 **Reference:** To restrict access to trusted identities, use the `aws:PrincipalOrgID`, `aws:PrincipalOrgPaths`, or `aws:PrincipalAccount` condition keys. These scope access to IAM principals within a particular organization, specific organizational units, or a specific AWS account, respectively. These keys do not contain your organization or account values for requests by AWS service principals, so apply them only when `aws:PrincipalIsAWSService` is `false`. As a defense-in-depth measure, use the `aws:SourceOrgID`, `aws:SourceOrgPaths`, `aws:SourceAccount`, or `aws:SourceArn` condition keys to restrict service access to your roles. These scope access performed on behalf of resources within a particular organization, specific organizational units, a specific AWS account, or a particular resource, respectively. Apply them only when `aws:PrincipalIsAWSService` is `true`. Also require that `aws:SourceAccount` is present in the request context, because not every service integration populates these keys. Choose the condition key that matches the granularity of the restriction you want to enforce.
 - [Establishing an identity perimeter](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_data-perimeters.html#access_policies_data-perimeters-identity)
@@ -1673,7 +1681,7 @@ Validates template properties before provisioning.
 
 **Implements:** [Mitigation.SNS.Topic.2](#mitigationsnstopic2)
 
-**Scoping** (for [Mitigation.SNS.Topic.2](#mitigationsnstopic2)): This CloudFormation Hook helps limit assumption of the delivery status logging roles in `$.DeliveryStatusLogging[*].SuccessFeedbackRoleArn` and `$.DeliveryStatusLogging[*].FailureFeedbackRoleArn` to Amazon SNS (`sns.amazonaws.com`). The topic create or update fails when a role's trust policy (`$.Role.AssumeRolePolicyDocument`) might allow public assumption or grant assumption beyond your reference policy.
+**Scoping** (for [Mitigation.SNS.Topic.2](#mitigationsnstopic2)): This implementation guidance recommends validating the trust policies of `$.DeliveryStatusLogging[*].SuccessFeedbackRoleArn` and `$.DeliveryStatusLogging[*].FailureFeedbackRoleArn`, your topic's success feedback role and failure feedback role, before provisioning. This helps prevent the topic from being provisioned when any trust policy can grant public access, or role assumption beyond the reference policy you maintain.
 
 **Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
@@ -1697,7 +1705,7 @@ A periodic rule that evaluates via the API operation chain below.
 
 **Implements:** [Mitigation.SNS.Topic.2](#mitigationsnstopic2)
 
-**Scoping** (for [Mitigation.SNS.Topic.2](#mitigationsnstopic2)): This implementation reads the delivery status logging role references in `$.Attributes{key}` and each role's trust policy in `$.Role.AssumeRolePolicyDocument`. Flagging trust policies that permit public role assumption, or assumption beyond the reference policy you supply, helps you detect over-permissive roles.
+**Scoping** (for [Mitigation.SNS.Topic.2](#mitigationsnstopic2)): This implementation guidance recommends reading `$.Attributes{key}`, your topic's `<ENDPOINT>SuccessFeedbackRoleArn` success feedback role and `<ENDPOINT>FailureFeedbackRoleArn` failure feedback role, then evaluating `$.Role.AssumeRolePolicyDocument`, each role's trust policy, with IAM Access Analyzer. Flagging trust policies that allow public role assumption, or assumption beyond your reference policy, helps you detect overly permissive role assumption.
 
 **Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
@@ -1719,7 +1727,9 @@ Governs the IAM role trust policy statements below (the role is the resource).
 
 **Implements:** [Mitigation.SNS.Topic.2](#mitigationsnstopic2)
 
-**Scoping** (for [Mitigation.SNS.Topic.2](#mitigationsnstopic2)): This implementation guidance recommends a trust policy that restricts assumption of your topic's delivery status logging role to the `sns.amazonaws.com` service principal.
+**Scoping** (for [Mitigation.SNS.Topic.2](#mitigationsnstopic2)): This implementation guidance recommends a trust policy that restricts assumption of your Amazon SNS topic's failure feedback role to the `sns.amazonaws.com` service principal.
+
+**Scoping** (for [Mitigation.SNS.Topic.2](#mitigationsnstopic2)): This implementation guidance recommends a trust policy that restricts assumption of your Amazon SNS topic's success feedback roles to the `sns.amazonaws.com` service principal.
 
 **Reference:** Confirm that IAM role trust policies grant access only to the AWS service principals you intend. Review the `Principal` element of each policy and verify it names only the service principals your workload requires.
 
@@ -1736,7 +1746,7 @@ Governs the IAM permissions below.
 
 **Implements:** [Mitigation.SNS.Topic.2](#mitigationsnstopic2)
 
-**Scoping** (for [Mitigation.SNS.Topic.2](#mitigationsnstopic2)): This implementation guidance recommends restricting `sts:AssumeRole` on your Amazon SNS topic IAM service role with the `aws:PrincipalOrgID` condition key in a resource control policy (RCP), while exempting AWS services that access the role on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent principals outside your organization from assuming the role.
+**Scoping** (for [Mitigation.SNS.Topic.2](#mitigationsnstopic2)): This implementation guidance recommends restricting `sts:AssumeRole` with the `aws:PrincipalOrgID` condition key in a resource control policy (RCP), while exempting AWS services acting on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent principals outside your organization from assuming your Amazon SNS topic's success feedback role and failure feedback role.
 
 **Reference:** To restrict access to trusted identities, use the `aws:PrincipalOrgID`, `aws:PrincipalOrgPaths`, or `aws:PrincipalAccount` condition keys. These scope access to IAM principals within a particular organization, specific organizational units, or a specific AWS account, respectively. These keys do not contain your organization or account values for requests by AWS service principals, so apply them only when `aws:PrincipalIsAWSService` is `false`. As a defense-in-depth measure, use the `aws:SourceOrgID`, `aws:SourceOrgPaths`, `aws:SourceAccount`, or `aws:SourceArn` condition keys to restrict service access to your roles. These scope access performed on behalf of resources within a particular organization, specific organizational units, a specific AWS account, or a particular resource, respectively. Apply them only when `aws:PrincipalIsAWSService` is `true`. Also require that `aws:SourceAccount` is present in the request context, because not every service integration populates these keys. Choose the condition key that matches the granularity of the restriction you want to enforce.
 - [Establishing an identity perimeter](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_data-perimeters.html#access_policies_data-perimeters-identity)
@@ -1986,7 +1996,7 @@ Consider using AWS Identity and Access Management Access Analyzer external acces
 
 **Implements:** [Mitigation.SNS.Topic.8](#mitigationsnstopic8)
 
-**Scoping** (for [Mitigation.SNS.Topic.8](#mitigationsnstopic8)): This recommendation directs you to review the resource-based policy on each topic for access granted to identities outside your organization. Remediating unintended access helps keep your topics accessible only to trusted identities, or to AWS services acting on behalf of trusted resources.
+**Scoping** (for [Mitigation.SNS.Topic.8](#mitigationsnstopic8)): This implementation guidance recommends reviewing the resource-based policy on each topic for access granted to identities outside your organization. Remediating unintended access helps keep your topics accessible only to trusted identities, or to AWS services acting on behalf of trusted resources.
 
 ### Implementation.SNS.Topic.23
 
@@ -2001,7 +2011,7 @@ Attaches to `AWS::SNS::Topic` and governs the IAM permissions below.
 
 **Implements:** [Mitigation.SNS.Topic.8](#mitigationsnstopic8)
 
-**Scoping** (for [Mitigation.SNS.Topic.8](#mitigationsnstopic8)): This implementation governs Amazon SNS API calls against your topic with the `aws:PrincipalOrgID` condition key, while exempting AWS services that access it on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. As a result, identities outside your organization are restricted from accessing your topic.
+**Scoping** (for [Mitigation.SNS.Topic.8](#mitigationsnstopic8)): This implementation guidance recommends governing Amazon SNS API calls against your topic with the `aws:PrincipalOrgID` condition key in its resource-based policy, while exempting AWS services that access it on your behalf (`aws:PrincipalIsAWSService`) and scoping those service requests with `aws:SourceOrgID`. These conditions help prevent identities outside your organization from accessing your topic.
 
 **Reference:** Confirm that resource-based policies grant access only to trusted identities and to services acting on your behalf.
 
@@ -2022,23 +2032,21 @@ Validates template properties before provisioning.
 
 **Implements:** [Mitigation.SNS.Topic.8](#mitigationsnstopic8)
 
-**Scoping** (for [Mitigation.SNS.Topic.8](#mitigationsnstopic8)): Before provisioning, this CloudFormation Hook checks `$.PolicyDocument`, your Amazon SNS topic's resource-based policy, for public access and access beyond your reference policy. It flags AWS service grants without source conditions, helping restrict your topic to trusted identities and AWS services acting on behalf of trusted resources.
+**Scoping** (for [Mitigation.SNS.Topic.8](#mitigationsnstopic8)): This implementation guidance recommends validating `$.PolicyDocument`, your Amazon SNS topic's resource-based policy, before provisioning the topic's access policy. The hook helps prevent a policy that can grant public access, access beyond your reference policy, permissions you specify, or AWS service access beyond a reference policy containing the source conditions you accept from being provisioned.
 
 **Data perimeter** (for [Mitigation.SNS.Topic.8](#mitigationsnstopic8)): A hook here helps prevent your developers from specifying a `$.PolicyDocument`, the topic's resource-based policy, that grants permissions to identities outside your organization. You can also require the standard identity perimeter statement in your topic resource-based policies. Covering both `AWS::SNS::TopicPolicy` and `AWS::SNS::TopicInlinePolicy` addresses every CloudFormation path for granting access to your topic.
-- [AWS::SNS::TopicPolicy CloudFormation resource](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-sns-topicpolicy.html)
-- [PolicyDocument property of AWS::SNS::TopicPolicy](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-sns-topicpolicy.html#cfn-sns-topicpolicy-policydocument)
+- [AWS::SNS::TopicPolicy resource](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-sns-topicpolicy.html)
+- [AWS::SNS::TopicPolicy PolicyDocument property](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-sns-topicpolicy.html#cfn-sns-topicpolicy-policydocument)
 - [Identity perimeter statement for Amazon SNS topic policies](https://github.com/aws-samples/data-perimeter-policy-examples/blob/main/resource_control_policies/service_specific_controls/sns_topic_policy.json#L5)
-- [AWS::SNS::TopicInlinePolicy CloudFormation resource](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-sns-topicinlinepolicy.html)
+- [AWS::SNS::TopicInlinePolicy resource](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-sns-topicinlinepolicy.html)
 
-**Reference:** This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.
-
-Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
 Custom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.
 
-The reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+The first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
+
+The second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.
 - [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
 - [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
@@ -2052,23 +2060,21 @@ Validates template properties before provisioning.
 
 **Implements:** [Mitigation.SNS.Topic.8](#mitigationsnstopic8)
 
-**Scoping** (for [Mitigation.SNS.Topic.8](#mitigationsnstopic8)): This implementation validates the resource-based policy your template declares in `$.PolicyDocument` before the topic policy is provisioned. Confirming the policy grants no public access, no permissions you list, and no access to AWS services without source conditions helps address the mitigation.
+**Scoping** (for [Mitigation.SNS.Topic.8](#mitigationsnstopic8)): This implementation guidance recommends validating `$.PolicyDocument`, the resource-based policy for your Amazon SNS topics, before provisioning your topic policy. The hook helps prevent a policy that can grant public access, access beyond your reference policy, permissions you specify, or access to an AWS service principal beyond a reference policy containing the source conditions you accept from being provisioned.
 
 **Data perimeter** (for [Mitigation.SNS.Topic.8](#mitigationsnstopic8)): Two CloudFormation resource types set an Amazon SNS topic's access policy through `$.PolicyDocument`. Governing both covers every template path that grants access to your topic. Validating each policy document at create and update time helps prevent a template from granting topic permissions to identities outside your organization. You can also require the standard identity perimeter statement in the topic policy your template declares.
-- [AWS::SNS::TopicPolicy resource](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-sns-topicpolicy.html)
-- [AWS::SNS::TopicPolicy PolicyDocument property](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-sns-topicpolicy.html#cfn-sns-topicpolicy-policydocument)
-- [AWS::SNS::TopicInlinePolicy resource](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-sns-topicinlinepolicy.html)
+- [AWS::SNS::TopicPolicy resource reference](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-sns-topicpolicy.html)
+- [PolicyDocument property of AWS::SNS::TopicPolicy](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-sns-topicpolicy.html#cfn-sns-topicpolicy-policydocument)
+- [AWS::SNS::TopicInlinePolicy resource reference](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-sns-topicinlinepolicy.html)
 - [Identity perimeter statement for Amazon SNS topic policies](https://github.com/aws-samples/data-perimeter-policy-examples/blob/main/resource_control_policies/service_specific_controls/sns_topic_policy.json#L5)
 
-**Reference:** This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.
-
-Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
 Custom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.
 
-The reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+The first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
+
+The second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.
 - [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
 - [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
@@ -2084,15 +2090,15 @@ Monitors the API calls below in CloudTrail.
 
 **Implements:** [Mitigation.SNS.Topic.8](#mitigationsnstopic8)
 
-**Scoping** (for [Mitigation.SNS.Topic.8](#mitigationsnstopic8)): This implementation monitors `AddPermission`, `CreateTopic`, and `SetTopicAttributes`, recording `$.AWSAccountId[*]` and the `Policy` attribute values those calls set on your topic. Surfacing those grants helps you detect access extended to identities outside your organization and review it against your identity perimeter.
+**Scoping** (for [Mitigation.SNS.Topic.8](#mitigationsnstopic8)): This implementation guidance recommends monitoring `AddPermission` for `$.AWSAccountId[*]`, the account IDs being granted access to your topic. It also recommends monitoring `CreateTopic` and `SetTopicAttributes` for the `Policy` attribute values those calls set on your topic. Surfacing those grants helps you detect access extended to identities outside your organization and review it against your identity perimeter.
 
 **Data perimeter:** Monitoring these calls surfaces changes to the resource-based policy on your topic. `AddPermission` carries the account IDs being granted access to the topic. `CreateTopic` and `SetTopicAttributes` carry the `Policy` attribute value. Each event also records the identity that made the call. When a call extends access to identities outside your organization, remediate with the responsive controls of your choice. For example, you can add the standard identity perimeter statement to your topic's resource-based policy. That statement uses the `aws:PrincipalOrgID` condition key, while exempting AWS services that access your topic on your behalf (`aws:PrincipalIsAWSService`).
-- [AddPermission request parameters (AWSAccountId.member.N)](https://docs.aws.amazon.com/sns/latest/api/API_AddPermission.html#API_AddPermission_RequestParameters)
-- [Amazon SNS API Reference: AddPermission](https://docs.aws.amazon.com/sns/latest/api/API_AddPermission.html)
-- [CreateTopic request parameters (Attributes and the Policy attribute)](https://docs.aws.amazon.com/sns/latest/api/API_CreateTopic.html#API_CreateTopic_RequestParameters)
-- [Amazon SNS API Reference: CreateTopic](https://docs.aws.amazon.com/sns/latest/api/API_CreateTopic.html)
-- [SetTopicAttributes request parameters (AttributeName and AttributeValue)](https://docs.aws.amazon.com/sns/latest/api/API_SetTopicAttributes.html#API_SetTopicAttributes_RequestParameters)
-- [Amazon SNS API Reference: SetTopicAttributes](https://docs.aws.amazon.com/sns/latest/api/API_SetTopicAttributes.html)
+- [AddPermission request parameters (Amazon SNS API Reference)](https://docs.aws.amazon.com/sns/latest/api/API_AddPermission.html#API_AddPermission_RequestParameters)
+- [AddPermission (Amazon SNS API Reference)](https://docs.aws.amazon.com/sns/latest/api/API_AddPermission.html)
+- [CreateTopic request parameters (Amazon SNS API Reference)](https://docs.aws.amazon.com/sns/latest/api/API_CreateTopic.html#API_CreateTopic_RequestParameters)
+- [CreateTopic (Amazon SNS API Reference)](https://docs.aws.amazon.com/sns/latest/api/API_CreateTopic.html)
+- [SetTopicAttributes request parameters (Amazon SNS API Reference)](https://docs.aws.amazon.com/sns/latest/api/API_SetTopicAttributes.html#API_SetTopicAttributes_RequestParameters)
+- [SetTopicAttributes (Amazon SNS API Reference)](https://docs.aws.amazon.com/sns/latest/api/API_SetTopicAttributes.html)
 - [Identity perimeter statement for Amazon SNS topic policies (data perimeter policy examples)](https://github.com/aws-samples/data-perimeter-policy-examples/blob/main/resource_control_policies/service_specific_controls/sns_topic_policy.json#L5)
 
 ### Implementation.SNS.Topic.27
@@ -2105,17 +2111,15 @@ A change-triggered rule that evaluates configuration item properties on change.
 
 **Implements:** [Mitigation.SNS.Topic.8](#mitigationsnstopic8)
 
-**Scoping** (for [Mitigation.SNS.Topic.8](#mitigationsnstopic8)): This rule reads `$.configuration.Policy`, the resource-based policy on your topic, and checks it for public access. Flagging grants to AWS services that omit the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys helps you detect overly permissive access.
+**Scoping** (for [Mitigation.SNS.Topic.8](#mitigationsnstopic8)): This implementation guidance recommends reading `$.configuration.Policy`, the resource-based policy on your topic, and evaluating it for public access, access beyond your reference policy, permissions you specify, and AWS service grants beyond a reference policy containing the source conditions you accept. Flagging those grants helps you detect access to your Amazon SNS topic that extends beyond trusted identities.
 
-**Reference:** This implementation recommends using both IAM Access Analyzer basic policy checks and custom policy checks.
-
-Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
 Custom policy checks (`CheckNoPublicAccess`, `CheckNoNewAccess`, `CheckAccessNotGranted`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant public access, grant new access beyond a reference policy you maintain, or grant specified permissions.
 
-The reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+The first reference policy for `CheckNoNewAccess` allowlists the principals that may be granted access to the resource. The check fails when the resource-based policy grants access beyond that allowlist. Example reference policies for resource-based policies are available in the IAM Access Analyzer custom policy checks samples repository.
+
+The second reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`.
 - [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
 - [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
@@ -2134,8 +2138,8 @@ Governs the IAM permissions below.
 **Scoping** (for [Mitigation.SNS.Topic.8](#mitigationsnstopic8)): This implementation guidance recommends applying the `aws:PrincipalTag/dp:exclude:identity` condition key in a service control policy (SCP) to govern `sns:AddPermission` for principals in your organization. This condition helps prevent principals you have not designated from granting identities outside your organization access to your topics through `AddPermission`.
 
 **Data perimeter:** `sns:AddPermission` adds a statement to a topic's access control policy that grants access to the AWS account IDs named in the request. Amazon SNS is not covered by resource control policies (RCPs), so a service control policy (SCP) is the scalable place to govern these grants. Restricting this action to the principals you select helps prevent grants that reach identities outside your organization. `sns:SetTopicAttributes` (its `Policy` attribute) and `sns:RemovePermission` also change the topic policy. They are not governed by this SCP, which governs only the action that adds grants. A principal permitted those actions can still replace or trim the policy. So the identity conditions in the topic policy itself remain the control that applies to every caller, including principals outside your organization.
-- [AddPermission – Amazon SNS API Reference](https://docs.aws.amazon.com/sns/latest/api/API_AddPermission.html)
-- [Example SCP: Restrict resource-based policy configurations](https://github.com/aws-samples/data-perimeter-policy-examples/blob/main/service_control_policies/service_specific_controls/restrict_resource_policy_configurations_scp.json)
+- [Amazon SNS API Reference: AddPermission](https://docs.aws.amazon.com/sns/latest/api/API_AddPermission.html)
+- [Example SCP that restricts resource-based policy configurations](https://github.com/aws-samples/data-perimeter-policy-examples/blob/main/service_control_policies/service_specific_controls/restrict_resource_policy_configurations_scp.json)
 
 ### Implementation.SNS.Topic.29
 
@@ -2149,7 +2153,7 @@ Attaches to `AWS::SNS::Topic` and governs the IAM permissions below.
 
 **Implements:** [Mitigation.SNS.Topic.9](#mitigationsnstopic9)
 
-**Scoping** (for [Mitigation.SNS.Topic.9](#mitigationsnstopic9)): This implementation restricts `sns:Publish` on your topic with the `aws:SourceArn` and `aws:SourceAccount` condition keys. Requests that do not satisfy those conditions are denied, so AWS services publish only on behalf of trusted resources and AWS accounts.
+**Scoping** (for [Mitigation.SNS.Topic.9](#mitigationsnstopic9)): This implementation guidance recommends governing `sns:Publish` on your topic with the `aws:SourceArn` and `aws:SourceAccount` condition keys. Enforce these keys only in resource-based policy statements that grant access to an AWS service principal. As a result, requests made on behalf of a resource or account you have not designated are restricted from publishing messages to your topic.
 
 **Reference:** To restrict service access to your resources, use the `aws:SourceOrgID`, `aws:SourceOrgPaths`, `aws:SourceAccount`, or `aws:SourceArn` condition keys. These scope access performed on behalf of resources within a particular organization, specific organizational units, a specific AWS account, or a particular resource, respectively. Choose the condition key that matches the granularity of the restriction you want to enforce.
 - [Establishing an identity perimeter](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_data-perimeters.html#access_policies_data-perimeters-identity)
@@ -2164,11 +2168,11 @@ Validates template properties before provisioning.
 
 **Implements:** [Mitigation.SNS.Topic.9](#mitigationsnstopic9)
 
-**Scoping** (for [Mitigation.SNS.Topic.9](#mitigationsnstopic9)): Before deployment, this CloudFormation hook validates `$.PolicyDocument`, your Amazon SNS topic's resource-based policy, to help prevent the cross-service confused deputy problem. The hook fails evaluation when `ValidatePolicy` reports that the policy grants an AWS service principal access without `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths`.
+**Scoping** (for [Mitigation.SNS.Topic.9](#mitigationsnstopic9)): This implementation guidance recommends validating `$.PolicyDocument`, your Amazon SNS topic's resource-based policy, before provisioning. When a grant to an AWS service principal extends beyond a reference policy containing the source conditions you accept, the hook fails the stack operation, which helps prevent such a grant from being provisioned.
 
-**Reference:** This implementation recommends using IAM Access Analyzer basic policy checks. Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks. Custom policy checks (`CheckNoNewAccess`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain. The reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`. The IAM Access Analyzer custom policy checks samples repository shows the reference policy format; compose the policy from the key combinations you accept.
+- [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
+- [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
 ### Implementation.SNS.Topic.31
 
@@ -2180,13 +2184,15 @@ Validates template properties before provisioning.
 
 **Implements:** [Mitigation.SNS.Topic.9](#mitigationsnstopic9)
 
-**Scoping** (for [Mitigation.SNS.Topic.9](#mitigationsnstopic9)): This implementation restricts the resource-based policy on your topic, carried in `$.PolicyDocument`, with the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, and `aws:SourceOrgPaths` condition keys. Requests that do not satisfy those conditions are denied, helping prevent confused deputy access to your topic.
+**Scoping** (for [Mitigation.SNS.Topic.9](#mitigationsnstopic9)): This implementation guidance recommends validating `$.PolicyDocument`, your topic's resource-based policy, before provisioning. When a grant to an AWS service principal extends beyond a reference policy containing the source conditions you accept, the hook fails the stack operation, which helps prevent such a grant from being provisioned.
 
-**Reference:** This implementation recommends using IAM Access Analyzer basic policy checks.
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
-Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+Custom policy checks (`CheckNoNewAccess`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain.
+
+The reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`. The IAM Access Analyzer custom policy checks samples repository shows the reference policy format; compose the policy from the key combinations you accept.
+- [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
+- [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
 ### Implementation.SNS.Topic.32
 
@@ -2198,13 +2204,15 @@ A change-triggered rule that evaluates configuration item properties on change.
 
 **Implements:** [Mitigation.SNS.Topic.9](#mitigationsnstopic9)
 
-**Scoping** (for [Mitigation.SNS.Topic.9](#mitigationsnstopic9)): This implementation flags your topic's resource-based policy, recorded at `$.configuration.Policy`, when it grants an AWS service principal access without `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths`. Surfacing those grants helps you detect where a service principal may act on behalf of unintended resources.
+**Scoping** (for [Mitigation.SNS.Topic.9](#mitigationsnstopic9)): This implementation guidance recommends reading `$.configuration.Policy`, your topic's resource-based policy, and flagging grants to an AWS service principal that extend beyond a reference policy containing the source conditions you accept. Flagging those grants helps you detect access by AWS services acting on your behalf that lacks a source restriction you accept.
 
-**Reference:** This implementation recommends using IAM Access Analyzer basic policy checks.
+**Reference:** This implementation recommends using IAM Access Analyzer custom policy checks.
 
-Basic policy checks (`ValidatePolicy`) validate your policy against IAM policy grammar and AWS best practices. These checks do not use automated reasoning. They provide actionable recommendations that help you author policies that are functional and conform to security best practices.
-- [IAM policy grammar](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html)
-- [AWS best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+Custom policy checks (`CheckNoNewAccess`) use automated reasoning to provide a higher level of assurance. They provably verify that a policy does not grant new access beyond a reference policy you maintain.
+
+The reference policy for `CheckNoNewAccess` encodes the source conditions you accept on grants to an AWS service principal: one statement per accepted combination of the `aws:SourceArn`, `aws:SourceAccount`, `aws:SourceOrgID`, or `aws:SourceOrgPaths` condition keys, with placeholders for your account, organization, and resource values. The check fails when the policy grants a service principal access that no statement of the reference allows, including grants that omit the condition keys or weaken them with `IfExists`. The IAM Access Analyzer custom policy checks samples repository shows the reference policy format; compose the policy from the key combinations you accept.
+- [IAM Access Analyzer custom policy checks](https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-custom-policy-checks.html)
+- [IAM Access Analyzer custom policy checks samples](https://github.com/aws-samples/iam-access-analyzer-custom-policy-check-samples)
 
 ### Implementation.SNS.Topic.33
 
